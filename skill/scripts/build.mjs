@@ -27,7 +27,7 @@ export const LIMITS = {
   'perplexity/space-instructions.md': 1500, // Space instructions
   'claude skill description': 1024, // Agent Skills frontmatter
 };
-export const SIZE_BUDGET = 15 * 1024 * 1024; // keep the output small enough to commit
+export const SIZE_BUDGET = 20 * 1024 * 1024; // keep the output small enough to commit
 
 const RULE_ORDER = ['colour', 'type', 'logo', 'layout-ui', 'illustration-motion', 'data', 'formats', 'words', 'checklist'];
 const TARGETS = ['claude', 'chatgpt', 'cursor', 'agents', 'copilot', 'gemini', 'perplexity', 'figma', 'portable'];
@@ -52,7 +52,7 @@ const ASSET_INFO = {
   illustrations: 'illustrations',
   icons: 'icons',
 };
-const KIT_SKIP = new Set(['posters']); // large reference images stay in the Claude skill only
+const KIT_SKIP = new Set(['posters']); // large reference images stay in the Claude skill and the brand kit
 
 const SKILL_DESCRIPTION =
   "Strike's brand and design rules, tokens, logo files and fonts. Use for anything made for Strike, the options exchange, including UI and components, web and landing pages, X posts and threads, social cards, posters, slides and decks, docs, emails, charts, illustrations and copy, and any use of the Strike logo, colours or type. Also use to review or fix existing Strike work.";
@@ -64,8 +64,8 @@ const TARGET_INFO = {
     name: 'Claude',
     summary: 'An Agent Skill. Claude loads it by itself whenever the work is for Strike.',
     steps: [
+      '**Claude Code:** run `npx skills add ibrahimweng/strike-figures` in your project (add `-g` for every project).',
       '**claude.ai:** download `strike-design.zip`, open Settings, then Capabilities, and under Skills choose Upload skill and pick the zip.',
-      '**Claude Code:** unzip it into `~/.claude/skills/` to use it everywhere, or into `.claude/skills/` inside one project.',
       'Ask for Strike work as usual, for example "Make a landing page hero for Strike."',
     ],
   },
@@ -83,8 +83,8 @@ const TARGET_INFO = {
     name: 'Cursor',
     summary: 'Project rules: the core rule always applies, and the detailed rules load when they are needed.',
     steps: [
-      'Download `strike-design-cursor.zip`.',
-      "Unzip it into your project's top folder, so `.cursor` and `strike-design` sit next to your code. On a Mac, Finder hides `.cursor`; press Cmd+Shift+. to see it.",
+      'Run `npx skills add ibrahimweng/strike-figures -a cursor` in your project.',
+      "Or download `strike-design-cursor.zip` and unzip it into your project's top folder.",
       'Open the project in Cursor. The Strike rules now apply to every chat in it.',
     ],
   },
@@ -92,8 +92,8 @@ const TARGET_INFO = {
     name: 'Codex and other AGENTS.md tools',
     summary: "An AGENTS.md file and a strike-design folder, read by Codex, Cursor, Copilot's coding agent, Windsurf, Jules and others.",
     steps: [
-      "Download `strike-design-agents.zip` and unzip it into your project's top folder.",
-      "If the project already has an `AGENTS.md`, paste the new file's text at the end of yours instead of replacing it.",
+      'Run `npx skills add ibrahimweng/strike-figures` in your project and pick your agent.',
+      "Or download `strike-design-agents.zip` and unzip it into your project's top folder (add its text to an existing `AGENTS.md`).",
       'Start your agent in that project. It reads `AGENTS.md` by itself.',
     ],
   },
@@ -101,8 +101,8 @@ const TARGET_INFO = {
     name: 'GitHub Copilot',
     summary: 'Repository instructions that Copilot Chat and the coding agent read in that repository.',
     steps: [
-      "Download `strike-design-copilot.zip` and unzip it into your repository's top folder, so `.github` and `strike-design` sit next to your code.",
-      'If the repository already has `.github/copilot-instructions.md`, add the new text to the end of it.',
+      'Run `npx skills add ibrahimweng/strike-figures -a github-copilot` in your repository.',
+      "Or download `strike-design-copilot.zip` and unzip it into the repository's top folder.",
       'Commit and push. Copilot follows the rules from then on.',
     ],
   },
@@ -148,10 +148,11 @@ const TARGET_INFO = {
 
 function parseArgs(argv) {
   const at = (p) => (isAbsolute(p) ? p : resolve(ROOT, p));
-  const o = { out: at('dist'), source: at('source'), assets: at('assets'), scripts: at('scripts'), png: true, quiet: false, force: false };
+  const o = { out: at('dist'), skills: null, source: at('source'), assets: at('assets'), scripts: at('scripts'), png: true, quiet: false, force: false };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--out') o.out = at(argv[++i]);
+    else if (a === '--skills') o.skills = at(argv[++i]);
     else if (a === '--source') o.source = at(argv[++i]);
     else if (a === '--assets') o.assets = at(argv[++i]);
     else if (a === '--scripts') o.scripts = at(argv[++i]);
@@ -911,6 +912,12 @@ function buildOnce(opts, pngs, tmp) {
   if (hasLockup) copy(lockupSrc, join(S, 'scripts', 'lockup.mjs'));
   write(join(C, 'strike-design.zip'), zipDir(S, 'strike-design/'));
   mirror(S, join(C, 'strike-design'));
+  /* The complete skill at <repo>/skills/strike-design/, where `npx skills add <owner>/<repo>` finds it. */
+  if (opts.skills) {
+    const dest = join(opts.skills, 'strike-design');
+    rmSync(dest, { recursive: true, force: true });
+    copyDir(S, dest);
+  }
   readme(C, [
     '# Strike design for Claude',
     '- claude.ai: Settings, Capabilities, Skills, Upload skill, then choose `strike-design.zip`.',
@@ -1141,8 +1148,9 @@ Drag the SVGs in \`logos/\` onto the canvas. The logo rules in \`guidelines.md\`
   for (const p of pngs) copy(p, join(OS, 'logo', basename(p)));
   copyDir(fontsDir, join(OS, 'fonts'));
   if (!existsSync(fontsDir)) notes.push('No assets/fonts/ yet, so the kits have no fonts.');
+  if (existsSync(join(assets, 'posters'))) copyDir(join(assets, 'posters'), join(OS, 'posters'));
   write(join(O, 'strike-design-kit.zip'), zipDir(OS));
-  mirror(OS, O, () => true); // the one loose home of the font and image files
+  mirror(OS, O, (rel) => !posix(rel).startsWith('posters/')); // the one loose home of the font and image files; posters travel in the zip
   readme(O, [
     '# Strike design for any other AI tool',
     '- Attach or paste `STRIKE-DESIGN.md` at the start of a chat and say: "Follow these rules for Strike work."',
@@ -1212,7 +1220,7 @@ Drag the SVGs in \`logos/\` onto the canvas. The logo rules in \`guidelines.md\`
     gemini: [[zipOf.gemini, 'Everything (zip)'], ['gemini/gem-instructions.md', 'Instructions'], ['gemini/knowledge/STRIKE-DESIGN.md', 'Knowledge: STRIKE-DESIGN.md'], ['gemini/knowledge/tokens.css', 'Knowledge: tokens.css'], ['gemini/knowledge/tokens.json', 'Knowledge: tokens.json']],
     perplexity: [[zipOf.perplexity, 'Everything (zip)'], ['perplexity/space-instructions.md', 'Instructions'], ['perplexity/knowledge/STRIKE-DESIGN.md', 'Knowledge: STRIKE-DESIGN.md']],
     figma: [[zipOf.figma, 'Everything (zip)'], ['figma/tokens.json', 'Variables: tokens.json'], ['figma/guidelines.md', 'Figma Make: guidelines.md'], ['figma/SETUP.md', 'Setup steps']],
-    portable: [['STRIKE-DESIGN.md', 'STRIKE-DESIGN.md'], [zipOf.portable, 'Kit: tokens, logos, fonts (zip)']],
+    portable: [['STRIKE-DESIGN.md', 'STRIKE-DESIGN.md'], [zipOf.portable, 'Brand kit: logos, fonts, posters, tokens (zip)']],
   };
   const faces = fontFaces(fontsDir);
   const readmeLogos = assetsLogoTable(join(assets, 'README.md'));
@@ -1230,7 +1238,7 @@ Drag the SVGs in \`logos/\` onto the canvas. The logo rules in \`guidelines.md\`
     downloads: [
       { path: 'STRIKE-DESIGN.md', label: 'All the rules in one file', kind: 'markdown' },
       { path: 'core.md', label: 'Core rules only', kind: 'markdown' },
-      ...TARGETS.map((id) => ({ path: zipOf[id], label: id === 'portable' ? 'Strike design kit' : `For ${TARGET_INFO[id].name}`, kind: 'zip' })),
+      ...TARGETS.map((id) => ({ path: zipOf[id], label: id === 'portable' ? 'Brand kit' : `For ${TARGET_INFO[id].name}`, kind: 'zip' })),
       { path: 'tokens/tokens.css', label: 'CSS variables', kind: 'css' },
       { path: 'tokens/tailwind.preset.cjs', label: 'Tailwind v3 preset', kind: 'js' },
       { path: 'tokens/theme.css', label: 'Tailwind v4 theme', kind: 'css' },

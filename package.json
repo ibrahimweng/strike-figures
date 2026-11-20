@@ -12,7 +12,7 @@
     "test": "vitest run",
     "render": "vite-node scripts/render-presets.ts --",
     "glyphs": "node scripts/build-glyphs.mjs",
-    "skill:build": "node skill/scripts/build.mjs --out ../public/skill",
+    "skill:build": "node skill/scripts/build.mjs --out ../public/skill --skills ../skills",
     "skill:check": "node skill/scripts/check.mjs",
     "skill:test": "npm --prefix skill test",
     "skill:lockup": "node skill/scripts/lockup.mjs"

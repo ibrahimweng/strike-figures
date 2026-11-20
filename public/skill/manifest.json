@@ -8,20 +8,20 @@
       "name": "Claude",
       "summary": "An Agent Skill. Claude loads it by itself whenever the work is for Strike.",
       "steps": [
+        "**Claude Code:** run `npx skills add ibrahimweng/strike-figures` in your project (add `-g` for every project).",
         "**claude.ai:** download `strike-design.zip`, open Settings, then Capabilities, and under Skills choose Upload skill and pick the zip.",
-        "**Claude Code:** unzip it into `~/.claude/skills/` to use it everywhere, or into `.claude/skills/` inside one project.",
         "Ask for Strike work as usual, for example \"Make a landing page hero for Strike.\""
       ],
       "files": [
         {
           "path": "claude/strike-design.zip",
           "label": "Skill (zip)",
-          "bytes": 2845263
+          "bytes": 2845336
         },
         {
           "path": "claude/strike-design/SKILL.md",
           "label": "SKILL.md",
-          "bytes": 8306
+          "bytes": 8457
         }
       ]
     },
@@ -39,17 +39,17 @@
         {
           "path": "chatgpt/strike-design-chatgpt.zip",
           "label": "Everything (zip)",
-          "bytes": 732531
+          "bytes": 732676
         },
         {
           "path": "chatgpt/instructions.md",
           "label": "Instructions",
-          "bytes": 5997
+          "bytes": 6148
         },
         {
           "path": "chatgpt/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 25120
+          "bytes": 25271
         },
         {
           "path": "chatgpt/knowledge/tokens.css",
@@ -78,20 +78,20 @@
       "name": "Cursor",
       "summary": "Project rules: the core rule always applies, and the detailed rules load when they are needed.",
       "steps": [
-        "Download `strike-design-cursor.zip`.",
-        "Unzip it into your project's top folder, so `.cursor` and `strike-design` sit next to your code. On a Mac, Finder hides `.cursor`; press Cmd+Shift+. to see it.",
+        "Run `npx skills add ibrahimweng/strike-figures -a cursor` in your project.",
+        "Or download `strike-design-cursor.zip` and unzip it into your project's top folder.",
         "Open the project in Cursor. The Strike rules now apply to every chat in it."
       ],
       "files": [
         {
           "path": "cursor/strike-design-cursor.zip",
           "label": "Rules and files (zip)",
-          "bytes": 1006286
+          "bytes": 1006359
         },
         {
           "path": "cursor/rules/strike-design.mdc",
           "label": "strike-design.mdc",
-          "bytes": 8205
+          "bytes": 8356
         },
         {
           "path": "cursor/rules/strike-colour.mdc",
@@ -145,20 +145,20 @@
       "name": "Codex and other AGENTS.md tools",
       "summary": "An AGENTS.md file and a strike-design folder, read by Codex, Cursor, Copilot's coding agent, Windsurf, Jules and others.",
       "steps": [
-        "Download `strike-design-agents.zip` and unzip it into your project's top folder.",
-        "If the project already has an `AGENTS.md`, paste the new file's text at the end of yours instead of replacing it.",
+        "Run `npx skills add ibrahimweng/strike-figures` in your project and pick your agent.",
+        "Or download `strike-design-agents.zip` and unzip it into your project's top folder (add its text to an existing `AGENTS.md`).",
         "Start your agent in that project. It reads `AGENTS.md` by itself."
       ],
       "files": [
         {
           "path": "agents/strike-design-agents.zip",
           "label": "AGENTS.md and files (zip)",
-          "bytes": 1005192
+          "bytes": 1005265
         },
         {
           "path": "agents/AGENTS.md",
           "label": "AGENTS.md",
-          "bytes": 7998
+          "bytes": 8149
         }
       ]
     },
@@ -167,20 +167,20 @@
       "name": "GitHub Copilot",
       "summary": "Repository instructions that Copilot Chat and the coding agent read in that repository.",
       "steps": [
-        "Download `strike-design-copilot.zip` and unzip it into your repository's top folder, so `.github` and `strike-design` sit next to your code.",
-        "If the repository already has `.github/copilot-instructions.md`, add the new text to the end of it.",
+        "Run `npx skills add ibrahimweng/strike-figures -a github-copilot` in your repository.",
+        "Or download `strike-design-copilot.zip` and unzip it into the repository's top folder.",
         "Commit and push. Copilot follows the rules from then on."
       ],
       "files": [
         {
           "path": "copilot/strike-design-copilot.zip",
           "label": "Instructions and files (zip)",
-          "bytes": 1005328
+          "bytes": 1005401
         },
         {
           "path": "copilot/copilot-instructions.md",
           "label": "copilot-instructions.md",
-          "bytes": 7998
+          "bytes": 8149
         }
       ]
     },
@@ -197,17 +197,17 @@
         {
           "path": "gemini/strike-design-gemini.zip",
           "label": "Everything (zip)",
-          "bytes": 30911
+          "bytes": 31056
         },
         {
           "path": "gemini/gem-instructions.md",
           "label": "Instructions",
-          "bytes": 5982
+          "bytes": 6133
         },
         {
           "path": "gemini/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 25120
+          "bytes": 25271
         },
         {
           "path": "gemini/knowledge/tokens.css",
@@ -234,7 +234,7 @@
         {
           "path": "perplexity/strike-design-perplexity.zip",
           "label": "Everything (zip)",
-          "bytes": 28399
+          "bytes": 28471
         },
         {
           "path": "perplexity/space-instructions.md",
@@ -244,7 +244,7 @@
         {
           "path": "perplexity/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 25120
+          "bytes": 25271
         }
       ]
     },
@@ -262,7 +262,7 @@
         {
           "path": "figma/strike-design-figma.zip",
           "label": "Everything (zip)",
-          "bytes": 20967
+          "bytes": 21042
         },
         {
           "path": "figma/tokens.json",
@@ -272,7 +272,7 @@
         {
           "path": "figma/guidelines.md",
           "label": "Figma Make: guidelines.md",
-          "bytes": 11482
+          "bytes": 11633
         },
         {
           "path": "figma/SETUP.md",
@@ -293,12 +293,12 @@
         {
           "path": "STRIKE-DESIGN.md",
           "label": "STRIKE-DESIGN.md",
-          "bytes": 25260
+          "bytes": 25411
         },
         {
           "path": "portable/strike-design-kit.zip",
-          "label": "Kit: tokens, logos, fonts (zip)",
-          "bytes": 2110292
+          "label": "Brand kit: logos, fonts, posters, tokens (zip)",
+          "bytes": 3890542
         }
       ]
     }
@@ -307,67 +307,67 @@
     {
       "path": "STRIKE-DESIGN.md",
       "label": "All the rules in one file",
-      "bytes": 25260,
+      "bytes": 25411,
       "kind": "markdown"
     },
     {
       "path": "core.md",
       "label": "Core rules only",
-      "bytes": 5618,
+      "bytes": 5769,
       "kind": "markdown"
     },
     {
       "path": "claude/strike-design.zip",
       "label": "For Claude",
-      "bytes": 2845263,
+      "bytes": 2845336,
       "kind": "zip"
     },
     {
       "path": "chatgpt/strike-design-chatgpt.zip",
       "label": "For ChatGPT",
-      "bytes": 732531,
+      "bytes": 732676,
       "kind": "zip"
     },
     {
       "path": "cursor/strike-design-cursor.zip",
       "label": "For Cursor",
-      "bytes": 1006286,
+      "bytes": 1006359,
       "kind": "zip"
     },
     {
       "path": "agents/strike-design-agents.zip",
       "label": "For Codex and other AGENTS.md tools",
-      "bytes": 1005192,
+      "bytes": 1005265,
       "kind": "zip"
     },
     {
       "path": "copilot/strike-design-copilot.zip",
       "label": "For GitHub Copilot",
-      "bytes": 1005328,
+      "bytes": 1005401,
       "kind": "zip"
     },
     {
       "path": "gemini/strike-design-gemini.zip",
       "label": "For Gemini",
-      "bytes": 30911,
+      "bytes": 31056,
       "kind": "zip"
     },
     {
       "path": "perplexity/strike-design-perplexity.zip",
       "label": "For Perplexity",
-      "bytes": 28399,
+      "bytes": 28471,
       "kind": "zip"
     },
     {
       "path": "figma/strike-design-figma.zip",
       "label": "For Figma",
-      "bytes": 20967,
+      "bytes": 21042,
       "kind": "zip"
     },
     {
       "path": "portable/strike-design-kit.zip",
-      "label": "Strike design kit",
-      "bytes": 2110292,
+      "label": "Brand kit",
+      "bytes": 3890542,
       "kind": "zip"
     },
     {

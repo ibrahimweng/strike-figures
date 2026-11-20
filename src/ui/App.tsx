@@ -4,7 +4,7 @@ import { KINDS, type Kind } from '../model/defaults';
 import { useStore } from '../model/store';
 import { useThread } from '../social/store';
 import { ModeSwitch, ThreadActions, ThreadTool } from '../social/ThreadTool';
-import { SkillPage } from '../skill/SkillPage';
+import { GITHUB, IconGitHub, SkillPage } from '../skill/SkillPage';
 import { Canvas } from './Canvas';
 import { ExportDialog, saveFigure } from './ExportDialog';
 import { IconBox, IconChevron, IconCylinder, IconDownload, IconFin, IconHex, IconRedo, IconSlab, IconUndo, StrikeMark } from './icons';
@@ -103,6 +103,9 @@ export function App() {
           </div>
           <ModeSwitch />
           <span className="spacer" />
+          <a className="top-link" href={GITHUB} target="_blank" rel="noreferrer" data-testid="github">
+            <IconGitHub /> GitHub
+          </a>
         </header>
         <SkillPage />
       </div>
