@@ -1,0 +1,10 @@
+/* Palette, alpha variants, illustration greys and logo stops are all fine. */
+:root { --strike-surface-1-light: #FFFFFF; }
+.a { color: #F9F9F9; background: #0C0C0C; }
+.b { border: 1px solid rgba(249, 249, 249, 0.08); }
+.c { stroke: #D0D6E0; fill: #62666D; }
+.d { stop-color: #34D399; }
+.e { background: rgb(12 12 12 / 70%); }
+.f { color: var(--strike-green); }
+#fade { opacity: 0.5; }
+[data-theme="light"] .card { background: #fff; }

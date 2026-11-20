@@ -1,0 +1,8 @@
+@font-face { font-family: "Ciburial"; src: url("ciburial/LCT-Ciburial-Regular.woff2") format("woff2"); }
+body { font-family: Geist, Arial, sans-serif; }
+code { font-family: "Geist Mono", ui-monospace, monospace; }
+.big-number { font-family: "Geist Pixel Circle", Geist, sans-serif; }
+h1 { font: 500 48px/1 Geist, Arial, sans-serif; }
+.wordmark { font-family: Ciburial; }
+.inherit { font-family: inherit; font: inherit; }
+.var { font-family: var(--strike-font-sans); }

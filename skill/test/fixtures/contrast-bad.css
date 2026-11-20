@@ -1,0 +1,3 @@
+.button { background: #10B981; color: #FFFFFF; }
+.button-ink { background-color: var(--strike-green); color: var(--strike-ink); }
+.faint { color: #62666D; background: #0C0C0C; }

@@ -1,0 +1,671 @@
+{
+  "version": "0.1.0",
+  "updated": "2026-11-20",
+  "universal": "STRIKE-DESIGN.md",
+  "targets": [
+    {
+      "id": "claude",
+      "name": "Claude",
+      "summary": "An Agent Skill. Claude loads it by itself whenever the work is for Strike.",
+      "steps": [
+        "**claude.ai:** download `strike-design.zip`, open Settings, then Capabilities, and under Skills choose Upload skill and pick the zip.",
+        "**Claude Code:** unzip it into `~/.claude/skills/` to use it everywhere, or into `.claude/skills/` inside one project.",
+        "Ask for Strike work as usual, for example \"Make a landing page hero for Strike.\""
+      ],
+      "files": [
+        {
+          "path": "claude/strike-design.zip",
+          "label": "Skill (zip)",
+          "bytes": 2845263
+        },
+        {
+          "path": "claude/strike-design/SKILL.md",
+          "label": "SKILL.md",
+          "bytes": 8306
+        }
+      ]
+    },
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "summary": "A custom GPT or a Project: the core rules as instructions, the detail as knowledge files.",
+      "steps": [
+        "Download `strike-design-chatgpt.zip` and unzip it.",
+        "Create a GPT (chatgpt.com/gpts/editor, then Configure) or a Project, and paste all of `instructions.md` into its instructions.",
+        "Upload `STRIKE-DESIGN.md`, `tokens.css`, `tokens.json` and `strike-logos.zip` from the `knowledge` folder.",
+        "For a GPT, turn on Code Interpreter & Data Analysis and Image Generation, then save."
+      ],
+      "files": [
+        {
+          "path": "chatgpt/strike-design-chatgpt.zip",
+          "label": "Everything (zip)",
+          "bytes": 732531
+        },
+        {
+          "path": "chatgpt/instructions.md",
+          "label": "Instructions",
+          "bytes": 5997
+        },
+        {
+          "path": "chatgpt/knowledge/STRIKE-DESIGN.md",
+          "label": "Knowledge: STRIKE-DESIGN.md",
+          "bytes": 25120
+        },
+        {
+          "path": "chatgpt/knowledge/tokens.css",
+          "label": "Knowledge: tokens.css",
+          "bytes": 7322
+        },
+        {
+          "path": "chatgpt/knowledge/tokens.json",
+          "label": "Knowledge: tokens.json",
+          "bytes": 5426
+        },
+        {
+          "path": "chatgpt/knowledge/strike-logos.zip",
+          "label": "Knowledge: logo files (zip)",
+          "bytes": 716592
+        },
+        {
+          "path": "chatgpt/SETUP.md",
+          "label": "Setup steps",
+          "bytes": 1022
+        }
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "summary": "Project rules: the core rule always applies, and the detailed rules load when they are needed.",
+      "steps": [
+        "Download `strike-design-cursor.zip`.",
+        "Unzip it into your project's top folder, so `.cursor` and `strike-design` sit next to your code. On a Mac, Finder hides `.cursor`; press Cmd+Shift+. to see it.",
+        "Open the project in Cursor. The Strike rules now apply to every chat in it."
+      ],
+      "files": [
+        {
+          "path": "cursor/strike-design-cursor.zip",
+          "label": "Rules and files (zip)",
+          "bytes": 1006286
+        },
+        {
+          "path": "cursor/rules/strike-design.mdc",
+          "label": "strike-design.mdc",
+          "bytes": 8205
+        },
+        {
+          "path": "cursor/rules/strike-colour.mdc",
+          "label": "strike-colour.mdc",
+          "bytes": 2439
+        },
+        {
+          "path": "cursor/rules/strike-type.mdc",
+          "label": "strike-type.mdc",
+          "bytes": 2059
+        },
+        {
+          "path": "cursor/rules/strike-logo.mdc",
+          "label": "strike-logo.mdc",
+          "bytes": 2770
+        },
+        {
+          "path": "cursor/rules/strike-layout-ui.mdc",
+          "label": "strike-layout-ui.mdc",
+          "bytes": 2449
+        },
+        {
+          "path": "cursor/rules/strike-illustration-motion.mdc",
+          "label": "strike-illustration-motion.mdc",
+          "bytes": 1819
+        },
+        {
+          "path": "cursor/rules/strike-data.mdc",
+          "label": "strike-data.mdc",
+          "bytes": 1026
+        },
+        {
+          "path": "cursor/rules/strike-formats.mdc",
+          "label": "strike-formats.mdc",
+          "bytes": 1856
+        },
+        {
+          "path": "cursor/rules/strike-words.mdc",
+          "label": "strike-words.mdc",
+          "bytes": 2792
+        },
+        {
+          "path": "cursor/rules/strike-checklist.mdc",
+          "label": "strike-checklist.mdc",
+          "bytes": 900
+        }
+      ]
+    },
+    {
+      "id": "agents",
+      "name": "Codex and other AGENTS.md tools",
+      "summary": "An AGENTS.md file and a strike-design folder, read by Codex, Cursor, Copilot's coding agent, Windsurf, Jules and others.",
+      "steps": [
+        "Download `strike-design-agents.zip` and unzip it into your project's top folder.",
+        "If the project already has an `AGENTS.md`, paste the new file's text at the end of yours instead of replacing it.",
+        "Start your agent in that project. It reads `AGENTS.md` by itself."
+      ],
+      "files": [
+        {
+          "path": "agents/strike-design-agents.zip",
+          "label": "AGENTS.md and files (zip)",
+          "bytes": 1005192
+        },
+        {
+          "path": "agents/AGENTS.md",
+          "label": "AGENTS.md",
+          "bytes": 7998
+        }
+      ]
+    },
+    {
+      "id": "copilot",
+      "name": "GitHub Copilot",
+      "summary": "Repository instructions that Copilot Chat and the coding agent read in that repository.",
+      "steps": [
+        "Download `strike-design-copilot.zip` and unzip it into your repository's top folder, so `.github` and `strike-design` sit next to your code.",
+        "If the repository already has `.github/copilot-instructions.md`, add the new text to the end of it.",
+        "Commit and push. Copilot follows the rules from then on."
+      ],
+      "files": [
+        {
+          "path": "copilot/strike-design-copilot.zip",
+          "label": "Instructions and files (zip)",
+          "bytes": 1005328
+        },
+        {
+          "path": "copilot/copilot-instructions.md",
+          "label": "copilot-instructions.md",
+          "bytes": 7998
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "summary": "A Gem: the core rules as instructions, the detail as files.",
+      "steps": [
+        "Download `strike-design-gemini.zip` and unzip it.",
+        "In Gemini, open Gems, choose New Gem and name it Strike design.",
+        "Paste all of `gem-instructions.md` into Instructions, then add `STRIKE-DESIGN.md` and the other files in the `knowledge` folder."
+      ],
+      "files": [
+        {
+          "path": "gemini/strike-design-gemini.zip",
+          "label": "Everything (zip)",
+          "bytes": 30911
+        },
+        {
+          "path": "gemini/gem-instructions.md",
+          "label": "Instructions",
+          "bytes": 5982
+        },
+        {
+          "path": "gemini/knowledge/STRIKE-DESIGN.md",
+          "label": "Knowledge: STRIKE-DESIGN.md",
+          "bytes": 25120
+        },
+        {
+          "path": "gemini/knowledge/tokens.css",
+          "label": "Knowledge: tokens.css",
+          "bytes": 7322
+        },
+        {
+          "path": "gemini/knowledge/tokens.json",
+          "label": "Knowledge: tokens.json",
+          "bytes": 5426
+        }
+      ]
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "summary": "A Space: short instructions, with the full rules as files.",
+      "steps": [
+        "Download `strike-design-perplexity.zip` and unzip it.",
+        "Create a Space called Strike design and paste `space-instructions.md` into the Space's instructions.",
+        "Upload the files in the `knowledge` folder, `STRIKE-DESIGN.md` first."
+      ],
+      "files": [
+        {
+          "path": "perplexity/strike-design-perplexity.zip",
+          "label": "Everything (zip)",
+          "bytes": 28399
+        },
+        {
+          "path": "perplexity/space-instructions.md",
+          "label": "Instructions",
+          "bytes": 789
+        },
+        {
+          "path": "perplexity/knowledge/STRIKE-DESIGN.md",
+          "label": "Knowledge: STRIKE-DESIGN.md",
+          "bytes": 25120
+        }
+      ]
+    },
+    {
+      "id": "figma",
+      "name": "Figma",
+      "summary": "Variables from the tokens, guidelines for Figma Make, and the logo files.",
+      "steps": [
+        "Download `strike-design-figma.zip` and unzip it.",
+        "Variables: import `tokens.json` with Figma's variable import or a design tokens plugin such as Tokens Studio.",
+        "Figma Make: put the text of `guidelines.md` in the file's `guidelines/Guidelines.md`.",
+        "When you need the logo, drag an SVG from `logos` onto the canvas."
+      ],
+      "files": [
+        {
+          "path": "figma/strike-design-figma.zip",
+          "label": "Everything (zip)",
+          "bytes": 20967
+        },
+        {
+          "path": "figma/tokens.json",
+          "label": "Variables: tokens.json",
+          "bytes": 5426
+        },
+        {
+          "path": "figma/guidelines.md",
+          "label": "Figma Make: guidelines.md",
+          "bytes": 11482
+        },
+        {
+          "path": "figma/SETUP.md",
+          "label": "Setup steps",
+          "bytes": 855
+        }
+      ]
+    },
+    {
+      "id": "portable",
+      "name": "Any other AI tool",
+      "summary": "One file with every rule, for any chat that can read a file or a link.",
+      "steps": [
+        "Attach `STRIKE-DESIGN.md` to the chat, or give the AI its link, and say \"Follow these rules for Strike work.\"",
+        "For tools that take files, add `strike-design-kit.zip`: the tokens, logo files and fonts."
+      ],
+      "files": [
+        {
+          "path": "STRIKE-DESIGN.md",
+          "label": "STRIKE-DESIGN.md",
+          "bytes": 25260
+        },
+        {
+          "path": "portable/strike-design-kit.zip",
+          "label": "Kit: tokens, logos, fonts (zip)",
+          "bytes": 2110292
+        }
+      ]
+    }
+  ],
+  "downloads": [
+    {
+      "path": "STRIKE-DESIGN.md",
+      "label": "All the rules in one file",
+      "bytes": 25260,
+      "kind": "markdown"
+    },
+    {
+      "path": "core.md",
+      "label": "Core rules only",
+      "bytes": 5618,
+      "kind": "markdown"
+    },
+    {
+      "path": "claude/strike-design.zip",
+      "label": "For Claude",
+      "bytes": 2845263,
+      "kind": "zip"
+    },
+    {
+      "path": "chatgpt/strike-design-chatgpt.zip",
+      "label": "For ChatGPT",
+      "bytes": 732531,
+      "kind": "zip"
+    },
+    {
+      "path": "cursor/strike-design-cursor.zip",
+      "label": "For Cursor",
+      "bytes": 1006286,
+      "kind": "zip"
+    },
+    {
+      "path": "agents/strike-design-agents.zip",
+      "label": "For Codex and other AGENTS.md tools",
+      "bytes": 1005192,
+      "kind": "zip"
+    },
+    {
+      "path": "copilot/strike-design-copilot.zip",
+      "label": "For GitHub Copilot",
+      "bytes": 1005328,
+      "kind": "zip"
+    },
+    {
+      "path": "gemini/strike-design-gemini.zip",
+      "label": "For Gemini",
+      "bytes": 30911,
+      "kind": "zip"
+    },
+    {
+      "path": "perplexity/strike-design-perplexity.zip",
+      "label": "For Perplexity",
+      "bytes": 28399,
+      "kind": "zip"
+    },
+    {
+      "path": "figma/strike-design-figma.zip",
+      "label": "For Figma",
+      "bytes": 20967,
+      "kind": "zip"
+    },
+    {
+      "path": "portable/strike-design-kit.zip",
+      "label": "Strike design kit",
+      "bytes": 2110292,
+      "kind": "zip"
+    },
+    {
+      "path": "tokens/tokens.css",
+      "label": "CSS variables",
+      "bytes": 7322,
+      "kind": "css"
+    },
+    {
+      "path": "tokens/tailwind.preset.cjs",
+      "label": "Tailwind v3 preset",
+      "bytes": 3836,
+      "kind": "js"
+    },
+    {
+      "path": "tokens/theme.css",
+      "label": "Tailwind v4 theme",
+      "bytes": 2513,
+      "kind": "css"
+    },
+    {
+      "path": "tokens/tokens.json",
+      "label": "Design tokens (JSON)",
+      "bytes": 5426,
+      "kind": "json"
+    }
+  ],
+  "logos": [
+    {
+      "path": "portable/logo/strike-lockup-3d-green.svg",
+      "label": "Lockup, 3D green",
+      "use": "Dark grounds",
+      "ground": "dark"
+    },
+    {
+      "path": "portable/logo/strike-lockup-3d-black.svg",
+      "label": "Lockup, 3D black",
+      "use": "Light grounds",
+      "ground": "light"
+    },
+    {
+      "path": "portable/logo/strike-lockup-3d-white.svg",
+      "label": "Lockup, 3D white",
+      "use": "Soft photos",
+      "ground": "photo"
+    },
+    {
+      "path": "portable/logo/strike-lockup-flat-black.svg",
+      "label": "Lockup, flat black",
+      "use": "Mint, merch, small sizes on light",
+      "ground": "mint"
+    },
+    {
+      "path": "portable/logo/strike-lockup-flat-white.svg",
+      "label": "Lockup, flat white",
+      "use": "Busy photos, green posters, merch, small sizes on dark",
+      "ground": "photo"
+    },
+    {
+      "path": "portable/logo/strike-mark-3d-green.svg",
+      "label": "Mark, 3D green",
+      "use": "Dark grounds",
+      "ground": "dark"
+    },
+    {
+      "path": "portable/logo/strike-mark-3d-black.svg",
+      "label": "Mark, 3D black",
+      "use": "Light grounds",
+      "ground": "light"
+    },
+    {
+      "path": "portable/logo/strike-mark-3d-white.svg",
+      "label": "Mark, 3D white",
+      "use": "Soft photos",
+      "ground": "photo"
+    },
+    {
+      "path": "portable/logo/strike-mark-flat-black.svg",
+      "label": "Mark, flat black",
+      "use": "Mint, merch, small sizes on light",
+      "ground": "mint"
+    },
+    {
+      "path": "portable/logo/strike-mark-flat-white.svg",
+      "label": "Mark, flat white",
+      "use": "Busy photos, merch, small sizes on dark",
+      "ground": "photo"
+    },
+    {
+      "path": "portable/logo/strike-wordmark-black.svg",
+      "label": "Wordmark, black",
+      "use": "Building lock-ups; layouts that place the mark separately",
+      "ground": "light"
+    },
+    {
+      "path": "portable/logo/strike-wordmark-white.svg",
+      "label": "Wordmark, white",
+      "use": "Building lock-ups; layouts that place the mark separately, on dark grounds and photos",
+      "ground": "dark"
+    },
+    {
+      "path": "portable/logo/strike-mark-tile.svg",
+      "label": "Mark, tile",
+      "use": "Avatars, app icons",
+      "ground": "dark"
+    },
+    {
+      "path": "portable/logo/strike-mark-disc.svg",
+      "label": "Mark, disc",
+      "use": "Round avatars, favicons",
+      "ground": "dark"
+    },
+    {
+      "path": "portable/logo/strike-og.png",
+      "label": "Link preview",
+      "use": "Social cards and link previews",
+      "ground": "dark"
+    }
+  ],
+  "colours": [
+    {
+      "token": "ground",
+      "hex": "#0C0C0C",
+      "use": "Backgrounds"
+    },
+    {
+      "token": "ink",
+      "hex": "#F9F9F9",
+      "use": "Text on ground; ground of light layouts"
+    },
+    {
+      "token": "ink-2",
+      "hex": "#B3B3B3",
+      "use": "Secondary text on dark (9.3:1)"
+    },
+    {
+      "token": "ink-3",
+      "hex": "#8A8F98",
+      "use": "Muted text and icons on dark (6.0:1)"
+    },
+    {
+      "token": "green",
+      "hex": "#10B981",
+      "use": "Primary action, focus, one highlight"
+    },
+    {
+      "token": "deep",
+      "hex": "#047857",
+      "use": "Green text or lines on light grounds (5.2:1)"
+    },
+    {
+      "token": "mark-light",
+      "hex": "#6EE7B7",
+      "use": "Logo gradient only"
+    },
+    {
+      "token": "profit",
+      "hex": "#3FD4AB",
+      "use": "Gains, buys, bids"
+    },
+    {
+      "token": "loss",
+      "hex": "#EE5E74",
+      "use": "Losses, sells, asks. Red means loss and nothing else"
+    },
+    {
+      "token": "mint",
+      "hex": "#50EBA0",
+      "use": "Poster grounds only"
+    },
+    {
+      "token": "data.yellow",
+      "hex": "#FFEF3C",
+      "use": "Charts with several series only"
+    },
+    {
+      "token": "data.sky",
+      "hex": "#0788F7",
+      "use": "Charts with several series only"
+    },
+    {
+      "token": "data.purple",
+      "hex": "#976FE6",
+      "use": "Charts with several series only"
+    },
+    {
+      "token": "dark.surface-1",
+      "hex": "#121214",
+      "use": "Cards, panels"
+    },
+    {
+      "token": "dark.surface-2",
+      "hex": "#18181B",
+      "use": "Inputs, raised controls, secondary buttons"
+    },
+    {
+      "token": "dark.surface-3",
+      "hex": "#202024",
+      "use": "Hover"
+    },
+    {
+      "token": "dark.line",
+      "hex": "#F9F9F914",
+      "use": "Hairlines and borders (8%)"
+    },
+    {
+      "token": "dark.line-strong",
+      "hex": "#F9F9F924",
+      "use": "Input borders (14%)"
+    },
+    {
+      "token": "light.ground",
+      "hex": "#F9F9F9",
+      "use": "Light mode ground"
+    },
+    {
+      "token": "light.surface-1",
+      "hex": "#FFFFFF",
+      "use": "Light mode surface-1"
+    },
+    {
+      "token": "light.surface-2",
+      "hex": "#F1F1F1",
+      "use": "Light mode surface-2"
+    },
+    {
+      "token": "light.surface-3",
+      "hex": "#E8E8E9",
+      "use": "Light mode surface-3"
+    },
+    {
+      "token": "light.ink",
+      "hex": "#0C0C0C",
+      "use": "Light mode ink"
+    },
+    {
+      "token": "light.ink-2",
+      "hex": "#4A4D52",
+      "use": "8.1:1 on light ground"
+    },
+    {
+      "token": "light.ink-3",
+      "hex": "#6B6F76",
+      "use": "4.8:1 on light ground"
+    },
+    {
+      "token": "light.line",
+      "hex": "#0C0C0C14",
+      "use": "Light mode line"
+    },
+    {
+      "token": "light.line-strong",
+      "hex": "#0C0C0C24",
+      "use": "Light mode line-strong"
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Geist",
+      "use": "Headlines and text",
+      "files": [
+        "portable/fonts/geist/Geist-Light.woff2",
+        "portable/fonts/geist/Geist-Light.ttf",
+        "portable/fonts/geist/Geist-Regular.woff2",
+        "portable/fonts/geist/Geist-Regular.ttf",
+        "portable/fonts/geist/Geist-Medium.woff2",
+        "portable/fonts/geist/Geist-Medium.ttf",
+        "portable/fonts/geist/Geist-SemiBold.woff2",
+        "portable/fonts/geist/Geist-SemiBold.ttf",
+        "portable/fonts/geist/Geist-Bold.woff2",
+        "portable/fonts/geist/Geist-Bold.ttf"
+      ]
+    },
+    {
+      "family": "Geist Mono",
+      "use": "Code, wallet addresses, order books only",
+      "files": [
+        "portable/fonts/geist-mono/GeistMono-Regular.woff2",
+        "portable/fonts/geist-mono/GeistMono-Regular.ttf",
+        "portable/fonts/geist-mono/GeistMono-Medium.woff2",
+        "portable/fonts/geist-mono/GeistMono-Medium.ttf"
+      ]
+    },
+    {
+      "family": "Geist Pixel Circle",
+      "use": "Big display numbers on posters only",
+      "files": [
+        "portable/fonts/geist-pixel/GeistPixel-Circle.woff2",
+        "portable/fonts/geist-pixel/GeistPixel-Circle.ttf"
+      ]
+    },
+    {
+      "family": "Ciburial",
+      "use": "The STRIKE wordmark only; use the logo files",
+      "files": [
+        "portable/fonts/ciburial/LCT-Ciburial-Regular.woff2",
+        "portable/fonts/ciburial/LCT-Ciburial-Regular.ttf"
+      ]
+    }
+  ]
+}

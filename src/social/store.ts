@@ -7,9 +7,10 @@ import { postText } from './text';
 import type { Post, Thread } from './types';
 
 const STORAGE = 'strike-figures:thread';
-const MODE = 'strike-figures:mode';
 
-export type Mode = 'figures' | 'thread';
+/** The three parts of the tool: the design skill (where everyone lands), the figure editor, and the thread maker. */
+export type Mode = 'skill' | 'figures' | 'thread';
+const MODES: Mode[] = ['skill', 'figures', 'thread'];
 
 /** A first thread in Strike's voice: calm, exact, the fact first. */
 export function exampleThread(): Thread {
@@ -92,10 +93,12 @@ function load(): Thread {
 }
 
 function loadMode(): Mode {
+  /* Everyone lands on the Skill page; #figures and #thread open the other parts directly. */
   try {
-    return localStorage.getItem(MODE) === 'thread' ? 'thread' : 'figures';
+    const h = location.hash.replace('#', '') as Mode;
+    return MODES.includes(h) ? h : 'skill';
   } catch {
-    return 'figures';
+    return 'skill';
   }
 }
 
@@ -122,9 +125,9 @@ export const useThread = create<ThreadState>((set, get) => ({
   selectedId: initial.posts[0]!.id,
   setMode: mode => {
     try {
-      localStorage.setItem(MODE, mode);
+      if (mode !== get().mode) history.pushState(null, '', mode === 'skill' ? location.pathname + location.search : `#${mode}`);
     } catch {
-      /* a preference only */
+      /* the address bar is a convenience only */
     }
     set({ mode });
   },
@@ -214,3 +217,11 @@ useThread.subscribe((st, prev) => {
     }
   }, 300);
 });
+
+/* Back and forward move between the tool's parts too. */
+if (typeof window !== 'undefined')
+  for (const ev of ['hashchange', 'popstate'])
+    window.addEventListener(ev, () => {
+      const m = loadMode();
+      if (m !== useThread.getState().mode) useThread.setState({ mode: m });
+    });

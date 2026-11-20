@@ -27,6 +27,7 @@ export function ModeSwitch() {
       <Seg<Mode>
         value={mode}
         options={[
+          { value: 'skill', label: 'Skill', title: 'The Strike design skill for AI tools' },
           { value: 'figures', label: 'Figures', title: 'Make illustrations' },
           { value: 'thread', label: 'Thread', title: 'Make an X thread with your illustrations' },
         ]}

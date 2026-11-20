@@ -1,0 +1,203 @@
+/* Strike design tokens. Generated from source/tokens.json; don't edit.
+   Dark is the default. Set data-theme="light" on <html> (or any element) for light. */
+:root {
+  color-scheme: dark;
+
+  /* Colour */
+  --strike-ground: #0C0C0C; /* Backgrounds */
+  --strike-ink: #F9F9F9; /* Text on ground; ground of light layouts */
+  --strike-ink-2: #B3B3B3; /* Secondary text on dark (9.3:1) */
+  --strike-ink-3: #8A8F98; /* Muted text and icons on dark (6.0:1) */
+  --strike-green: #10B981; /* Primary action, focus, one highlight */
+  --strike-deep: #047857; /* Green text or lines on light grounds (5.2:1) */
+  --strike-mark-light: #6EE7B7; /* Logo gradient only */
+  --strike-profit: #3FD4AB; /* Gains, buys, bids */
+  --strike-loss: #EE5E74; /* Losses, sells, asks. Red means loss and nothing else */
+  --strike-mint: #50EBA0; /* Poster grounds only */
+  --strike-data-yellow: #FFEF3C; /* Charts with several series only */
+  --strike-data-sky: #0788F7; /* Charts with several series only */
+  --strike-data-purple: #976FE6; /* Charts with several series only */
+  --strike-surface-1: #121214; /* Cards, panels */
+  --strike-surface-2: #18181B; /* Inputs, raised controls, secondary buttons */
+  --strike-surface-3: #202024; /* Hover */
+  --strike-line: #F9F9F914; /* Hairlines and borders (8%) */
+  --strike-line-strong: #F9F9F924; /* Input borders (14%) */
+  --strike-green-text: var(--strike-green); /* Green text: green on dark, deep on light */
+  /* As RGB channels, for rgb(var(--strike-ground-rgb) / 70%) */
+  --strike-ground-rgb: 12 12 12;
+  --strike-ink-rgb: 249 249 249;
+  --strike-ink-2-rgb: 179 179 179;
+  --strike-ink-3-rgb: 138 143 152;
+  --strike-surface-1-rgb: 18 18 20;
+  --strike-surface-2-rgb: 24 24 27;
+  --strike-surface-3-rgb: 32 32 36;
+
+  /* Type */
+  --strike-font-sans: Geist, Arial, sans-serif;
+  --strike-font-mono: "Geist Mono", ui-monospace, monospace; /* Code, wallet addresses, order books only */
+  --strike-font-display-pixel: "Geist Pixel Circle", Geist, sans-serif; /* Big display numbers on posters only */
+  --strike-font-wordmark: Ciburial; /* The STRIKE wordmark only; use the logo files */
+  --strike-weight-light: 300;
+  --strike-weight-regular: 400;
+  --strike-weight-medium: 500;
+  --strike-weight-semibold: 600;
+  --strike-text-display-size: 72px;
+  --strike-text-display-line-height: 0.95;
+  --strike-text-display-tracking: -0.03em;
+  --strike-text-display-weight: 500;
+  --strike-text-h1-size: 48px;
+  --strike-text-h1-line-height: 1;
+  --strike-text-h1-tracking: -0.03em;
+  --strike-text-h1-weight: 500;
+  --strike-text-h2-size: 32px;
+  --strike-text-h2-line-height: 1.1;
+  --strike-text-h2-tracking: -0.02em;
+  --strike-text-h2-weight: 500;
+  --strike-text-h3-size: 24px;
+  --strike-text-h3-line-height: 1.2;
+  --strike-text-h3-tracking: -0.015em;
+  --strike-text-h3-weight: 500;
+  --strike-text-body-l-size: 18px;
+  --strike-text-body-l-line-height: 1.5;
+  --strike-text-body-l-tracking: 0;
+  --strike-text-body-l-weight: 400;
+  --strike-text-body-size: 16px;
+  --strike-text-body-line-height: 1.5;
+  --strike-text-body-tracking: 0;
+  --strike-text-body-weight: 400;
+  --strike-text-small-size: 14px;
+  --strike-text-small-line-height: 1.45;
+  --strike-text-small-tracking: 0;
+  --strike-text-small-weight: 400;
+  --strike-text-label-size: 12px;
+  --strike-text-label-line-height: 1.4;
+  --strike-text-label-tracking: 0.02em;
+  --strike-text-label-weight: 500;
+
+  /* Space: the 4 px scale; posters, cards and illustrations use the 50 px grid */
+  --strike-space-1: 4px;
+  --strike-space-2: 8px;
+  --strike-space-3: 12px;
+  --strike-space-4: 16px;
+  --strike-space-5: 24px;
+  --strike-space-6: 32px;
+  --strike-space-7: 48px;
+  --strike-space-8: 64px;
+  --strike-space-9: 96px;
+  --strike-space-10: 128px;
+  --strike-grid: 50px;
+
+  /* Radius */
+  --strike-radius-sm: 6px; /* Small controls */
+  --strike-radius-md: 8px; /* Buttons, inputs */
+  --strike-radius-lg: 12px; /* Cards */
+  --strike-radius-pill: 9999px;
+
+  /* Size */
+  --strike-size-control: 40px;
+  --strike-size-control-sm: 32px;
+  --strike-size-logo-mark-min: 16px;
+  --strike-size-logo-lockup-min-height: 20px;
+
+  /* Motion */
+  --strike-duration-fast: 120ms;
+  --strike-duration-base: 200ms;
+  --strike-duration-slow: 320ms;
+  --strike-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --strike-ground: #F9F9F9;
+  --strike-surface-1: #FFFFFF;
+  --strike-surface-2: #F1F1F1;
+  --strike-surface-3: #E8E8E9;
+  --strike-ink: #0C0C0C;
+  --strike-ink-2: #4A4D52;
+  --strike-ink-3: #6B6F76;
+  --strike-line: #0C0C0C14;
+  --strike-line-strong: #0C0C0C24;
+  --strike-green-text: var(--strike-deep);
+  --strike-ground-rgb: 249 249 249;
+  --strike-surface-1-rgb: 255 255 255;
+  --strike-surface-2-rgb: 241 241 241;
+  --strike-surface-3-rgb: 232 232 233;
+  --strike-ink-rgb: 12 12 12;
+  --strike-ink-2-rgb: 74 77 82;
+  --strike-ink-3-rgb: 107 111 118;
+}
+
+/* Type scale. Headings balance their lines; the main title is at most 2 lines. */
+.strike-display,
+.strike-h1,
+.strike-h2,
+.strike-h3 {
+  text-wrap: balance;
+}
+.strike-display {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-display-size);
+  line-height: var(--strike-text-display-line-height);
+  letter-spacing: var(--strike-text-display-tracking);
+  font-weight: var(--strike-text-display-weight);
+  font-kerning: normal;
+}
+.strike-h1 {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-h1-size);
+  line-height: var(--strike-text-h1-line-height);
+  letter-spacing: var(--strike-text-h1-tracking);
+  font-weight: var(--strike-text-h1-weight);
+  font-kerning: normal;
+}
+.strike-h2 {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-h2-size);
+  line-height: var(--strike-text-h2-line-height);
+  letter-spacing: var(--strike-text-h2-tracking);
+  font-weight: var(--strike-text-h2-weight);
+  font-kerning: normal;
+}
+.strike-h3 {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-h3-size);
+  line-height: var(--strike-text-h3-line-height);
+  letter-spacing: var(--strike-text-h3-tracking);
+  font-weight: var(--strike-text-h3-weight);
+  font-kerning: normal;
+}
+.strike-body-l {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-body-l-size);
+  line-height: var(--strike-text-body-l-line-height);
+  letter-spacing: var(--strike-text-body-l-tracking);
+  font-weight: var(--strike-text-body-l-weight);
+  font-kerning: normal;
+}
+.strike-body {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-body-size);
+  line-height: var(--strike-text-body-line-height);
+  letter-spacing: var(--strike-text-body-tracking);
+  font-weight: var(--strike-text-body-weight);
+  font-kerning: normal;
+}
+.strike-small {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-small-size);
+  line-height: var(--strike-text-small-line-height);
+  letter-spacing: var(--strike-text-small-tracking);
+  font-weight: var(--strike-text-small-weight);
+  font-kerning: normal;
+}
+.strike-label {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-label-size);
+  line-height: var(--strike-text-label-line-height);
+  letter-spacing: var(--strike-text-label-tracking);
+  font-weight: var(--strike-text-label-weight);
+  font-kerning: normal;
+}
+.strike-tabular {
+  font-variant-numeric: tabular-nums;
+}

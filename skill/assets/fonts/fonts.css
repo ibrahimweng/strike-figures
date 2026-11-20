@@ -1,0 +1,32 @@
+/* Strike fonts. All four families are under the SIL Open Font License 1.1 (OFL.txt in each folder).
+   Link this file, then use: font-family: "Geist", Arial, sans-serif; */
+
+/* Geist: headlines and body */
+@font-face { font-family: "Geist"; font-style: normal; font-weight: 300; font-display: swap;
+  src: url("geist/Geist-Light.woff2") format("woff2"), url("geist/Geist-Light.ttf") format("truetype"); }
+@font-face { font-family: "Geist"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("geist/Geist-Regular.woff2") format("woff2"), url("geist/Geist-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Geist"; font-style: normal; font-weight: 500; font-display: swap;
+  src: url("geist/Geist-Medium.woff2") format("woff2"), url("geist/Geist-Medium.ttf") format("truetype"); }
+@font-face { font-family: "Geist"; font-style: normal; font-weight: 600; font-display: swap;
+  src: url("geist/Geist-SemiBold.woff2") format("woff2"), url("geist/Geist-SemiBold.ttf") format("truetype"); }
+@font-face { font-family: "Geist"; font-style: normal; font-weight: 700; font-display: swap;
+  src: url("geist/Geist-Bold.woff2") format("woff2"), url("geist/Geist-Bold.ttf") format("truetype"); }
+
+/* Geist Mono: code, wallet addresses, order books */
+@font-face { font-family: "Geist Mono"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("geist-mono/GeistMono-Regular.woff2") format("woff2"), url("geist-mono/GeistMono-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Geist Mono"; font-style: normal; font-weight: 500; font-display: swap;
+  src: url("geist-mono/GeistMono-Medium.woff2") format("woff2"), url("geist-mono/GeistMono-Medium.ttf") format("truetype"); }
+
+/* Geist Pixel Circle: display only (big numbers on posters) */
+@font-face { font-family: "Geist Pixel Circle"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("geist-pixel/GeistPixel-Circle.woff2") format("woff2"), url("geist-pixel/GeistPixel-Circle.ttf") format("truetype"); }
+
+/* Ciburial: the wordmark's typeface; not for text */
+@font-face { font-family: "Ciburial"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("ciburial/LCT-Ciburial-Regular.woff2") format("woff2"), url("ciburial/LCT-Ciburial-Regular.ttf") format("truetype"); }
+
+/* Optional: every Geist weight (100-900) from one file. Use font-family: "Geist Variable". */
+@font-face { font-family: "Geist Variable"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("geist/Geist-Variable.woff2") format("woff2-variations"), url("geist/Geist-Variable.woff2") format("woff2"); }

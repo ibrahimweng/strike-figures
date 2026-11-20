@@ -1,0 +1,87 @@
+/* Strike theme for Tailwind CSS v4. Generated from source/tokens.json; don't edit.
+   @import "tailwindcss"; @import "./theme.css";
+   Dark is the default; data-theme="light" on an element switches it and its children. */
+@theme {
+  --color-*: initial;
+  --color-ground: #0C0C0C;
+  --color-ink: #F9F9F9;
+  --color-ink-2: #B3B3B3;
+  --color-ink-3: #8A8F98;
+  --color-green: #10B981;
+  --color-deep: #047857;
+  --color-mark-light: #6EE7B7;
+  --color-profit: #3FD4AB;
+  --color-loss: #EE5E74;
+  --color-mint: #50EBA0;
+  --color-data-yellow: #FFEF3C;
+  --color-data-sky: #0788F7;
+  --color-data-purple: #976FE6;
+  --color-surface-1: #121214;
+  --color-surface-2: #18181B;
+  --color-surface-3: #202024;
+  --color-line: #F9F9F914;
+  --color-line-strong: #F9F9F924;
+
+  --font-*: initial;
+  --font-sans: Geist, Arial, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-pixel: "Geist Pixel Circle", Geist, sans-serif;
+
+  --text-*: initial;
+  --text-display: 72px;
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 500;
+  --text-h1: 48px;
+  --text-h1--line-height: 1;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h1--font-weight: 500;
+  --text-h2: 32px;
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 500;
+  --text-h3: 24px;
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3--font-weight: 500;
+  --text-body-l: 18px;
+  --text-body-l--line-height: 1.5;
+  --text-body-l--letter-spacing: 0;
+  --text-body-l--font-weight: 400;
+  --text-body: 16px;
+  --text-body--line-height: 1.5;
+  --text-body--letter-spacing: 0;
+  --text-body--font-weight: 400;
+  --text-small: 14px;
+  --text-small--line-height: 1.45;
+  --text-small--letter-spacing: 0;
+  --text-small--font-weight: 400;
+  --text-label: 12px;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.02em;
+  --text-label--font-weight: 500;
+
+  --radius-*: initial;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* p-4 is 16px. Stay on the scale: 1, 2, 3, 4, 6, 8, 12, 16, 24, 32. */
+  --spacing: 4px;
+  --spacing-grid: 50px;
+
+  --ease-strike: cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme="light"] {
+  --color-ground: #F9F9F9;
+  --color-surface-1: #FFFFFF;
+  --color-surface-2: #F1F1F1;
+  --color-surface-3: #E8E8E9;
+  --color-ink: #0C0C0C;
+  --color-ink-2: #4A4D52;
+  --color-ink-3: #6B6F76;
+  --color-line: #0C0C0C14;
+  --color-line-strong: #0C0C0C24;
+}

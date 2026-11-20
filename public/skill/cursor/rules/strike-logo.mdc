@@ -1,0 +1,47 @@
+---
+description: Strike brand, logo. Which logo file for which ground, minimum sizes, clear space, misuse, and sub-brand lockups. Read whenever the logo appears.
+globs:
+alwaysApply: false
+---
+
+# Logo
+
+The mark is three stacked layers. The logo is 3D by default.
+
+## Which file
+| Ground | Use | File (strike-design/assets/logo/) |
+|---|---|---|
+| Dark (ground #0C0C0C, product UI) | 3D green mark, white STRIKE | strike-lockup-3d-green.svg · strike-mark-3d-green.svg |
+| Light (white, light grey) | 3D black | strike-lockup-3d-black.svg · strike-mark-3d-black.svg |
+| Mint, very bright grounds | Flat black | strike-lockup-flat-black.svg · strike-mark-flat-black.svg |
+| Photo, soft | 3D white | strike-lockup-3d-white.svg · strike-mark-3d-white.svg |
+| Photo, busy or noisy; green posters | Flat white | strike-lockup-flat-white.svg · strike-mark-flat-white.svg |
+| Merch, one-colour print, embroidery | Flat black or flat white | strike-*-flat-*.svg |
+| Small sizes where 3D layers blur (under ~32 px) | Flat | strike-mark-flat-*.svg |
+| Avatars, app icons | Mark on its tile | strike-mark-tile.svg |
+| Round avatars, favicons | Mark on a disc | strike-mark-disc.svg |
+| Link previews | 1200 × 630 | strike-og.png |
+
+- The wordmark alone (strike-wordmark-black/white.svg) is for places where the mark already appears nearby.
+- Use the lockup where there's room for the name, the mark alone where there isn't.
+
+## Rules
+- Mark at least 16 px; lockup at least 20 px tall.
+- Clear space: one layer of the mark on every side.
+- Never on a green ground in UI. On posters the flat black logo may sit on mint.
+- Never recolour, outline, add shadows, glows or other effects, stretch, rotate, separate the layers, or redraw it.
+- Text: write "Strike". STRIKE in capitals, tracked 0.22 em in Ciburial, exists only inside the logo files.
+- Place it in a corner of the layout grid, not centred over content, unless the logo is the subject (a cover, a sign-off).
+
+## Sub-brands (only when asked)
+Strike has no official sub-brands. When a user asks for one, build it the way the brand book does. M is the height of the mark:
+- **Horizontal:**
+  - the mark;
+  - a 0.43 M gap;
+  - STRIKE (cap height 0.47 M, centred on the mark);
+  - a 0.47 M gap;
+  - the name in Geist Medium, sentence case, 1.22× STRIKE's height, on STRIKE's baseline.
+- **Stacked:** the small lockup on top. Below it, 0.27 M lower, the name in Geist Medium at 1.31 M, left-aligned.
+- **Powered by:** "Powered by" in Geist Medium at 0.6× STRIKE's cap height, centred on the mark, 0.6 M before it.
+
+With the repo's scripts available, generate it: `node strike-design/scripts/lockup.mjs --name "Markets" --layout horizontal --version 3d-green`. Otherwise compose it from the logo files with these proportions.

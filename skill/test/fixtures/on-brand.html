@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strike: options on every market, every hour</title>
+<link rel="stylesheet" href="../../assets/fonts/fonts.css">
+<style>
+  :root {
+    --strike-ground: #0C0C0C;
+    --strike-surface-1: #121214;
+    --strike-surface-2: #18181B;
+    --strike-ink: #F9F9F9;
+    --strike-ink-2: #B3B3B3;
+    --strike-ink-3: #8A8F98;
+    --strike-green: #10B981;
+    --strike-line: #F9F9F914;
+  }
+  body { margin: 0; background: var(--strike-ground); color: var(--strike-ink); font-family: Geist, Arial, sans-serif; font-size: 16px; line-height: 1.5; }
+  header, main, footer { max-width: 1120px; margin: 0 auto; padding: 24px 64px; }
+  h1 { font-size: 48px; font-weight: 500; line-height: 1; letter-spacing: -0.03em; text-wrap: balance; margin: 96px 0 24px; }
+  h2 { font-size: 24px; font-weight: 500; line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 8px; }
+  .lede { color: var(--strike-ink-2); max-width: 60ch; margin: 0 0 32px; }
+  .actions { display: flex; gap: 12px; margin-bottom: 64px; }
+  .primary { background: var(--strike-green); color: var(--strike-ground); border: 0; border-radius: 8px; height: 40px; padding: 0 16px; font: 500 16px/1 Geist, Arial, sans-serif; }
+  .secondary { background: var(--strike-surface-2); color: var(--strike-ink); border: 1px solid var(--strike-line); border-radius: 8px; height: 40px; padding: 0 16px; }
+  .card { background: var(--strike-surface-1); border: 1px solid var(--strike-line); border-radius: 12px; padding: 24px; }
+  .num { font-variant-numeric: tabular-nums; }
+  footer { color: var(--strike-ink-3); font-size: 14px; border-top: 1px solid var(--strike-line); }
+  footer a { color: var(--strike-ink-2); }
+</style>
+</head>
+<body>
+<header><img src="../../assets/logo/strike-lockup-3d-green.svg" alt="STRIKE" height="24"></header>
+<main>
+  <h1>Options that never close</h1>
+  <p class="lede">Trade calls and puts on stocks, indices, pre-IPO companies, GPU compute and crypto from one margin account, 168 hours a week.</p>
+  <div class="actions">
+    <button class="primary">Join the waitlist</button>
+    <button class="secondary">Read the docs</button>
+  </div>
+  <section class="card">
+    <h2>A daily expiry at <span class="num">20:00</span> ET</h2>
+    <p>European style and cash-settled in USDC, with weeklies and monthlies too.</p>
+  </section>
+</main>
+<footer>
+  <p>Options involve risk. Closed beta, invite required. <a href="https://strikelabs.app/risk">strikelabs.app/risk</a></p>
+</footer>
+</body>
+</html>

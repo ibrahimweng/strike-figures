@@ -1,6 +1,8 @@
 # Strike Figures
 
-Figures is a small tool for making Strike's illustrations: line-art figures, flat or in 3D, that move. It also makes posts for X threads, with an illustration on one side and words on the other.
+Figures is Strike's design tool. It has three parts: the Strike design skill for AI tools, an illustration maker, and an X thread maker.
+
+The illustration maker makes Strike's illustrations: line-art figures, flat or in 3D, that move. It also makes posts for X threads, with an illustration on one side and words on the other.
 
 Every figure is a real 3D scene. You can:
 - turn it to any angle, or look straight down for the flat version;
@@ -13,6 +15,32 @@ It comes with a library of 65 illustrations, all drawn by the same house rules:
 - 17 options-trading scenes;
 - 16 tech scenes;
 - 15 from Strike's brand book.
+
+## Skill: the Strike design skill
+
+The tool opens on **Skill**. It's the Strike brand packaged for AI tools: give any AI the link on that page and everything it makes follows the brand.
+- **Copy link:** a file any AI that can read a web page can follow.
+- **Install it:** steps and files for Claude, ChatGPT, Cursor, Codex and other AGENTS.md tools, Copilot, Gemini, Perplexity and Figma.
+- **Downloads:** CSS variables, the Tailwind presets and the design tokens.
+- **Logo, colour and type:** at a glance, with each logo file ready to download.
+
+The skill's source lives in `skill/` (see `skill/README.md`):
+- the rules: `skill/source/`;
+- the logos, fonts and posters: `skill/assets/`;
+- the build: `skill/scripts/build.mjs`;
+- a brand checker: `skill/scripts/check.mjs`;
+- a sub-brand lock-up generator: `skill/scripts/lockup.mjs`.
+
+`npm run skill:build` writes the files the page serves into `public/skill/`. Commit them, and Vercel serves them at `/skill/` on your domain.
+
+| Command | What it does |
+| --- | --- |
+| `npm run skill:build` | Rebuild the skill's files into `public/skill/` after changing anything in `skill/source` or `skill/assets` |
+| `npm run skill:check -- <files>` | Check pages, CSS or SVGs against the brand |
+| `npm run skill:lockup -- --name "Markets" --layout horizontal --version 3d-green` | Build a sub-brand lock-up (only when one is asked for) |
+| `npm run skill:test` | Run the skill's tests |
+
+Links: `#figures` and `#thread` open those parts directly.
 
 ## Using it (no setup knowledge needed)
 

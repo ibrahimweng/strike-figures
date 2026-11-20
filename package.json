@@ -11,7 +11,11 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "render": "vite-node scripts/render-presets.ts --",
-    "glyphs": "node scripts/build-glyphs.mjs"
+    "glyphs": "node scripts/build-glyphs.mjs",
+    "skill:build": "node skill/scripts/build.mjs --out ../public/skill",
+    "skill:check": "node skill/scripts/check.mjs",
+    "skill:test": "npm --prefix skill test",
+    "skill:lockup": "node skill/scripts/lockup.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "5.3.0",

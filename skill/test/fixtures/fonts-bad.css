@@ -1,0 +1,4 @@
+body { font-family: Inter, sans-serif; }
+h1 { font: 500 48px/1 "Playfair Display", serif; }
+.label { font-family: Ciburial; }
+:root { --font-heading: Roboto; }

@@ -1,0 +1,4 @@
+.a { border-radius: 4px; }
+.b { border-radius: 8px 8px 16px 8px; }
+.c { border-top-left-radius: 1rem; }
+.d { border-radius: 100%; }
