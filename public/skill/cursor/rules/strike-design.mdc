@@ -78,7 +78,7 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 - Labels: Geist, a ticker in Medium over its value in Regular ("AMD" / "IV 106.2%").
 - Motion is calm: one thing moves at a time and returns to rest. No bounce, no flashing.
 - Shapes **gather** into a meeting point with an ease-in, cubic-bezier(0.55, 0, 0.85, 0), 400 ms, and **release** from it with an ease-out, cubic-bezier(0.15, 1, 0.6, 1), 320 ms; then rest 280 ms (a 1 s loop). Plain UI uses cubic-bezier(0.2, 0, 0, 1), 120–200 ms.
-- Circle compositions: five equal circles, three over two, each touching its neighbours, in one grey. To move, one circle grows (up to 2×) as the others shrink, always passing back through the five equal circles.
+- Circle compositions: five equal circles, three over two, each touching its neighbours, drawn as line art (grey outlines, ground-colour faces, the focus in green dots), flat or 2:1. To move, one circle grows (up to 2×) as the others shrink, always passing back through the five equal circles. Every animation uses these curves, turns included (in eased steps, never constant speed).
 
 ## Words
 - Verbal branding is still being written: keep copy short, plain and factual. No hype, no exclamation marks, no emoji in brand copy.

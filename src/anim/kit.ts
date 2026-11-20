@@ -4,17 +4,21 @@
    nudged), so loops still work on figures someone has edited.
 
    The house rule for motion, from Strike's tone of voice (calm, exact, never
-   hyped): one idea moves at a time, slowly, with eased starts and stops, and
-   comes back to rest. No bounces, no flashes. */
+   hyped): one idea moves at a time and comes back to rest. Every easing here
+   is the motion system's (system.ts): gather into the middle of a move with
+   an ease-in, release out of it with an ease-out. No bounces, no flashes. */
 import type { DotFill, Scene, SceneObject } from '../model/types';
+import { inout, pulse, steps, tri } from './system';
+
+export { inout, pulse, steps };
 
 export type V = [number, number, number];
 
-/** Smoothstep, clamped: 0 before 0, 1 after 1. */
-export const ease = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+/** A move from 0 to 1, clamped: gather, then release (the system's inout). */
+export const ease = inout;
 
-/** 0 outside [a, b]; inside, rises smoothly to 1 at the middle and falls back to 0. */
-export const bump = (t: number, a: number, b: number) => (t <= a || t >= b ? 0 : 0.5 - 0.5 * Math.cos((2 * Math.PI * (t - a)) / (b - a)));
+/** 0 outside [a, b]; inside, moves out to 1 at the middle and back to 0 (the system's pulse). */
+export const bump = pulse;
 
 /** Up at [a, b] then down at [c, d]: 0 → 1 → 0 with a hold between. */
 export const hold = (t: number, a: number, b: number, c: number, d: number) => (t < c ? ease((t - a) / (b - a)) : 1 - ease((t - c) / (d - c)));
@@ -69,12 +73,12 @@ export function fade(o: SceneObject | null, k: number) {
 }
 
 /** 0 at the start and end of the loop, 1 in the middle: lets an effect fade in and out so the loop rests at t = 0. */
-export const envelope = (t: number) => 0.5 - 0.5 * Math.cos(2 * Math.PI * t);
+export const envelope = (t: number) => pulse(t, 0, 1);
 
 /** Pass a band of light across an object's dots during the loop (`lag`: how far behind, 0..1). */
 export function sweep(o: SceneObject | null, t: number, amount = 0.7, lag = 0) {
   if (!o) return;
-  for (const d of dotsOf(o)) d.sweep = { phase: t - lag, amount: amount * envelope(t) };
+  for (const d of dotsOf(o)) d.sweep = { phase: inout(t) - lag, amount: amount * envelope(t) };
 }
 
 /** Shift a dot fill's wave along (one whole period over the loop keeps it seamless). */
@@ -96,7 +100,10 @@ export function orbit(o: SceneObject | null, deg: number, centre: V = [0, 0, 0])
 }
 
 /** A wave that travels: 0 at t = 0 and t = 1, swinging ±1 in between, `lag` (0..1) behind. */
-export const swing = (t: number, lag = 0) => Math.sin(2 * Math.PI * (t - lag)) * (0.5 - 0.5 * Math.cos(2 * Math.PI * t));
+export const swing = (t: number, lag = 0) => tri(t - lag) * envelope(t);
+
+/** A turn in eased steps: `n` beats, each a rest and then a move, `deg` in all over the loop. */
+export const turn = (t: number, deg: number, n = 4) => deg * steps(t, n);
 
 /** The numbers in a name ("Cell 3,4" → [3, 4], "Column 5 · 3" → [5, 3], "Node 212" → [212]). */
 export const nums = (name: string) => (name.match(/\d+/g) ?? []).map(Number);

@@ -10,11 +10,11 @@ Every figure is a real 3D scene. You can:
 - play its animation;
 - export it as SVG, PNG, MP4, GIF, animated SVG or Lottie.
 
-It comes with a library of 65 illustrations, all drawn by the same house rules:
+It comes with a library of 66 illustrations, all drawn by the same house rules:
 - 17 data visualisations;
 - 17 options-trading scenes;
 - 16 tech scenes;
-- 15 from Strike's brand book.
+- 16 brand: 15 from Strike's brand book and the motion system's circles.
 
 ## Skill: the Strike design skill
 

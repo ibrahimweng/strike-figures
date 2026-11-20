@@ -1,5 +1,6 @@
-/* The library: sixty-five illustrations, all drawn by the kit's rules (see kit.ts):
-   17 data, 17 options, 16 tech, and 15 from Strike's brand book. */
+/* The library: sixty-six illustrations, all drawn by the kit's rules (see kit.ts):
+   17 data, 17 options, 16 tech, and 16 brand (15 from Strike's brand book, plus
+   the motion system's circles). */
 import type { Loop } from '../anim/motion';
 import type { Scene } from '../model/types';
 import { BRAND } from './brand';

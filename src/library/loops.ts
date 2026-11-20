@@ -3,7 +3,7 @@
    things by name and change them relatively, so they keep working on a
    figure someone has edited (missing things are skipped). */
 import type { Loop } from '../anim/motion';
-import { allDots, bump, dotsOf, envelope, fade, grow, move, named, nums, one, orbit, spin, sweep, swing } from '../anim/kit';
+import { allDots, bump, dotsOf, envelope, fade, grow, inout, move, named, nums, one, orbit, spin, sweep, swing, turn } from '../anim/kit';
 import type { SceneObject } from '../model/types';
 
 /** Things rise one after another and settle back. */
@@ -15,7 +15,7 @@ const breathe = (list: SceneObject[], t: number, depth: number, spread = 0.5, wi
   list.forEach((o, i) => grow(o, 1 - depth * bump(t, (i / Math.max(1, list.length)) * spread + 0.04, (i / Math.max(1, list.length)) * spread + 0.04 + width)));
 
 /** Light passes across every dotted face. */
-const shine = (sc: Parameters<Loop>[0], t: number, amount = 0.65) => allDots(sc, d => (d.sweep = { phase: t, amount: amount * envelope(t) }));
+const shine = (sc: Parameters<Loop>[0], t: number, amount = 0.65) => allDots(sc, d => (d.sweep = { phase: inout(t), amount: amount * envelope(t) }));
 
 /** Light passes across each object's dots in turn. */
 const shineEach = (list: SceneObject[], t: number, amount = 0.7) => list.forEach((o, i) => sweep(o, t, amount, i / Math.max(1, list.length)));
@@ -100,7 +100,7 @@ export const LOOPS: Record<string, Loop> = {
   expiry: (sc, t) => ripple(named(sc, 'Day'), t, 4, 0.6, 0.3),
   'always-open': (sc, t) => {
     const pin = one(sc, 'Pin');
-    orbit(one(sc, 'Minute hand'), -360 * t, pin ? [pin.position[0], 0, pin.position[2]] : [0, 0, 0]);
+    orbit(one(sc, 'Minute hand'), -turn(t, 360), pin ? [pin.position[0], 0, pin.position[2]] : [0, 0, 0]);
   },
   theta: (sc, t) => breathe(named(sc, 'Day'), t, 0.3, 0.55, 0.4),
   greeks: (sc, t) => ripple(['DELTA', 'GAMMA', 'VEGA', 'THETA'].map(n => one(sc, n)).filter((o): o is SceneObject => !!o), t, 6, 0.5, 0.42),
@@ -150,7 +150,7 @@ export const LOOPS: Record<string, Loop> = {
   gears: (sc, t) => {
     const g = one(sc, 'Gear');
     const teeth = g?.shape.kind === 'outline' ? Math.max(1, Math.round(g.shape.points.length / 4)) : 12;
-    spin(g, (360 / teeth) * t);
+    spin(g, turn(t, 360 / teeth));
     sweep(one(sc, 'Engine'), t, 0.5);
   },
   latency: (sc, t) => {
@@ -163,7 +163,7 @@ export const LOOPS: Record<string, Loop> = {
     const pins = sc.objects.filter(o => o.name === 'Pin');
     sc.objects.filter(o => o.name === 'Minute hand').forEach((h, i) => {
       const p = pins[i];
-      orbit(h, -360 * t, p ? [p.position[0], 0, p.position[2]] : [0, 0, 0]);
+      orbit(h, -turn(t, 360), p ? [p.position[0], 0, p.position[2]] : [0, 0, 0]);
     });
   },
   cubes: (sc, t) => named(sc, 'Node').forEach(o => {

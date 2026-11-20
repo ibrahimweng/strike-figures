@@ -1,13 +1,16 @@
 /* The Motion page and its live pieces: circle loops and the two curves. */
-import { useEffect, useRef } from 'react';
-import { bezier, type Circle, circlesAt, css, curveAt, CYCLE, EASE, FOCUS_RIGHT, type Move, MS, REST } from './circles';
+import { useEffect, useMemo, useRef } from 'react';
+import { bezier, circlesAt, css, curveAt, CYCLE, EASE, type Move, MS } from '../anim/system';
+import { renderScene } from '../engine/render';
+import { buildSvg, serialize } from '../engine/svg';
+import { type CircleView, circleScene, setCircles } from '../library/circleFigure';
 import { type Copy, Group } from './shared';
 
 const GREY = '#B3B3B3';
 const still = () => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Runs a callback every frame while mounted (or once, when motion is reduced). */
-function useFrames(draw: (ms: number) => void, first: number) {
+function useFrames(draw: (ms: number) => void, first: number, fps = 60) {
   const ref = useRef(draw);
   ref.current = draw;
   useEffect(() => {
@@ -16,42 +19,40 @@ function useFrames(draw: (ms: number) => void, first: number) {
       return;
     }
     let raf = 0;
+    let last = -1e9;
     const start = performance.now();
     const tick = (now: number) => {
-      ref.current(now - start);
+      if (now - last >= 1000 / fps - 1) {
+        last = now;
+        ref.current(now - start);
+      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [first]);
+  }, [first, fps]);
 }
 
-const VIEW = { focus: '-5.6 -4.7 11.2 7', press: '-3.6 -2.6 7.2 5.2' };
+let ids = 0;
+const SIZE = { focus: [560, 360], press: [480, 300], still: [420, 260] } as const;
 
-/** Five circles running one move on a loop. */
-export function CircleLoop({ move, className }: { move: Move; className?: string }) {
-  const svg = useRef<SVGSVGElement>(null);
-  useFrames(
-    ms => {
-      const cs = svg.current?.children;
-      if (!cs) return;
-      circlesAt(move, ms).forEach(([x, y, r], i) => {
-        const c = cs[i] as SVGCircleElement | undefined;
-        c?.setAttribute('cx', x.toFixed(3));
-        c?.setAttribute('cy', y.toFixed(3));
-        c?.setAttribute('r', r.toFixed(3));
-      });
-    },
-    move === 'focus' ? MS.rest + MS.gather + MS.release : 0,
-  );
-  const first: Circle[] = move === 'focus' ? FOCUS_RIGHT : REST;
-  return (
-    <svg ref={svg} className={className} viewBox={VIEW[move]} aria-hidden>
-      {first.map(([x, y, r], i) => (
-        <circle key={i} cx={x} cy={y} r={r} fill={GREY} />
-      ))}
-    </svg>
-  );
+/** The five circles, drawn by the illustration engine (flat or 2:1), running one move or still. */
+export function CircleFigure({ move, view, guides, className }: { move: Move | 'still'; view: CircleView; guides?: boolean; className?: string }) {
+  const host = useRef<HTMLDivElement>(null);
+  const prefix = useMemo(() => `circ${ids++}`, []);
+  const base = useMemo(() => {
+    const [width, height] = SIZE[move];
+    return circleScene(view, move, { width, height, guides, small: true });
+  }, [move, view, guides]);
+  const draw = (ms: number) => {
+    const el = host.current;
+    if (!el) return;
+    const sc = structuredClone(base);
+    if (move !== 'still') setCircles(sc, circlesAt(move, ms));
+    el.innerHTML = serialize(buildSvg(renderScene(sc), { background: false, idPrefix: prefix }));
+  };
+  useFrames(draw, move === 'focus' ? MS.rest + MS.gather + MS.release : 0, move === 'still' ? 0.001 : 30);
+  return <div className={`sk-circles ${className ?? ''}`} ref={host} aria-hidden />;
 }
 
 /** One curve, drawn on a square, with a dot running along it. */
@@ -127,14 +128,11 @@ export function MotionPage({ copied, copy }: { copied: string | null; copy: Copy
 
       <Group title="Composition" line="Five equal circles, three over two, each touching its neighbours.">
         <div className="sk-compose">
-          <svg viewBox="-3.4 -2.2 6.8 4.4" aria-hidden>
-            {REST.map(([x, y, r], i) => (
-              <circle key={i} cx={x} cy={y} r={r} fill={GREY} />
-            ))}
-          </svg>
+          <CircleFigure move="still" view="flat" guides />
           <ul className="sk-dos">
-            <li>Centres 2r apart in a row; rows r·√3 apart, the lower two in the gaps.</li>
-            <li>One grey. At most one green, for the one thing that matters.</li>
+            <li>Centres 2r apart in a row; rows r·√3 apart (dashed), the lower two in the gaps.</li>
+            <li>Drawn like every illustration: grey lines, faces in the ground colour, one green focus in dots.</li>
+            <li>Flat explains the composition; the 2:1 view gives the same plates depth.</li>
             <li>This cluster is the rest state every move passes through.</li>
           </ul>
         </div>
@@ -143,7 +141,7 @@ export function MotionPage({ copied, copy }: { copied: string | null; copy: Copy
       <Group title="Moves" line="Built from the two curves. One move at a time.">
         <div className="sk-moves">
           <div className="sk-move">
-            <CircleLoop move="focus" />
+            <CircleFigure move="focus" view="iso" />
             <h4>Focus</h4>
             <p>One circle grows up to 2× while the others shrink to 0.5×. Hover, highlight, “this one”.</p>
             <Timing
@@ -155,7 +153,7 @@ export function MotionPage({ copied, copy }: { copied: string | null; copy: Copy
             />
           </div>
           <div className="sk-move">
-            <CircleLoop move="press" />
+            <CircleFigure move="press" view="flat" />
             <h4>Press</h4>
             <p>The circles squeeze to the centre and back. A click, a confirm.</p>
             <Timing

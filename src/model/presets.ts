@@ -1,6 +1,7 @@
 /* The built-in figure: the Strike mark, the logo's chevrons stacked in 3D.
    Everything else comes from the library (src/library). */
 import { defaultDots, defaultGradient, defaultTheme, newObject, STRIKE, uid } from './defaults';
+import { pulse } from '../anim/system';
 import type { Scene, SceneObject } from './types';
 
 /** Figures of earlier versions that are no longer part of the project (they were Linear's artwork). */
@@ -58,7 +59,7 @@ export const PRESET_LOOPS: Record<string, (sc: Scene, t: number) => void> = {
   strike: (sc, t) => {
     sc.objects.forEach((o, i) => {
       if (i === 0) return;
-      const k = 0.5 - 0.5 * Math.cos(2 * Math.PI * Math.min(1, Math.max(0, (t - 0.1 * i) / 0.75)));
+      const k = pulse(t, 0.1 * i, 0.1 * i + 0.75);
       o.position = [o.position[0], o.position[1] + 10 * i * k, o.position[2]];
     });
   },

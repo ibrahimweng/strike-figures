@@ -41,3 +41,27 @@ describe('motion', () => {
     expect(playingKind(withMotion(sc, 'designed'))).toBe('designed');
   });
 });
+
+import { CYCLE, circlesAt, FOCUS_LEFT, inout, MS, pulse, REST, steps } from '../src/anim/system';
+
+describe('the motion system', () => {
+  it('moves on the two curves: slow at both ends, fastest in the middle', () => {
+    expect(inout(0)).toBe(0);
+    expect(inout(1)).toBe(1);
+    const speed = (x: number) => (inout(x + 0.01) - inout(x)) / 0.01;
+    expect(speed(0.01)).toBeLessThan(0.3);
+    expect(speed(0.98)).toBeLessThan(0.3);
+    expect(speed(0.55)).toBeGreaterThan(2);
+  });
+  it('pulses out and back, and steps with a rest at each beat', () => {
+    expect(pulse(0.5, 0, 1)).toBeCloseTo(1);
+    expect(pulse(0, 0, 1)).toBe(0);
+    expect(steps(0.05, 4)).toBe(0);
+    expect(steps(0.999, 4)).toBeCloseTo(1, 2);
+  });
+  it('passes the circles through the rest cluster and loops seamlessly', () => {
+    expect(circlesAt('focus', 0)).toEqual(FOCUS_LEFT);
+    expect(circlesAt('focus', CYCLE.focus)).toEqual(FOCUS_LEFT);
+    expect(circlesAt('focus', MS.rest + MS.gather)).toEqual(REST);
+  });
+});

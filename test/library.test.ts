@@ -86,11 +86,11 @@ describe('labels', () => {
 });
 
 describe('the library', () => {
-  it('has sixty-five illustrations: 17 data, 17 options, 16 tech, 15 from the brand book', () => {
-    expect(LIBRARY.length).toBe(65);
+  it('has sixty-six illustrations: 17 data, 17 options, 16 tech, 16 brand', () => {
+    expect(LIBRARY.length).toBe(66);
     const count = (c: string) => LIBRARY.filter(x => x.category === c).length;
-    expect([count('data'), count('options'), count('tech'), count('brand')]).toEqual([17, 17, 16, 15]);
-    expect(new Set(LIBRARY.map(x => x.id)).size).toBe(65);
+    expect([count('data'), count('options'), count('tech'), count('brand')]).toEqual([17, 17, 16, 16]);
+    expect(new Set(LIBRARY.map(x => x.id)).size).toBe(66);
   });
 
   it('draws every illustration by the house rules', () => {

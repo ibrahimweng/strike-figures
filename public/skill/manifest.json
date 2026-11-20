@@ -16,12 +16,12 @@
         {
           "path": "claude/strike-design.zip",
           "label": "Skill (zip)",
-          "bytes": 2848871
+          "bytes": 2849198
         },
         {
           "path": "claude/strike-design/SKILL.md",
           "label": "SKILL.md",
-          "bytes": 9915
+          "bytes": 10086
         }
       ]
     },
@@ -39,17 +39,17 @@
         {
           "path": "chatgpt/strike-design-chatgpt.zip",
           "label": "Everything (zip)",
-          "bytes": 735856
+          "bytes": 736246
         },
         {
           "path": "chatgpt/instructions.md",
           "label": "Instructions",
-          "bytes": 7606
+          "bytes": 7777
         },
         {
           "path": "chatgpt/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 30857
+          "bytes": 31708
         },
         {
           "path": "chatgpt/knowledge/tokens.css",
@@ -86,12 +86,12 @@
         {
           "path": "cursor/strike-design-cursor.zip",
           "label": "Rules and files (zip)",
-          "bytes": 1009893
+          "bytes": 1010223
         },
         {
           "path": "cursor/rules/strike-design.mdc",
           "label": "strike-design.mdc",
-          "bytes": 9814
+          "bytes": 9985
         },
         {
           "path": "cursor/rules/strike-colour.mdc",
@@ -116,7 +116,7 @@
         {
           "path": "cursor/rules/strike-illustration-motion.mdc",
           "label": "strike-illustration-motion.mdc",
-          "bytes": 3295
+          "bytes": 3975
         },
         {
           "path": "cursor/rules/strike-data.mdc",
@@ -153,12 +153,12 @@
         {
           "path": "agents/strike-design-agents.zip",
           "label": "AGENTS.md and files (zip)",
-          "bytes": 1008807
+          "bytes": 1009134
         },
         {
           "path": "agents/AGENTS.md",
           "label": "AGENTS.md",
-          "bytes": 9607
+          "bytes": 9778
         }
       ]
     },
@@ -175,12 +175,12 @@
         {
           "path": "copilot/strike-design-copilot.zip",
           "label": "Instructions and files (zip)",
-          "bytes": 1008943
+          "bytes": 1009270
         },
         {
           "path": "copilot/copilot-instructions.md",
           "label": "copilot-instructions.md",
-          "bytes": 9607
+          "bytes": 9778
         }
       ]
     },
@@ -197,17 +197,17 @@
         {
           "path": "gemini/strike-design-gemini.zip",
           "label": "Everything (zip)",
-          "bytes": 34235
+          "bytes": 34626
         },
         {
           "path": "gemini/gem-instructions.md",
           "label": "Instructions",
-          "bytes": 7591
+          "bytes": 7762
         },
         {
           "path": "gemini/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 30857
+          "bytes": 31708
         },
         {
           "path": "gemini/knowledge/tokens.css",
@@ -234,7 +234,7 @@
         {
           "path": "perplexity/strike-design-perplexity.zip",
           "label": "Everything (zip)",
-          "bytes": 31070
+          "bytes": 31385
         },
         {
           "path": "perplexity/space-instructions.md",
@@ -244,7 +244,7 @@
         {
           "path": "perplexity/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 30857
+          "bytes": 31708
         }
       ]
     },
@@ -262,7 +262,7 @@
         {
           "path": "figma/strike-design-figma.zip",
           "label": "Everything (zip)",
-          "bytes": 22350
+          "bytes": 22427
         },
         {
           "path": "figma/tokens.json",
@@ -272,7 +272,7 @@
         {
           "path": "figma/guidelines.md",
           "label": "Figma Make: guidelines.md",
-          "bytes": 13909
+          "bytes": 14080
         },
         {
           "path": "figma/SETUP.md",
@@ -293,12 +293,12 @@
         {
           "path": "STRIKE-DESIGN.md",
           "label": "STRIKE-DESIGN.md",
-          "bytes": 30997
+          "bytes": 31848
         },
         {
           "path": "portable/strike-design-kit.zip",
           "label": "Brand kit: logos, fonts, posters, tokens (zip)",
-          "bytes": 3893232
+          "bytes": 3893549
         }
       ]
     }
@@ -307,67 +307,67 @@
     {
       "path": "STRIKE-DESIGN.md",
       "label": "All the rules in one file",
-      "bytes": 30997,
+      "bytes": 31848,
       "kind": "markdown"
     },
     {
       "path": "core.md",
       "label": "Core rules only",
-      "bytes": 7227,
+      "bytes": 7398,
       "kind": "markdown"
     },
     {
       "path": "claude/strike-design.zip",
       "label": "For Claude",
-      "bytes": 2848871,
+      "bytes": 2849198,
       "kind": "zip"
     },
     {
       "path": "chatgpt/strike-design-chatgpt.zip",
       "label": "For ChatGPT",
-      "bytes": 735856,
+      "bytes": 736246,
       "kind": "zip"
     },
     {
       "path": "cursor/strike-design-cursor.zip",
       "label": "For Cursor",
-      "bytes": 1009893,
+      "bytes": 1010223,
       "kind": "zip"
     },
     {
       "path": "agents/strike-design-agents.zip",
       "label": "For Codex and other AGENTS.md tools",
-      "bytes": 1008807,
+      "bytes": 1009134,
       "kind": "zip"
     },
     {
       "path": "copilot/strike-design-copilot.zip",
       "label": "For GitHub Copilot",
-      "bytes": 1008943,
+      "bytes": 1009270,
       "kind": "zip"
     },
     {
       "path": "gemini/strike-design-gemini.zip",
       "label": "For Gemini",
-      "bytes": 34235,
+      "bytes": 34626,
       "kind": "zip"
     },
     {
       "path": "perplexity/strike-design-perplexity.zip",
       "label": "For Perplexity",
-      "bytes": 31070,
+      "bytes": 31385,
       "kind": "zip"
     },
     {
       "path": "figma/strike-design-figma.zip",
       "label": "For Figma",
-      "bytes": 22350,
+      "bytes": 22427,
       "kind": "zip"
     },
     {
       "path": "portable/strike-design-kit.zip",
       "label": "Brand kit",
-      "bytes": 3893232,
+      "bytes": 3893549,
       "kind": "zip"
     },
     {

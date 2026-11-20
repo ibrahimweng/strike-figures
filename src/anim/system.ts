@@ -1,7 +1,11 @@
-/* Strike's motion system, drawn with circles (see skill/source/rules/illustration-motion.md).
-   Two curves: shapes GATHER into a meeting point with an ease-in, then RELEASE from it
-   with an ease-out, then rest. The meeting point of the focus move is the rest cluster:
-   five equal circles, three over two, each touching its neighbours. */
+/* Strike's motion system (skill/source/rules/illustration-motion.md): every
+   animation in the tool runs on it.
+   Two curves: shapes GATHER into a meeting point with an ease-in, then RELEASE
+   from it with an ease-out, then rest: 400 + 320 + 280 ms, a one-second beat.
+   A move between two still states gathers into its midpoint and releases out
+   of it (inout); a move out and back does that twice (pulse). The meeting point
+   of the circles' focus move is the rest cluster: five equal circles, three
+   over two, each touching its neighbours. */
 
 /** [x, y, r] in units of the rest radius. */
 export type Circle = [number, number, number];
@@ -30,8 +34,43 @@ export function bezier([x1, y1, x2, y2]: readonly number[]): (t: number) => numb
     return at(y1!, y2!, (lo + hi) / 2);
   };
 }
-const gather = bezier(EASE.gather);
-const release = bezier(EASE.release);
+export const gather = bezier(EASE.gather);
+export const release = bezier(EASE.release);
+
+const clamp01 = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x);
+/** Share of a move spent gathering (400 of 720 ms). */
+const G = MS.gather / (MS.gather + MS.release);
+/** Share of a beat spent resting (280 of 1000 ms). */
+export const REST_SHARE = MS.rest / (MS.rest + MS.gather + MS.release);
+
+/** A move between two still states: gather into the midpoint, release out of it. 0..1 → 0..1. */
+export function inout(x: number): number {
+  const u = clamp01(x);
+  return u < G ? 0.5 * gather(u / G) : 0.5 + 0.5 * release((u - G) / (1 - G));
+}
+
+/** Out and back within [a, b]: 0 outside, 1 at the middle, each half an inout move. */
+export function pulse(t: number, a: number, b: number): number {
+  if (t <= a || t >= b) return 0;
+  const u = (t - a) / (b - a);
+  return u < 0.5 ? inout(u * 2) : 1 - inout((u - 0.5) * 2);
+}
+
+/** n beats over 0..1, each a rest then a move: a value stepping 0 → 1 in n eased steps. */
+export function steps(t: number, n: number): number {
+  const u = ((t % 1) + 1) % 1;
+  const k = Math.min(n - 1, Math.floor(u * n));
+  const f = u * n - k;
+  return (k + (f < REST_SHARE ? 0 : inout((f - REST_SHARE) / (1 - REST_SHARE)))) / n;
+}
+
+/** A swing between +1 and −1, one eased move per quarter: 0 at the start and end. */
+export function tri(t: number): number {
+  const u = ((t % 1) + 1) % 1;
+  const q = Math.floor(u * 4);
+  const f = inout(u * 4 - q);
+  return q === 0 ? f : q === 1 ? 1 - f : q === 2 ? -f : -1 + f;
+}
 
 const H = Math.sqrt(3) / 2;
 /** Order: top left, top middle, top right, bottom left, bottom right. */

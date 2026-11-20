@@ -495,7 +495,7 @@ function Inspector({ thread, post, index, layout, setStatus, busy }: { thread: T
         />
         {post.animated && (
           <>
-            <SliderRow label="Loop" value={post.duration ?? own} min={2} max={10} step={0.5} places={1} unit="s" onChange={v => set({ duration: v })} title="How long one loop lasts" />
+            <SliderRow label="Loop" value={post.duration ?? own} min={2} max={10} step={1} places={0} unit="s" onChange={v => set({ duration: v })} title="How long one loop lasts" />
             <div className="tp-hint">Animated posts download as MP4 or GIF. Copy image copies the still picture.</div>
           </>
         )}

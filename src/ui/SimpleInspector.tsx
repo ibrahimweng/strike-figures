@@ -78,8 +78,8 @@ export function MotionSection({ scene }: { scene: Scene }) {
         value={m.duration}
         min={2}
         max={10}
-        step={0.5}
-        places={1}
+        step={1}
+        places={0}
         unit=" s"
         onChange={(v, l) => update(s => void (s.motion = { ...motionOf(s), duration: v }), live('length', l))}
       />

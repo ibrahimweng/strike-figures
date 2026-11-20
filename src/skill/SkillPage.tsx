@@ -3,8 +3,8 @@
    it works in. Below, a card for each part of the brand; each opens its own
    page (#logo, #colour, …). Everything is read from the skill's built files. */
 import { type ReactNode, useEffect, useState } from 'react';
-import { css, EASE, MS } from './circles';
-import { CircleLoop } from './motion';
+import { css, EASE, MS } from '../anim/system';
+import { CircleFigure } from './motion';
 import { LOGOS } from './agent-logos';
 import { AppMock, BrandPage, HeroFigure, PAGES, type PageId, WebMock } from './brandPages';
 import { at, COMMAND, CopyBox, type Copy, GITHUB, IconArrow, IconCheck, IconGitHub, Label, type Manifest, PUBLIC, size, useCopy } from './shared';
@@ -204,7 +204,7 @@ function CardArt({ id, lockup }: { id: PageId; lockup: string }) {
       </div>
     );
   if (id === 'illustration') return <HeroFigure />;
-  if (id === 'motion') return <CircleLoop move="focus" className="sk-art-motion" />;
+  if (id === 'motion') return <CircleFigure move="focus" view="iso" className="sk-art-motion" />;
   if (id === 'backgrounds')
     return (
       <div className="sk-art-bg">

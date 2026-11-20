@@ -20,6 +20,14 @@
   --danger: #f87171;
   --r: 8px;
   --r-sm: 6px;
+  /* the motion system (src/anim/system.ts): UI uses the standard curve; shapes gather, then release */
+  --ease-ui: cubic-bezier(0.2, 0, 0, 1);
+  --ease-gather: cubic-bezier(0.55, 0, 0.85, 0);
+  --ease-release: cubic-bezier(0.15, 1, 0.6, 1);
+  --t-fast: 120ms;
+  --t-base: 200ms;
+  --t-gather: 400ms;
+  --t-release: 320ms;
   --sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
   color-scheme: dark;
@@ -264,7 +272,7 @@ button {
   border: 1px solid var(--line-2);
   position: relative;
   flex: none;
-  transition: background 0.15s;
+  transition: background var(--t-fast) var(--ease-ui);
 }
 
 .switch::after {
@@ -276,7 +284,7 @@ button {
   height: 12px;
   border-radius: 99px;
   background: var(--muted);
-  transition: left 0.15s, background 0.15s;
+  transition: left var(--t-base) var(--ease-ui), background var(--t-fast) var(--ease-ui);
 }
 
 .on > .switch,
@@ -460,7 +468,7 @@ button {
   background: #08090a;
   border: 1px solid var(--line);
   overflow: hidden;
-  transition: border-color 0.12s;
+  transition: border-color var(--t-fast) var(--ease-ui);
 }
 
 .thumb .pic img {
@@ -711,7 +719,7 @@ button {
 
 .section > .title .chev {
   color: var(--faint);
-  transition: transform 0.15s;
+  transition: transform var(--t-fast) var(--ease-ui);
 }
 
 .section.closed > .title .chev {
@@ -1274,7 +1282,7 @@ select.select:focus {
   border: 1px solid var(--line);
   background: var(--field);
   cursor: pointer;
-  transition: border-color 0.12s;
+  transition: border-color var(--t-fast) var(--ease-ui);
 }
 
 .tp-item:hover {
@@ -1471,7 +1479,7 @@ select.select:focus {
   display: block;
   height: 100%;
   background: var(--accent);
-  transition: width 0.15s;
+  transition: width var(--t-base) var(--ease-ui);
 }
 
 /* fields, down the right */
@@ -1729,7 +1737,7 @@ select.select:focus {
 .progress > div {
   height: 100%;
   background: var(--accent);
-  transition: width 0.2s ease;
+  transition: width var(--t-base) var(--ease-ui);
 }
 
 
@@ -1898,12 +1906,12 @@ select.select:focus {
   color: var(--faint);
   cursor: pointer;
   /* leaving the row: gather back to rest */
-  transition: width 400ms cubic-bezier(0.55, 0, 0.85, 0), height 400ms cubic-bezier(0.55, 0, 0.85, 0), background 200ms cubic-bezier(0.2, 0, 0, 1), color 200ms cubic-bezier(0.2, 0, 0, 1);
+  transition: width var(--t-gather) var(--ease-gather), height var(--t-gather) var(--ease-gather), background var(--t-base) var(--ease-ui), color var(--t-base) var(--ease-ui);
 }
 .sk-orbs.live .sk-orb {
   /* within the row: release into the new focus */
-  transition-duration: 320ms, 320ms, 200ms, 200ms;
-  transition-timing-function: cubic-bezier(0.15, 1, 0.6, 1), cubic-bezier(0.15, 1, 0.6, 1), cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1);
+  transition-duration: var(--t-release), var(--t-release), var(--t-base), var(--t-base);
+  transition-timing-function: var(--ease-release), var(--ease-release), var(--ease-ui), var(--ease-ui);
 }
 .sk-orb.focus {
   width: calc(var(--s) * 1.36);
@@ -1962,7 +1970,7 @@ select.select:focus {
   border-bottom: 1.5px solid currentColor;
   transform: rotate(-45deg);
   margin: 0 10px 2px 2px;
-  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition: transform var(--t-base) var(--ease-ui);
 }
 .sk-more[open] summary::before,
 .sk-fold[open] > summary::before {
@@ -2037,7 +2045,7 @@ select.select:focus {
   border-bottom: 1px solid var(--line);
   text-decoration: none;
   color: inherit;
-  transition: background 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition: background var(--t-base) var(--ease-ui);
 }
 .sk-card:hover {
   background: #0f0f0f;
@@ -2060,8 +2068,8 @@ select.select:focus {
   padding: 36px 40px;
 }
 .sk-art-motion {
-  width: 62%;
-  max-width: 300px;
+  width: 86%;
+  max-width: 440px;
 }
 .sk-card-art {
   height: 260px;
@@ -2082,7 +2090,7 @@ select.select:focus {
 }
 .sk-card-text h3 svg {
   color: var(--faint);
-  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s;
+  transition: transform var(--t-base) var(--ease-ui), color var(--t-base) var(--ease-ui);
 }
 .sk-card:hover .sk-card-text h3 svg {
   color: var(--text);
@@ -2399,7 +2407,7 @@ details.sk-group > summary h3::before {
   border-bottom: 1.5px solid currentColor;
   transform: rotate(-45deg);
   margin: 0 10px 3px 1px;
-  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition: transform var(--t-base) var(--ease-ui);
 }
 details.sk-group[open] > summary h3::before {
   transform: rotate(45deg);
@@ -2477,7 +2485,7 @@ details.sk-group[open] > .sk-swatches {
   color: var(--text);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.12s cubic-bezier(0.2, 0, 0, 1), transform 0.12s cubic-bezier(0.2, 0, 0, 1);
+  transition: opacity var(--t-fast) var(--ease-ui), transform var(--t-fast) var(--ease-ui);
 }
 .sk-tip.wide {
   width: 320px;
@@ -2753,13 +2761,12 @@ details.sk-group[open] > .sk-swatches {
 }
 .sk-compose {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 32px;
   align-items: center;
 }
-.sk-compose svg {
+.sk-compose .sk-circles {
   width: 100%;
-  display: block;
 }
 .sk-moves {
   display: grid;
@@ -2771,11 +2778,14 @@ details.sk-group[open] > .sk-swatches {
   border: 1px solid var(--line);
   border-radius: 12px;
 }
-.sk-move svg {
+.sk-circles svg {
   display: block;
-  width: 70%;
-  height: 170px;
-  margin: 0 auto 20px;
+  width: 100%;
+  height: auto;
+}
+.sk-move .sk-circles {
+  width: 86%;
+  margin: 0 auto 16px;
 }
 .sk-move h4 {
   font-size: 15px;
@@ -2870,8 +2880,8 @@ details.sk-group[open] > .sk-swatches {
   .sk-compose {
     grid-template-columns: minmax(0, 1fr);
   }
-  .sk-compose svg {
-    max-width: 220px;
+  .sk-compose .sk-circles {
+    max-width: 280px;
   }
   .sk-cards {
     grid-template-columns: minmax(0, 1fr);
@@ -2927,5 +2937,15 @@ details.sk-group[open] > .sk-swatches {
   }
   .sk-tip {
     display: none;
+  }
+}
+
+/* motion system: with reduced motion, things change without moving */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
   }
 }

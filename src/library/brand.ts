@@ -7,7 +7,7 @@
    plates, so turning it to the 2:1 view gives its isometric version with
    the same look. Infographics may use the brand's data colours, each for
    one meaning (see DATA_COLOURS in kit.ts). */
-import { allDots, bump, ease, envelope, named, one } from '../anim/kit';
+import { allDots, bump, ease, envelope, inout, named, one, swing } from '../anim/kit';
 import type { Label, Line, Scene, SceneObject } from '../model/types';
 import {
   band,
@@ -31,9 +31,9 @@ import {
   wall,
   type V,
 } from './kit';
+import { circleScene, circlesLoop } from './circleFigure';
 import type { Entry } from './index';
 
-const TAU = Math.PI * 2;
 /** a point on a circle in plan, angle in degrees from +X towards +Z (screen: from the right, clockwise) */
 const polar = (r: number, deg: number, y = 0): V => [r * Math.cos((deg * Math.PI) / 180), y, r * Math.sin((deg * Math.PI) / 180)];
 const flatPts = (pts: V[]): [number, number][] => pts.map(p => [p[0], p[2]]);
@@ -61,7 +61,7 @@ export const BRAND: Entry[] = [
     },
     loop: (sc, t) => {
       const base = [66, 30, 44, 28, 58];
-      const radii = base.map((r, i) => r * (1 + 0.16 * Math.sin(TAU * (t - i / 5)) * bump(t, 0, 1)));
+      const radii = base.map((r, i) => r * (1 + 0.16 * swing(t, i / 5)));
       const poly = one(sc, 'Profile');
       if (poly && poly.shape.kind === 'outline') poly.shape.points = flatPts(radarPts(radii, 0));
       const nodes = lineNamed(sc, 5);
@@ -326,7 +326,7 @@ export const BRAND: Entry[] = [
     loop: (sc, t) => {
       named(sc, 'Bubble').forEach((o, i) => {
         if (o.shape.kind !== 'cylinder') return;
-        o.shape.radius *= 1 + 0.06 * Math.sin(TAU * (t - i / 8)) * bump(t, 0, 1);
+        o.shape.radius *= 1 + 0.06 * swing(t, i / 8);
       });
     },
   },
@@ -376,7 +376,7 @@ export const BRAND: Entry[] = [
         if (level > 0) o.position = [o.position[0], o.position[1] + 8 * level * bump(t, 0.05 + level * 0.08, 0.75 + level * 0.08), o.position[2]];
       });
       allDots(sc, (d, o) => {
-        if (o.name === 'Chevron 1') d.sweep = { phase: t, amount: 0.6 * envelope(t) };
+        if (o.name === 'Chevron 1') d.sweep = { phase: inout(t), amount: 0.6 * envelope(t) };
       });
     },
   },
@@ -449,9 +449,17 @@ export const BRAND: Entry[] = [
     },
     loop: (sc, t) => {
       lines(sc).forEach(l => {
-        if (Math.abs(l.rotation[0] - 90) < 1e-6) l.rotation = [l.rotation[0], l.rotation[1] + 45 * t, l.rotation[2]];
-        if (l.nodes !== 'none') l.nodeAt = l.nodeAt.map(f => f + 0.125 * t);
+        if (Math.abs(l.rotation[0] - 90) < 1e-6) l.rotation = [l.rotation[0], l.rotation[1] + 45 * inout(t), l.rotation[2]];
+        if (l.nodes !== 'none') l.nodeAt = l.nodeAt.map(f => f + 0.125 * inout(t));
       });
     },
+  },
+  {
+    id: 'circles',
+    title: 'Circles',
+    tags: ['circles', 'motion', 'focus', 'composition', 'cluster', 'brand'],
+    /* the motion system's composition: five touching circles; one grows into focus */
+    make: () => circleScene('flat', 'focus'),
+    loop: circlesLoop,
   },
 ];

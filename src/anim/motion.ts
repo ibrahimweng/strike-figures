@@ -4,7 +4,7 @@
 
    A figure moves one of five ways (Scene.motion.kind):
    - designed: the illustration's own loop, written next to it in the library;
-   - turn: the camera goes once round;
+   - turn: the camera goes once round, in four eased quarter turns;
    - build: the shapes sink away and rise back into place, one after another;
    - drift: a band of light passes across the dots;
    - none: still. */
@@ -13,11 +13,12 @@ import { buildSvg, serialize, type El, type SvgOptions } from '../engine/svg';
 import { LIBRARY } from '../library';
 import { PRESET_LOOPS } from '../model/presets';
 import type { Motion, Scene } from '../model/types';
-import { allDots, bump, ease, envelope, grow } from './kit';
+import { allDots, ease, envelope, grow, inout, swing, turn } from './kit';
 
 /** A designed loop: change the copy `sc` to how it looks at t. */
 export type Loop = (sc: Scene, t: number) => void;
 
+/** Loops last whole seconds: one-second beats of rest, gather and release. */
 export const DEFAULT_MOTION: Motion = { kind: 'designed', duration: 4 };
 export const FPS = 30;
 
@@ -54,7 +55,7 @@ export function sceneAt(scene: Scene, t: number): Scene {
   const u = ((t % 1) + 1) % 1;
   const sc = structuredClone(scene);
   if (kind === 'designed') designedLoop(scene)!(sc, u);
-  else if (kind === 'turn') sc.camera.yaw += 360 * u;
+  else if (kind === 'turn') sc.camera.yaw += turn(u, 360);
   else if (kind === 'build') build(sc, u);
   else drift(sc, u);
   return sc;
@@ -90,8 +91,8 @@ function build(sc: Scene, u: number) {
 function drift(sc: Scene, u: number) {
   let any = false;
   allDots(sc, d => {
-    d.sweep = { phase: u, amount: 0.7 * envelope(u) };
+    d.sweep = { phase: inout(u), amount: 0.7 * envelope(u) };
     any = true;
   });
-  if (!any) sc.camera.yaw += 10 * Math.sin(2 * Math.PI * u) * bump(u, 0, 1);
+  if (!any) sc.camera.yaw += 10 * swing(u);
 }
