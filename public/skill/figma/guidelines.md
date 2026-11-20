@@ -70,6 +70,7 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 - Leave room. Fewer elements, aligned to the grid, beat more elements.
 
 ## Illustration and motion
+- Illustrations are line art (2:1 or flat), never the logo files or solid colour, and quieter than their title. Never tiny: no text under 12 px.
 - Line art in greys with one green focus, on the 2:1 isometric angle or flat (straight down). Faces hide what's behind them; dashed lines mean "not real yet"; dots carry tone.
 - Labels: Geist, a ticker in Medium over its value in Regular ("AMD" / "IV 106.2%").
 - Motion is calm: one thing moves at a time and returns to rest. No bounce, no flashing.
@@ -84,7 +85,7 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 - Never target the US or sanctioned regions.
 
 ## Before you hand it over
-Check: dark unless asked · backgrounds from the set · nothing said twice · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
+Check: dark unless asked · backgrounds from the set · nothing said twice · illustrations lined, quieter than titles · nothing tiny · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
 
 ---
 

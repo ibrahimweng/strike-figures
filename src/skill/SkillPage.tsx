@@ -4,10 +4,10 @@
    page (#logo, #colour, …). Everything is read from the skill's built files. */
 import { type ReactNode, useEffect, useState } from 'react';
 import { css, EASE, MS } from '../anim/system';
-import { CircleFigure } from './motion';
+import { CardArt } from './cardArt';
 import { LOGOS } from './agent-logos';
-import { AppMock, BrandPage, HeroFigure, PAGES, type PageId, WebMock } from './brandPages';
-import { at, COMMAND, CopyBox, type Copy, GITHUB, IconArrow, IconCheck, IconGitHub, Label, type Manifest, PUBLIC, size, useCopy } from './shared';
+import { BrandPage, PAGES, type PageId } from './brandPages';
+import { at, COMMAND, CopyBox, type Copy, GITHUB, IconArrow, IconGitHub, Label, type Manifest, PUBLIC, size, useCopy } from './shared';
 
 export { GITHUB, IconGitHub };
 
@@ -167,63 +167,6 @@ function Tools({ prompt, copied, copy }: { prompt: string; copied: string | null
   );
 }
 
-/* ---------- the card previews ---------- */
-
-const PILLS = ['#2E2E2E', '#B3B3B3', '#F9F9F9', '#10B981', '#3FD4AB', '#EE5E74', '#50EBA0', '#0788F7'];
-const CHECKS = ['Dark unless asked', 'Geist only', 'Title in two lines or fewer', 'Green on 5% or less', 'Nothing invented'];
-
-function CardArt({ id, lockup }: { id: PageId; lockup: string }) {
-  if (id === 'logo')
-    return (
-      <div className="sk-art-logo">
-        <img src={lockup} alt="" />
-      </div>
-    );
-  if (id === 'colour')
-    return (
-      <div className="sk-pills">
-        {PILLS.map(c => (
-          <span key={c} className="sk-pill">
-            <i style={{ background: c }} />
-          </span>
-        ))}
-      </div>
-    );
-  if (id === 'type')
-    return (
-      <div className="sk-art-type">
-        <span className="t-sans">Geist</span>
-        <span className="t-mono">Geist Mono</span>
-        <span className="t-pixel">24%</span>
-        <span className="t-weights">
-          <b style={{ fontWeight: 300 }}>Aa</b>
-          <b style={{ fontWeight: 400 }}>Aa</b>
-          <b style={{ fontWeight: 500 }}>Aa</b>
-          <b style={{ fontWeight: 600 }}>Aa</b>
-        </span>
-      </div>
-    );
-  if (id === 'illustration') return <HeroFigure />;
-  if (id === 'motion') return <CircleFigure move="focus" view="iso" className="sk-art-motion" />;
-  if (id === 'backgrounds')
-    return (
-      <div className="sk-art-bg">
-        <AppMock small />
-        <WebMock small />
-      </div>
-    );
-  return (
-    <ul className="sk-art-checks">
-      {CHECKS.map(c => (
-        <li key={c}>
-          <IconCheck />
-          {c}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 /* ---------- the page ---------- */
 
 export function SkillPage() {
@@ -231,6 +174,7 @@ export function SkillPage() {
   const [core, setCore] = useState('');
   const [copied, copy] = useCopy();
   const [page, go] = usePage();
+  const [hot, setHot] = useState<PageId | null>(null);
 
   useEffect(() => {
     fetch(at('manifest.json'))
@@ -254,7 +198,6 @@ export function SkillPage() {
   const link = new URL(manifest?.universal ?? 'STRIKE-DESIGN.md', PUBLIC).href;
   const prompt = `Read ${link} and follow it for everything you make for Strike.`;
   const kit = manifest?.downloads.find(d => d.path.endsWith('strike-design-kit.zip'));
-  const lockup = at(manifest?.logos.find(l => /lockup-3d-green/.test(l.path))?.path ?? 'portable/logo/strike-lockup-3d-green.svg');
 
   /* ---- one part of the brand ---- */
   if (page) {
@@ -342,9 +285,13 @@ export function SkillPage() {
                 e.preventDefault();
                 go(p.id);
               }}
+              onMouseEnter={() => setHot(p.id)}
+              onMouseLeave={() => setHot(h => (h === p.id ? null : h))}
+              onFocus={() => setHot(p.id)}
+              onBlur={() => setHot(h => (h === p.id ? null : h))}
             >
               <div className="sk-card-art">
-                <CardArt id={p.id} lockup={lockup} />
+                <CardArt id={p.id} active={hot === p.id} />
               </div>
               <div className="sk-card-text">
                 <h3>

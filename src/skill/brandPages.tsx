@@ -1,12 +1,11 @@
 /* The brand, one page per part: Logo, Colour, Type, Illustration,
    Backgrounds and Rules. Each page is grouped by category with one line per
    group; the deeper detail waits on hover. */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LIBRARY } from '../library';
 import { useStore } from '../model/store';
 import { useThread } from '../social/store';
 import { useLibraryThumb } from '../ui/thumbs';
-import { heroAt, heroScene, heroSvg } from './heroFigure';
 import { Markdown } from './markdown';
 import { MotionPage } from './motion';
 import { at, type Colour, type Copy, Group, type Manifest, ratio, Tip } from './shared';
@@ -22,33 +21,6 @@ export const PAGES: { id: PageId; title: string; line: string }[] = [
   { id: 'backgrounds', title: 'Backgrounds', line: 'Two darks for each medium. About 80% is the darkest.' },
   { id: 'rules', title: 'Rules', line: 'The full set your AI follows, and the check before handing over.' },
 ];
-
-/* ---------- the moving figure (overview card and Illustration page) ---------- */
-
-export function HeroFigure() {
-  const host = useRef<HTMLDivElement>(null);
-  const base = useMemo(() => heroScene(), []);
-  useEffect(() => {
-    const el = host.current;
-    if (!el) return;
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    el.innerHTML = heroSvg(heroAt(base, 0));
-    if (still) return;
-    let raf = 0;
-    let last = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      if (now - last > 1000 / 30) {
-        last = now;
-        el.innerHTML = heroSvg(heroAt(base, (((now - start) / 1000) % 7) / 7));
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [base]);
-  return <div className="sk-figure" ref={host} aria-hidden />;
-}
 
 /* ---------- Logo ---------- */
 
@@ -305,9 +277,6 @@ function Thumb({ id }: { id: string }) {
 function IllustrationPage() {
   return (
     <>
-      <div className="sk-figure-band">
-        <HeroFigure />
-      </div>
       <Group title="Style" line="How every Strike figure is drawn.">
         <ul className="sk-dos">
           <li>Line art in greys with one green focus, on the dark ground.</li>

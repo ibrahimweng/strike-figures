@@ -16,6 +16,10 @@ alwaysApply: false
 - **Colour:** greys and one green focus. Data colours only in infographics.
 - **Labels:** Geist, a ticker in Medium over its value in Regular; at most three labels except in infographics.
 - **Grid:** built on the 50 px grid.
+- **Illustration is not the logo:** an illustration is always line art in the 2:1 view (or flat). Never use the logo files, a solid colour block or a screenshot as an illustration. To show the mark in an illustration, draw it as lined plates.
+- **It supports the words:** next to a title, an illustration is quieter than the title: mostly the support line, one subject line, at most one green. The title stays the brightest thing on the card.
+- **Never tiny:** no text under 12 px, no labels on small illustrations, no hairline detail that disappears at the size it's shown. Scale the illustration up or leave the detail out.
+- **On cards and hover:** rest still; on hover make one move on the motion curves (gather, release), revealing detail (colour as dots, the green focus) only then.
 - **Making them:** use the Strike Figures tool (66 ready illustrations, exports SVG, PNG, MP4, GIF, animated SVG and Lottie) when it's available. Otherwise draw with these rules.
 
 ## Motion

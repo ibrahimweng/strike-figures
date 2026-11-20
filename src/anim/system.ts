@@ -97,7 +97,7 @@ export const FOCUS_LEFT: Circle[] = MIRROR.map(i => {
 });
 export const PRESSED: Circle[] = REST.map(([x, y, r]) => [x * 0.45, y * 0.45, r]);
 
-const mix = (a: Circle[], b: Circle[], k: number): Circle[] => a.map((c, i) => c.map((v, j) => v + (b[i]![j]! - v) * k) as Circle);
+export const mix = (a: Circle[], b: Circle[], k: number): Circle[] => a.map((c, i) => c.map((v, j) => v + (b[i]![j]! - v) * k) as Circle);
 
 export type Move = 'focus' | 'press';
 

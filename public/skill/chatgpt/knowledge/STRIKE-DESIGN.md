@@ -70,6 +70,7 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 - Leave room. Fewer elements, aligned to the grid, beat more elements.
 
 ## Illustration and motion
+- Illustrations are line art (2:1 or flat), never the logo files or solid colour, and quieter than their title. Never tiny: no text under 12 px.
 - Line art in greys with one green focus, on the 2:1 isometric angle or flat (straight down). Faces hide what's behind them; dashed lines mean "not real yet"; dots carry tone.
 - Labels: Geist, a ticker in Medium over its value in Regular ("AMD" / "IV 106.2%").
 - Motion is calm: one thing moves at a time and returns to rest. No bounce, no flashing.
@@ -84,7 +85,7 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 - Never target the US or sanctioned regions.
 
 ## Before you hand it over
-Check: dark unless asked · backgrounds from the set · nothing said twice · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
+Check: dark unless asked · backgrounds from the set · nothing said twice · illustrations lined, quieter than titles · nothing tiny · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
 
 ---
 
@@ -289,6 +290,10 @@ With the repo's scripts available, generate it: `node scripts/lockup.mjs --name 
 - **Colour:** greys and one green focus. Data colours only in infographics.
 - **Labels:** Geist, a ticker in Medium over its value in Regular; at most three labels except in infographics.
 - **Grid:** built on the 50 px grid.
+- **Illustration is not the logo:** an illustration is always line art in the 2:1 view (or flat). Never use the logo files, a solid colour block or a screenshot as an illustration. To show the mark in an illustration, draw it as lined plates.
+- **It supports the words:** next to a title, an illustration is quieter than the title: mostly the support line, one subject line, at most one green. The title stays the brightest thing on the card.
+- **Never tiny:** no text under 12 px, no labels on small illustrations, no hairline detail that disappears at the size it's shown. Scale the illustration up or leave the detail out.
+- **On cards and hover:** rest still; on hover make one move on the motion curves (gather, release), revealing detail (colour as dots, the green focus) only then.
 - **Making them:** use the Strike Figures tool (66 ready illustrations, exports SVG, PNG, MP4, GIF, animated SVG and Lottie) when it's available. Otherwise draw with these rules.
 
 ### Motion
@@ -430,6 +435,7 @@ Verbal branding is still being written. Until then, keep copy short, plain and f
 - [ ] Profit and loss carry a sign; red only means loss
 - [ ] Nothing invented; no market count; USDC unless told otherwise
 - [ ] Risk line where required
+- [ ] Illustrations are line art (2:1 or flat), never the logo or solid colour, and quieter than their titles; nothing tiny (no text under 12 px)
 - [ ] Nothing repeats: each action, label and message appears once; nothing contradicts
 - [ ] Motion uses gather (ease-in, 400 ms) and release (ease-out, 320 ms), or the UI ease for plain UI
 - [ ] Your reply to the user is short and direct

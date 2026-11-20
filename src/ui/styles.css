@@ -2067,10 +2067,6 @@ select.select:focus {
 .sk-cards .c-rules .sk-card-text {
   padding: 36px 40px;
 }
-.sk-art-motion {
-  width: 86%;
-  max-width: 440px;
-}
 .sk-card-art {
   height: 260px;
   display: flex;
@@ -2086,7 +2082,9 @@ select.select:focus {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 16px;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+  color: var(--text);
 }
 .sk-card-text h3 svg {
   color: var(--faint);
@@ -2102,117 +2100,24 @@ select.select:focus {
   font-size: 14px;
   line-height: 1.45;
 }
-
-/* card art */
-.sk-art-logo {
-  position: relative;
-  width: 72%;
-  padding: 26px 0;
-  background-image: linear-gradient(90deg, var(--line-2) 50%, transparent 50%), linear-gradient(90deg, var(--line-2) 50%, transparent 50%), linear-gradient(var(--line-2) 50%, transparent 50%), linear-gradient(var(--line-2) 50%, transparent 50%);
-  background-size: 6px 1px, 6px 1px, 1px 6px, 1px 6px;
-  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
-  background-position: 0 26px, 0 calc(100% - 26px), 0 0, 100% 0;
-}
-.sk-art-logo img {
-  display: block;
+/* the picture supports the name: quieter until the card is hovered */
+.sk-art {
   width: 100%;
+  max-width: 480px;
+  opacity: 0.78;
+  transition: opacity var(--t-base) var(--ease-ui);
 }
-.sk-pills {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
+.sk-card:hover .sk-art,
+.sk-card:focus-visible .sk-art {
+  opacity: 1;
 }
-.sk-pill {
-  width: 34px;
-  height: 128px;
-  padding: 9px;
-  border: 1px solid var(--line-2);
-  border-radius: 999px;
-}
-.sk-pill i {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-}
-.sk-art-type {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 100%;
-  max-width: 420px;
-  border: 1px dashed var(--line-2);
-}
-.sk-art-type > span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 84px;
-  color: var(--text);
-  font-size: 26px;
-  letter-spacing: -0.02em;
-  border: 1px dashed var(--line-2);
-  margin: -0.5px;
-}
-.sk-art-type .t-sans {
-  font-weight: 500;
-}
-.sk-art-type .t-mono {
-  font-family: var(--mono);
-  font-size: 22px;
-  letter-spacing: 0;
-}
-.sk-art-type .t-pixel {
-  font-family: 'Geist Pixel Circle', var(--sans);
-  color: var(--accent);
-  font-size: 34px;
-}
-.sk-art-type .t-weights {
-  gap: 10px;
-  font-size: 22px;
-}
-.sk-art-type .t-weights b {
-  font-weight: inherit;
-}
-.c-illustration .sk-card-art {
-  padding: 16px 0 0;
-}
-.c-illustration .sk-figure {
-  width: 150%;
-  flex: none;
-}
-.sk-figure svg {
+.sk-art svg {
   display: block;
   width: 100%;
   height: auto;
 }
-.sk-art-bg {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 16px;
-  align-items: center;
-  width: 100%;
-  max-width: 380px;
-}
-.sk-art-bg .sk-mock-web {
-  aspect-ratio: 3 / 4;
-}
-.sk-art-checks {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-size: 14px;
-  color: var(--muted);
-}
-.sk-art-checks li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.sk-art-checks svg {
-  color: var(--accent);
-}
+
+/* card art */
 
 /* the background mocks: an app (modules on the frame) and a web page (sections) */
 .sk-mock-app {
@@ -2665,11 +2570,6 @@ details.sk-group[open] > .sk-swatches {
 }
 
 /* illustration */
-.sk-figure-band {
-  padding: 24px 0 8px;
-  border-bottom: 1px solid var(--line);
-  overflow: hidden;
-}
 .sk-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -2897,14 +2797,6 @@ details.sk-group[open] > .sk-swatches {
   .sk-card-text {
     padding: 8px 20px 28px;
   }
-  .sk-pills {
-    gap: 8px;
-  }
-  .sk-pill {
-    width: 26px;
-    height: 104px;
-    padding: 7px;
-  }
   .sk-sub-head h1 {
     font-size: 40px;
   }
@@ -2920,10 +2812,6 @@ details.sk-group[open] > .sk-swatches {
   }
   .sk-bg-row {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .sk-figure-band .sk-figure {
-    width: 170%;
-    margin-left: -35%;
   }
   .sk-type {
     grid-template-columns: minmax(0, 1fr);

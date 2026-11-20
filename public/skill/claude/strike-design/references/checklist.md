@@ -11,6 +11,7 @@
 - [ ] Profit and loss carry a sign; red only means loss
 - [ ] Nothing invented; no market count; USDC unless told otherwise
 - [ ] Risk line where required
+- [ ] Illustrations are line art (2:1 or flat), never the logo or solid colour, and quieter than their titles; nothing tiny (no text under 12 px)
 - [ ] Nothing repeats: each action, label and message appears once; nothing contradicts
 - [ ] Motion uses gather (ease-in, 400 ms) and release (ease-out, 320 ms), or the UI ease for plain UI
 - [ ] Your reply to the user is short and direct

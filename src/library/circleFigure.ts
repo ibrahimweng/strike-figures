@@ -15,6 +15,9 @@ const PLATE = 3;
 
 export type CircleView = 'flat' | 'iso';
 
+/** The five circles as plates, in state `cs`. */
+export const plates = (cs: Circle[]): SceneObject[] => cs.map((c, i) => plate(i, c));
+
 const plate = (i: number, [x, y, r]: Circle): SceneObject => cyl(r * U, PLATE, [x * U, 0, y * U], { tier: 'support', name: `Circle ${i + 1}` });
 
 /** Put the circles in state `cs`: size, place, and the green focus on whichever has grown. */
