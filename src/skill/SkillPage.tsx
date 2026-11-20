@@ -33,6 +33,9 @@ interface Manifest {
 /** Where the skill's files are served from: /skill/ next to the tool, on any domain. */
 const SKILL = new URL('skill/', document.baseURI).href;
 const at = (path: string) => new URL(path, SKILL).href;
+/** The link to share: always the public site, even when this page runs on someone's own computer. */
+const PUBLIC = __STRIKE_SITE__ ? `${__STRIKE_SITE__}/skill/` : SKILL;
+const LOCAL = /^(localhost|127\.|0\.0\.0\.0|\[::1\]|192\.168\.|10\.)/.test(location.hostname);
 
 const size = (b?: number) => (b === undefined ? '' : b < 1024 ? `${b} B` : b < 1048576 ? `${Math.round(b / 1024)} KB` : `${(b / 1048576).toFixed(1)} MB`);
 const isText = (p: string) => /\.(md|mdc|txt|css|json|cjs|js)$/i.test(p);
@@ -86,7 +89,8 @@ export function SkillPage() {
       .catch(() => setCore(''));
   }, []);
 
-  const link = at(manifest?.universal ?? 'STRIKE-DESIGN.md');
+  const link = new URL(manifest?.universal ?? 'STRIKE-DESIGN.md', PUBLIC).href;
+  const unshareable = LOCAL && !__STRIKE_SITE__;
   const prompt = `Read ${link} and follow it for everything you make for Strike in this chat.`;
   const current = useMemo(() => manifest?.targets.find(t => t.id === target) ?? manifest?.targets[0], [manifest, target]);
   const fetchText = (path: string) => () => fetch(at(path)).then(r => r.text());
@@ -119,6 +123,11 @@ export function SkillPage() {
             </span>
           )}
         </p>
+        {unshareable && (
+          <p className="sk-warn" data-testid="local-note">
+            This is a copy running on your computer, so this link only works here. Open the tool on your Vercel site to get the link to share.
+          </p>
+        )}
         {failed && <p className="sk-warn">The skill's files aren't built yet. Run `npm run skill:build`, then reload.</p>}
       </section>
 
