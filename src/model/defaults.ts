@@ -1,0 +1,149 @@
+import type { ShapeSpec } from '../engine/shapes';
+import type { DotFill, FaceStyle, Gradient, Scene, SceneObject, Theme } from './types';
+
+export const uid = () => Math.random().toString(36).slice(2, 10);
+
+/* Strike's colours, from strikelabs.app: emerald 300–900 on near-black */
+export const STRIKE = {
+  ink: '#08090A',
+  emerald300: '#6EE7B7',
+  emerald400: '#34D399',
+  emerald500: '#10B981',
+  emerald600: '#059669',
+  emerald700: '#047857',
+  emerald800: '#065F46',
+  emerald900: '#064E3B',
+};
+
+/* Linear's line colours, from its homepage figures */
+export const LINEAR = {
+  ink: '#08090A',
+  line: '#D0D6E0',
+  mid: '#62666D',
+  dim: '#3E3E44',
+  faint: '#2E2E32',
+  dot: '#E4E5E9',
+};
+
+export const THEMES: Theme[] = [
+  {
+    name: 'Strike mix',
+    background: LINEAR.ink,
+    transparent: false,
+    fill: LINEAR.ink,
+    outline: LINEAR.line,
+    crease: LINEAR.dim,
+    guide: LINEAR.dim,
+    dot: STRIKE.emerald500,
+    accent: STRIKE.emerald400,
+    lineWidth: 0.5,
+    creaseTaper: 0.7,
+    creaseTrim: 4,
+  },
+  {
+    name: 'Linear grey',
+    background: LINEAR.ink,
+    transparent: false,
+    fill: LINEAR.ink,
+    outline: LINEAR.line,
+    crease: LINEAR.dim,
+    guide: LINEAR.dim,
+    dot: LINEAR.dot,
+    accent: LINEAR.line,
+    lineWidth: 0.5,
+    creaseTaper: 0.7,
+    creaseTrim: 4,
+  },
+  {
+    name: 'Strike green',
+    background: LINEAR.ink,
+    transparent: false,
+    fill: LINEAR.ink,
+    outline: STRIKE.emerald400,
+    crease: STRIKE.emerald800,
+    guide: STRIKE.emerald800,
+    dot: STRIKE.emerald500,
+    accent: STRIKE.emerald300,
+    lineWidth: 0.5,
+    creaseTaper: 0.7,
+    creaseTrim: 4,
+  },
+];
+
+export const defaultTheme = (): Theme => ({ ...THEMES[0]! });
+
+export const defaultGradient = (): Gradient => ({
+  type: 'none',
+  angle: 0,
+  start: 0,
+  end: 1,
+  cx: 0.5,
+  cy: 0.5,
+  radius: 0.7,
+  frequency: 2,
+  phase: 0,
+  seed: 7,
+  affects: 'size',
+  invert: false,
+});
+
+export const defaultDots = (color = ''): DotFill => ({
+  enabled: true,
+  pattern: 'grid',
+  spacing: 4,
+  size: 0.9,
+  sizeMin: 0.15,
+  shape: 'circle',
+  color,
+  opacity: 1,
+  opacityMin: 0.1,
+  gradient: defaultGradient(),
+  inset: 2,
+  angle: 0,
+  region: null,
+});
+
+export const emptyFace = (): FaceStyle => ({ fill: null, dots: null });
+
+export function newObject(shape: ShapeSpec, height: number, name: string, at: [number, number, number] = [0, 0, 0]): SceneObject {
+  return {
+    id: uid(),
+    name,
+    visible: true,
+    locked: false,
+    shape,
+    height,
+    position: at,
+    rotation: [0, 0, 0],
+    style: { outline: null, crease: null, fill: null, lineWidth: null, outlineOpacity: 1, creaseOpacity: 1, showCreases: true, creaseTrim: null, creaseDrop: 0 },
+    faces: { top: emptyFace(), bottom: emptyFace(), sides: {} },
+    shadow: { enabled: false, blur: 8, dx: 0, dy: 4, opacity: 0.6 },
+    guides: false,
+    decal: null,
+  };
+}
+
+/** The shapes the toolbar adds, sized for a 320-unit artboard. */
+export const KINDS = {
+  box: { label: 'Box', make: () => newObject({ kind: 'box', width: 60, depth: 60, radius: 4 }, 60, 'Box') },
+  slab: { label: 'Slab', make: () => newObject({ kind: 'box', width: 120, depth: 120, radius: 6 }, 14, 'Slab') },
+  fin: { label: 'Fin', make: () => newObject({ kind: 'box', width: 120, depth: 4, radius: 1.2 }, 50, 'Fin') },
+  cylinder: { label: 'Cylinder', make: () => newObject({ kind: 'cylinder', radius: 30 }, 40, 'Cylinder') },
+  hexagon: { label: 'Hexagon', make: () => newObject({ kind: 'polygon', sides: 6, radius: 36, corner: 3 }, 24, 'Hexagon') },
+  chevron: { label: 'Chevron', make: () => newObject({ kind: 'chevron', width: 140, depth: 72 }, 12, 'Chevron') },
+} as const;
+
+export type Kind = keyof typeof KINDS;
+
+export function blankScene(name = 'Untitled figure'): Scene {
+  return {
+    id: uid(),
+    name,
+    label: 'FIG 1.0',
+    artboard: { width: 320, height: 320 },
+    camera: { yaw: 45, pitch: 30, zoom: 1, panX: 0, panY: 40 },
+    theme: defaultTheme(),
+    objects: [],
+    preset: null,
+  };
+}

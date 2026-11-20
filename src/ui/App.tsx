@@ -1,0 +1,122 @@
+import { type ReactElement, useEffect, useState } from 'react';
+import { renderScene } from '../engine/render';
+import { KINDS, type Kind } from '../model/defaults';
+import { useStore } from '../model/store';
+import { Canvas } from './Canvas';
+import { ExportDialog, saveFigure } from './ExportDialog';
+import { IconBox, IconChevron, IconCylinder, IconDownload, IconFin, IconHex, IconRedo, IconSlab, IconUndo, StrikeMark } from './icons';
+import { Inspector } from './Inspector';
+import { LeftPanel } from './Panels';
+import { fitCamera, VIEWS } from './view';
+
+const ADD: { kind: Kind; icon: () => ReactElement }[] = [
+  { kind: 'box', icon: IconBox },
+  { kind: 'slab', icon: IconSlab },
+  { kind: 'fin', icon: IconFin },
+  { kind: 'cylinder', icon: IconCylinder },
+  { kind: 'hexagon', icon: IconHex },
+  { kind: 'chevron', icon: IconChevron },
+];
+
+export function App() {
+  const scene = useStore(s => s.scenes.find(x => x.id === s.activeId) ?? s.scenes[0]!);
+  const canUndo = useStore(s => (s.past[s.activeId]?.length ?? 0) > 0);
+  const canRedo = useStore(s => (s.future[s.activeId]?.length ?? 0) > 0);
+  const { add, undo, redo } = useStore.getState();
+  const [exporting, setExporting] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement;
+      if (el.closest('input, select, textarea, [contenteditable]')) return;
+      if (exporting) return;
+      const st = useStore.getState();
+      const mod = e.metaKey || e.ctrlKey;
+      const sel = st.selection.objectId;
+      if (mod && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) st.redo();
+        else st.undo();
+      } else if (mod && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        st.redo();
+      } else if (mod && e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        st.duplicate();
+      } else if (mod && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveFigure(st.scene());
+      } else if (mod && e.key.toLowerCase() === 'e') {
+        e.preventDefault();
+        setExporting(true);
+      } else if ((e.key === 'Delete' || e.key === 'Backspace') && sel) {
+        e.preventDefault();
+        st.remove();
+      } else if (e.key === 'Escape') {
+        st.select(null);
+      } else if (e.key.startsWith('Arrow') && sel) {
+        e.preventDefault();
+        const step = e.shiftKey ? 10 : e.altKey ? 0.1 : 1;
+        const d: Record<string, [number, number]> = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
+        const [dx, dz] = d[e.key]!;
+        st.updateObject(sel, o => void (o.position = [o.position[0] + dx, o.position[1], o.position[2] + dz]), 'nudge');
+      } else if ((e.key === 'PageUp' || e.key === 'PageDown') && sel) {
+        e.preventDefault();
+        const step = (e.shiftKey ? 10 : 1) * (e.key === 'PageUp' ? 1 : -1);
+        st.updateObject(sel, o => void (o.position = [o.position[0], o.position[1] + step, o.position[2]]), 'nudge');
+      } else if (e.key === '[' || e.key === ']') {
+        st.update(s => void (s.camera.yaw = ((s.camera.yaw + (e.key === ']' ? 15 : -15) + 540) % 360) - 180), 'turn');
+      } else if (!mod && e.key.toLowerCase() === 'f') {
+        const sc = st.scene();
+        const cam = fitCamera(sc, renderScene(sc));
+        if (cam) st.update(s => void (s.camera = cam));
+      } else if (!mod) {
+        const v = VIEWS.find(x => x.key === e.key);
+        if (v)
+          st.update(s => {
+            s.camera.yaw = v.yaw;
+            s.camera.pitch = v.pitch;
+          });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [exporting]);
+
+  return (
+    <div className="app">
+      <header className="top">
+        <div className="brand">
+          <StrikeMark size={20} />
+          <span className="word">STRIKE</span>
+          <span className="tool">Figures</span>
+        </div>
+        <div className="tools" role="toolbar" aria-label="Add a shape">
+          {ADD.map(({ kind, icon: Icon }) => (
+            <button key={kind} className="btn" onClick={() => add(kind)} title={`Add a ${KINDS[kind].label.toLowerCase()}`} data-testid={`add-${kind}`}>
+              <Icon /> <span>{KINDS[kind].label}</span>
+            </button>
+          ))}
+          <span className="sep" />
+          <button className="btn icon" onClick={undo} disabled={!canUndo} title="Undo (⌘Z)" aria-label="Undo">
+            <IconUndo />
+          </button>
+          <button className="btn icon" onClick={redo} disabled={!canRedo} title="Redo (⇧⌘Z)" aria-label="Redo">
+            <IconRedo />
+          </button>
+        </div>
+        <span className="spacer" />
+        <button className="btn ghost" onClick={() => saveFigure(scene)} title="Save this figure as a file (⌘S)">
+          Save figure
+        </button>
+        <button className="btn primary" onClick={() => setExporting(true)} data-testid="export" title="Export SVG or PNG (⌘E)">
+          <IconDownload /> Export
+        </button>
+      </header>
+      <LeftPanel />
+      <Canvas />
+      <Inspector />
+      {exporting && <ExportDialog scene={scene} onClose={() => setExporting(false)} />}
+    </div>
+  );
+}
