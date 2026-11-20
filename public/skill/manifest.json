@@ -16,12 +16,12 @@
         {
           "path": "claude/strike-design.zip",
           "label": "Skill (zip)",
-          "bytes": 2847079
+          "bytes": 2848871
         },
         {
           "path": "claude/strike-design/SKILL.md",
           "label": "SKILL.md",
-          "bytes": 9184
+          "bytes": 9915
         }
       ]
     },
@@ -39,27 +39,27 @@
         {
           "path": "chatgpt/strike-design-chatgpt.zip",
           "label": "Everything (zip)",
-          "bytes": 734212
+          "bytes": 735856
         },
         {
           "path": "chatgpt/instructions.md",
           "label": "Instructions",
-          "bytes": 6875
+          "bytes": 7606
         },
         {
           "path": "chatgpt/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 28306
+          "bytes": 30857
         },
         {
           "path": "chatgpt/knowledge/tokens.css",
           "label": "Knowledge: tokens.css",
-          "bytes": 7747
+          "bytes": 8072
         },
         {
           "path": "chatgpt/knowledge/tokens.json",
           "label": "Knowledge: tokens.json",
-          "bytes": 6744
+          "bytes": 7282
         },
         {
           "path": "chatgpt/knowledge/strike-logos.zip",
@@ -86,12 +86,12 @@
         {
           "path": "cursor/strike-design-cursor.zip",
           "label": "Rules and files (zip)",
-          "bytes": 1008104
+          "bytes": 1009893
         },
         {
           "path": "cursor/rules/strike-design.mdc",
           "label": "strike-design.mdc",
-          "bytes": 9083
+          "bytes": 9814
         },
         {
           "path": "cursor/rules/strike-colour.mdc",
@@ -116,7 +116,7 @@
         {
           "path": "cursor/rules/strike-illustration-motion.mdc",
           "label": "strike-illustration-motion.mdc",
-          "bytes": 1819
+          "bytes": 3295
         },
         {
           "path": "cursor/rules/strike-data.mdc",
@@ -136,7 +136,7 @@
         {
           "path": "cursor/rules/strike-checklist.mdc",
           "label": "strike-checklist.mdc",
-          "bytes": 1045
+          "bytes": 1236
         }
       ]
     },
@@ -153,12 +153,12 @@
         {
           "path": "agents/strike-design-agents.zip",
           "label": "AGENTS.md and files (zip)",
-          "bytes": 1007017
+          "bytes": 1008807
         },
         {
           "path": "agents/AGENTS.md",
           "label": "AGENTS.md",
-          "bytes": 8876
+          "bytes": 9607
         }
       ]
     },
@@ -175,12 +175,12 @@
         {
           "path": "copilot/strike-design-copilot.zip",
           "label": "Instructions and files (zip)",
-          "bytes": 1007153
+          "bytes": 1008943
         },
         {
           "path": "copilot/copilot-instructions.md",
           "label": "copilot-instructions.md",
-          "bytes": 8876
+          "bytes": 9607
         }
       ]
     },
@@ -197,27 +197,27 @@
         {
           "path": "gemini/strike-design-gemini.zip",
           "label": "Everything (zip)",
-          "bytes": 32591
+          "bytes": 34235
         },
         {
           "path": "gemini/gem-instructions.md",
           "label": "Instructions",
-          "bytes": 6860
+          "bytes": 7591
         },
         {
           "path": "gemini/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 28306
+          "bytes": 30857
         },
         {
           "path": "gemini/knowledge/tokens.css",
           "label": "Knowledge: tokens.css",
-          "bytes": 7747
+          "bytes": 8072
         },
         {
           "path": "gemini/knowledge/tokens.json",
           "label": "Knowledge: tokens.json",
-          "bytes": 6744
+          "bytes": 7282
         }
       ]
     },
@@ -234,7 +234,7 @@
         {
           "path": "perplexity/strike-design-perplexity.zip",
           "label": "Everything (zip)",
-          "bytes": 29771
+          "bytes": 31070
         },
         {
           "path": "perplexity/space-instructions.md",
@@ -244,7 +244,7 @@
         {
           "path": "perplexity/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 28306
+          "bytes": 30857
         }
       ]
     },
@@ -262,17 +262,17 @@
         {
           "path": "figma/strike-design-figma.zip",
           "label": "Everything (zip)",
-          "bytes": 21718
+          "bytes": 22350
         },
         {
           "path": "figma/tokens.json",
           "label": "Variables: tokens.json",
-          "bytes": 6744
+          "bytes": 7282
         },
         {
           "path": "figma/guidelines.md",
           "label": "Figma Make: guidelines.md",
-          "bytes": 12930
+          "bytes": 13909
         },
         {
           "path": "figma/SETUP.md",
@@ -293,12 +293,12 @@
         {
           "path": "STRIKE-DESIGN.md",
           "label": "STRIKE-DESIGN.md",
-          "bytes": 28446
+          "bytes": 30997
         },
         {
           "path": "portable/strike-design-kit.zip",
           "label": "Brand kit: logos, fonts, posters, tokens (zip)",
-          "bytes": 3891839
+          "bytes": 3893232
         }
       ]
     }
@@ -307,91 +307,91 @@
     {
       "path": "STRIKE-DESIGN.md",
       "label": "All the rules in one file",
-      "bytes": 28446,
+      "bytes": 30997,
       "kind": "markdown"
     },
     {
       "path": "core.md",
       "label": "Core rules only",
-      "bytes": 6496,
+      "bytes": 7227,
       "kind": "markdown"
     },
     {
       "path": "claude/strike-design.zip",
       "label": "For Claude",
-      "bytes": 2847079,
+      "bytes": 2848871,
       "kind": "zip"
     },
     {
       "path": "chatgpt/strike-design-chatgpt.zip",
       "label": "For ChatGPT",
-      "bytes": 734212,
+      "bytes": 735856,
       "kind": "zip"
     },
     {
       "path": "cursor/strike-design-cursor.zip",
       "label": "For Cursor",
-      "bytes": 1008104,
+      "bytes": 1009893,
       "kind": "zip"
     },
     {
       "path": "agents/strike-design-agents.zip",
       "label": "For Codex and other AGENTS.md tools",
-      "bytes": 1007017,
+      "bytes": 1008807,
       "kind": "zip"
     },
     {
       "path": "copilot/strike-design-copilot.zip",
       "label": "For GitHub Copilot",
-      "bytes": 1007153,
+      "bytes": 1008943,
       "kind": "zip"
     },
     {
       "path": "gemini/strike-design-gemini.zip",
       "label": "For Gemini",
-      "bytes": 32591,
+      "bytes": 34235,
       "kind": "zip"
     },
     {
       "path": "perplexity/strike-design-perplexity.zip",
       "label": "For Perplexity",
-      "bytes": 29771,
+      "bytes": 31070,
       "kind": "zip"
     },
     {
       "path": "figma/strike-design-figma.zip",
       "label": "For Figma",
-      "bytes": 21718,
+      "bytes": 22350,
       "kind": "zip"
     },
     {
       "path": "portable/strike-design-kit.zip",
       "label": "Brand kit",
-      "bytes": 3891839,
+      "bytes": 3893232,
       "kind": "zip"
     },
     {
       "path": "tokens/tokens.css",
       "label": "CSS variables",
-      "bytes": 7747,
+      "bytes": 8072,
       "kind": "css"
     },
     {
       "path": "tokens/tailwind.preset.cjs",
       "label": "Tailwind v3 preset",
-      "bytes": 3925,
+      "bytes": 4194,
       "kind": "js"
     },
     {
       "path": "tokens/theme.css",
       "label": "Tailwind v4 theme",
-      "bytes": 2602,
+      "bytes": 2700,
       "kind": "css"
     },
     {
       "path": "tokens/tokens.json",
       "label": "Design tokens (JSON)",
-      "bytes": 6744,
+      "bytes": 7282,
       "kind": "json"
     }
   ],

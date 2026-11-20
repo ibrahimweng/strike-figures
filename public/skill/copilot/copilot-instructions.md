@@ -4,6 +4,8 @@ Strike is the options exchange that never closes. Its design is calm, exact and 
 
 ## Make it easy
 Give people the simplest way first: one link to copy, one command, one button. Offer downloads and longer steps only as the fallback.
+- **Say each thing once.** No repeated actions, labels or messages on a screen, and nothing that contradicts something else. If two parts do the same job, keep one.
+- Simplify whatever can be simplified. Clear and direct beats complete.
 
 ## Ask first, briefly, when it isn't clear
 - The medium and size (web, app, X post, poster, slide).
@@ -68,7 +70,9 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 ## Illustration and motion
 - Line art in greys with one green focus, on the 2:1 isometric angle or flat (straight down). Faces hide what's behind them; dashed lines mean "not real yet"; dots carry tone.
 - Labels: Geist, a ticker in Medium over its value in Regular ("AMD" / "IV 106.2%").
-- Motion is calm: one thing moves at a time, eased, and returns to rest. No bounce, no flashing.
+- Motion is calm: one thing moves at a time and returns to rest. No bounce, no flashing.
+- Shapes **gather** into a meeting point with an ease-in, cubic-bezier(0.55, 0, 0.85, 0), 400 ms, and **release** from it with an ease-out, cubic-bezier(0.15, 1, 0.6, 1), 320 ms; then rest 280 ms (a 1 s loop). Plain UI uses cubic-bezier(0.2, 0, 0, 1), 120–200 ms.
+- Circle compositions: five equal circles, three over two, each touching its neighbours, in one grey. To move, one circle grows (up to 2×) as the others shrink, always passing back through the five equal circles.
 
 ## Words
 - Verbal branding is still being written: keep copy short, plain and factual. No hype, no exclamation marks, no emoji in brand copy.
@@ -78,7 +82,7 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 - Never target the US or sanctioned regions.
 
 ## Before you hand it over
-Check: dark unless asked · backgrounds from the set · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
+Check: dark unless asked · backgrounds from the set · nothing said twice · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
 
 ## Files
 Paths are relative to the project's root. Open the rule file for the work in hand before you start.

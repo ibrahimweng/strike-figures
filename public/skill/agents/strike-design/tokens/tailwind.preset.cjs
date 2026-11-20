@@ -144,10 +144,18 @@ module.exports = {
       "transitionDuration": {
         "fast": "120ms",
         "base": "200ms",
-        "slow": "320ms"
+        "slow": "320ms",
+        "gather": "400ms",
+        "release": "320ms",
+        "rest": "280ms",
+        "loop": "1000ms",
+        "press-in": "240ms",
+        "press-out": "200ms"
       },
       "transitionTimingFunction": {
-        "strike": "cubic-bezier(0.2, 0, 0, 1)"
+        "strike": "cubic-bezier(0.2, 0, 0, 1)",
+        "gather": "cubic-bezier(0.55, 0, 0.85, 0)",
+        "release": "cubic-bezier(0.15, 1, 0.6, 1)"
       }
     }
   }

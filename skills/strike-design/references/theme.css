@@ -75,6 +75,8 @@
   --spacing-grid: 50px;
 
   --ease-strike: cubic-bezier(0.2, 0, 0, 1);
+  --ease-gather: cubic-bezier(0.55, 0, 0.85, 0);
+  --ease-release: cubic-bezier(0.15, 1, 0.6, 1);
 }
 
 [data-theme="light"] {

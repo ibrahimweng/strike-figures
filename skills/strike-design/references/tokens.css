@@ -106,7 +106,15 @@
   --strike-duration-fast: 120ms;
   --strike-duration-base: 200ms;
   --strike-duration-slow: 320ms;
+  --strike-duration-gather: 400ms;
+  --strike-duration-release: 320ms;
+  --strike-duration-rest: 280ms;
+  --strike-duration-loop: 1000ms;
+  --strike-duration-press-in: 240ms;
+  --strike-duration-press-out: 200ms;
   --strike-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --strike-ease-gather: cubic-bezier(0.55, 0, 0.85, 0);
+  --strike-ease-release: cubic-bezier(0.15, 1, 0.6, 1);
 }
 
 [data-theme="light"] {

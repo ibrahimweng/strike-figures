@@ -19,10 +19,28 @@ alwaysApply: false
 - **Making them:** use the Strike Figures tool (65 ready illustrations, exports SVG, PNG, MP4, GIF, animated SVG and Lottie) when it's available. Otherwise draw with these rules.
 
 ## Motion
-- **Character:** calm and exact. One thing moves at a time, eased, and comes back to rest. The first frame is the still.
-- **UI timing:**
-  - 120 ms for small changes, 200 ms for panels, 320 ms for page transitions;
-  - ease cubic-bezier(0.2, 0, 0, 1);
-  - no bounce, no flashing;
-  - honour reduced motion.
-- **Video and loops:** 3–6 s, seamless. Type fades in; it never flies in.
+- **Character:** calm and exact. One thing moves at a time and comes back to rest. The first frame is the still. No bounce, no flashing; honour reduced motion.
+
+### The two curves
+Every move has a meeting point: the moment shapes come together (or pass through their rest state). Shapes speed up into it and slow down out of it, so the fastest frame is the meeting.
+
+| Name | Curve | Duration | Use |
+|---|---|---|---|
+| Gather (ease-in) | cubic-bezier(0.55, 0, 0.85, 0) | 400 ms | Into the meeting point; back to rest when a hover ends |
+| Release (ease-out) | cubic-bezier(0.15, 1, 0.6, 1) | 320 ms | Out of it to the new state; hover-in |
+| Rest | — | 280 ms | Still between moves |
+| UI (standard) | cubic-bezier(0.2, 0, 0, 1) | 120 / 200 / 320 ms | Plain UI: colour, small changes, panels, page transitions |
+
+- **A loop** is rest → gather → release: 280 + 400 + 320 = 1000 ms.
+- **Press** (a click): gather in 240 ms, release out 200 ms.
+- Small moves may shorten both, keeping the ratio (gather a little longer than release).
+
+### Circle composition
+- **Five equal circles, three over two.** Each touches its neighbours: centres 2r apart in a row, rows r·√3 apart, the lower two sitting in the gaps.
+- One grey (ink-2 #B3B3B3 on dark). At most one green, for the one thing that matters.
+- **Focus move:** one circle grows (up to 2×) while the others shrink (down to 0.5×) and stay packed against it. Changing focus always passes back through the five equal circles: gather into them, release out to the new focus.
+- **Press move:** the five circles squeeze towards the centre and back.
+- **In a row** (e.g. icons): the hovered circle grows by about a third and its two neighbours give up the same width between them, so the row keeps its length.
+
+### Video and loops
+3–6 s, seamless, built from 1 s moves. Type fades in; it never flies in.

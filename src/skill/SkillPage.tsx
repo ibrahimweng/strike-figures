@@ -3,10 +3,11 @@
    it works in. Below, a card for each part of the brand; each opens its own
    page (#logo, #colour, …). Everything is read from the skill's built files. */
 import { type ReactNode, useEffect, useState } from 'react';
+import { css, EASE, MS } from './circles';
+import { CircleLoop } from './motion';
 import { LOGOS } from './agent-logos';
 import { AppMock, BrandPage, HeroFigure, PAGES, type PageId, WebMock } from './brandPages';
-import { Markdown } from './markdown';
-import { at, COMMAND, CopyBox, GITHUB, IconArrow, IconCheck, IconGitHub, Label, type Manifest, PUBLIC, size, useCopy } from './shared';
+import { at, COMMAND, CopyBox, type Copy, GITHUB, IconArrow, IconCheck, IconGitHub, Label, type Manifest, PUBLIC, size, useCopy } from './shared';
 
 export { GITHUB, IconGitHub };
 
@@ -18,8 +19,6 @@ interface Agent {
   name: string;
   logo: ReactNode;
   how: How;
-  /** the manifest target with the longer steps and files */
-  target: string;
 }
 
 const Glyph = ({ d }: { d: string }) => (
@@ -34,7 +33,7 @@ const Line = ({ children }: { children: ReactNode }) => (
 );
 
 const AGENTS: Agent[] = [
-  { id: 'claude-code', name: 'Claude Code', logo: <Glyph d={LOGOS.claude!} />, how: { kind: 'command', agent: 'claude-code' }, target: 'claude' },
+  { id: 'claude-code', name: 'Claude Code', logo: <Glyph d={LOGOS.claude!} />, how: { kind: 'command', agent: 'claude-code' } },
   {
     id: 'codex',
     name: 'Codex',
@@ -45,12 +44,10 @@ const AGENTS: Agent[] = [
       </Line>
     ),
     how: { kind: 'command', agent: 'codex' },
-    target: 'agents',
   },
-  { id: 'cursor', name: 'Cursor', logo: <Glyph d={LOGOS.cursor!} />, how: { kind: 'command', agent: 'cursor' }, target: 'cursor' },
-  { id: 'copilot', name: 'GitHub Copilot', logo: <Glyph d={LOGOS.copilot!} />, how: { kind: 'command', agent: 'github-copilot' }, target: 'copilot' },
-  { id: 'windsurf', name: 'Windsurf', logo: <Glyph d={LOGOS.windsurf!} />, how: { kind: 'command', agent: 'windsurf' }, target: 'agents' },
-  { id: 'claude', name: 'Claude', logo: <Glyph d={LOGOS.claude!} />, how: { kind: 'prompt', keep: 'a Project' }, target: 'claude' },
+  { id: 'cursor', name: 'Cursor', logo: <Glyph d={LOGOS.cursor!} />, how: { kind: 'command', agent: 'cursor' } },
+  { id: 'copilot', name: 'GitHub Copilot', logo: <Glyph d={LOGOS.copilot!} />, how: { kind: 'command', agent: 'github-copilot' } },
+  { id: 'windsurf', name: 'Windsurf', logo: <Glyph d={LOGOS.windsurf!} />, how: { kind: 'command', agent: 'windsurf' } },
   {
     id: 'chatgpt',
     name: 'ChatGPT',
@@ -60,11 +57,10 @@ const AGENTS: Agent[] = [
       </Line>
     ),
     how: { kind: 'prompt', keep: 'a Project or a GPT' },
-    target: 'chatgpt',
   },
-  { id: 'gemini', name: 'Gemini', logo: <Glyph d={LOGOS.gemini!} />, how: { kind: 'prompt', keep: 'a Gem' }, target: 'gemini' },
-  { id: 'perplexity', name: 'Perplexity', logo: <Glyph d={LOGOS.perplexity!} />, how: { kind: 'prompt', keep: 'a Space' }, target: 'perplexity' },
-  { id: 'figma', name: 'Figma', logo: <Glyph d={LOGOS.figma!} />, how: { kind: 'guidelines' }, target: 'figma' },
+  { id: 'gemini', name: 'Gemini', logo: <Glyph d={LOGOS.gemini!} />, how: { kind: 'prompt', keep: 'a Gem' } },
+  { id: 'perplexity', name: 'Perplexity', logo: <Glyph d={LOGOS.perplexity!} />, how: { kind: 'prompt', keep: 'a Space' } },
+  { id: 'figma', name: 'Figma', logo: <Glyph d={LOGOS.figma!} />, how: { kind: 'guidelines' } },
 ];
 
 /* ---------- which page: #logo, #colour, … (no hash: the overview) ---------- */
@@ -78,7 +74,10 @@ const readPage = (): PageId | null => {
 function usePage(): [PageId | null, (p: PageId | null) => void] {
   const [page, setPage] = useState<PageId | null>(readPage);
   useEffect(() => {
-    const sync = () => setPage(readPage());
+    const sync = () => {
+      setPage(readPage());
+      document.querySelector('.sk')?.scrollTo({ top: 0 });
+    };
     window.addEventListener('hashchange', sync);
     window.addEventListener('popstate', sync);
     return () => {
@@ -96,6 +95,76 @@ function usePage(): [PageId | null, (p: PageId | null) => void] {
     document.querySelector('.sk')?.scrollTo({ top: 0 });
   };
   return [page, go];
+}
+
+/* ---------- the tools: a row of circles ---------- */
+
+/* Hover runs the focus move: the circle grows by a third and its neighbours give up the
+   same width, released out (ease-out); leaving gathers them back to rest (ease-in).
+   A click copies that tool's setup and presses the circle. One caption says what happens. */
+function Tools({ prompt, copied, copy }: { prompt: string; copied: string | null; copy: Copy }) {
+  const [hover, setHover] = useState<number | null>(null);
+  const [last, setLast] = useState<Agent | null>(null);
+  const textFor = (a: Agent): string | (() => Promise<string>) =>
+    a.how.kind === 'command' ? `${COMMAND} -a ${a.how.agent}` : a.how.kind === 'prompt' ? prompt : () => fetch(at('figma/guidelines.md')).then(r => r.text());
+  const what = (a: Agent) => (a.how.kind === 'command' ? 'copies the install command' : a.how.kind === 'prompt' ? 'copies the prompt' : 'copies the guidelines for Figma Make');
+  const done = (a: Agent) =>
+    a.how.kind === 'command'
+      ? 'Run it in your project, then ask for Strike work as usual.'
+      : a.how.kind === 'prompt'
+        ? `Paste it into ${a.name}. To keep it, add it to ${a.how.keep}’s instructions.`
+        : 'Paste it into Figma Make’s Guidelines.md.';
+  const press = (el: HTMLElement) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !el.animate) return;
+    const total = MS.pressIn + MS.pressOut;
+    el.animate(
+      [
+        { transform: 'scale(1)', easing: css(EASE.gather) },
+        { transform: 'scale(0.86)', offset: MS.pressIn / total, easing: css(EASE.release) },
+        { transform: 'scale(1)' },
+      ],
+      { duration: total },
+    );
+  };
+  const shown = hover !== null ? AGENTS[hover]! : null;
+  const isCopied = last && copied === `tool-${last.id}`;
+  return (
+    <>
+      <div className={`sk-orbs${hover !== null ? ' live' : ''}`} onMouseLeave={() => setHover(null)}>
+        {AGENTS.map((a, i) => (
+          <button
+            key={a.id}
+            className={`sk-orb${hover === i ? ' focus' : hover !== null && Math.abs(hover - i) === 1 ? ' near' : ''}${isCopied && last?.id === a.id ? ' done' : ''}`}
+            aria-label={`${a.name}: ${what(a)}`}
+            data-testid={`tool-${a.id}`}
+            onMouseEnter={() => setHover(i)}
+            onFocus={() => setHover(i)}
+            onBlur={() => setHover(null)}
+            onClick={e => {
+              press(e.currentTarget);
+              setLast(a);
+              copy(`tool-${a.id}`, textFor(a));
+            }}
+          >
+            <span className="sk-orb-logo">{a.logo}</span>
+          </button>
+        ))}
+      </div>
+      <p className="sk-caption" aria-live="polite" data-testid="tools-caption">
+        {isCopied && last ? (
+          <>
+            <b>Copied.</b> {done(last)}
+          </>
+        ) : shown ? (
+          <>
+            <b>{shown.name}</b> · {what(shown)}
+          </>
+        ) : (
+          'Click a tool to copy its setup.'
+        )}
+      </p>
+    </>
+  );
 }
 
 /* ---------- the card previews ---------- */
@@ -135,6 +204,7 @@ function CardArt({ id, lockup }: { id: PageId; lockup: string }) {
       </div>
     );
   if (id === 'illustration') return <HeroFigure />;
+  if (id === 'motion') return <CircleLoop move="focus" className="sk-art-motion" />;
   if (id === 'backgrounds')
     return (
       <div className="sk-art-bg">
@@ -159,7 +229,6 @@ function CardArt({ id, lockup }: { id: PageId; lockup: string }) {
 export function SkillPage() {
   const [manifest, setManifest] = useState<Manifest | null>(null);
   const [core, setCore] = useState('');
-  const [agentId, setAgentId] = useState('claude-code');
   const [copied, copy] = useCopy();
   const [page, go] = usePage();
 
@@ -184,11 +253,8 @@ export function SkillPage() {
 
   const link = new URL(manifest?.universal ?? 'STRIKE-DESIGN.md', PUBLIC).href;
   const prompt = `Read ${link} and follow it for everything you make for Strike.`;
-  const agent = AGENTS.find(a => a.id === agentId) ?? AGENTS[0]!;
-  const target = manifest?.targets.find(t => t.id === agent.target);
   const kit = manifest?.downloads.find(d => d.path.endsWith('strike-design-kit.zip'));
   const lockup = at(manifest?.logos.find(l => /lockup-3d-green/.test(l.path))?.path ?? 'portable/logo/strike-lockup-3d-green.svg');
-  const fetchText = (path: string) => () => fetch(at(path)).then(r => r.text());
 
   /* ---- one part of the brand ---- */
   if (page) {
@@ -261,58 +327,7 @@ export function SkillPage() {
         {/* ---- the tools ---- */}
         <section className="sk-tools">
           <Label>Works in</Label>
-          <div className="sk-agents" role="tablist">
-            {AGENTS.map(a => (
-              <button key={a.id} role="tab" aria-selected={a.id === agent.id} className={`sk-agent${a.id === agent.id ? ' on' : ''}`} onClick={() => setAgentId(a.id)} title={a.name}>
-                <span className="sk-agent-logo">{a.logo}</span>
-                <span className="sk-agent-name">{a.name}</span>
-              </button>
-            ))}
-          </div>
-          <div className="sk-how">
-            <h3>Use it in {agent.name}</h3>
-            {agent.how.kind === 'command' && (
-              <>
-                <p className="sk-one">Run this in your project, then ask for Strike work as usual.</p>
-                <CopyBox k={`cmd-${agent.id}`} text={`${COMMAND} -a ${agent.how.agent}`} prompt="$" copied={copied} copy={copy} mono />
-              </>
-            )}
-            {agent.how.kind === 'prompt' && (
-              <>
-                <p className="sk-one">Paste this into the chat. To keep it, put it in {agent.how.keep}’s instructions.</p>
-                <CopyBox k={`prompt-${agent.id}`} text={prompt} copied={copied} copy={copy} />
-              </>
-            )}
-            {agent.how.kind === 'guidelines' && (
-              <>
-                <p className="sk-one">Paste these guidelines into Figma Make’s Guidelines.md.</p>
-                <CopyBox k="figma" text={fetchText('figma/guidelines.md')} shown="Strike guidelines for Figma Make" copied={copied} copy={copy} />
-              </>
-            )}
-            {target && (
-              <details className="sk-more">
-                <summary>Other ways</summary>
-                <ol className="sk-steps">
-                  {target.steps.map((s, i) => (
-                    <li key={i}>
-                      <Markdown text={s} />
-                    </li>
-                  ))}
-                </ol>
-                <ul className="sk-files">
-                  {target.files.map(f => (
-                    <li key={f.path}>
-                      <span>{f.label}</span>
-                      <span className="sk-size">{size(f.bytes)}</span>
-                      <a href={at(f.path)} download>
-                        Download
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            )}
-          </div>
+          <Tools prompt={prompt} copied={copied} copy={copy} />
         </section>
 
         {/* ---- the brand, one card per part ---- */}
@@ -354,6 +369,31 @@ export function SkillPage() {
             </a>
           </div>
           <p className="sk-note">Logos, fonts, posters and design tokens, in one zip.</p>
+          {manifest && (
+            <details className="sk-more">
+              <summary>Set up by hand</summary>
+              <ul className="sk-files">
+                {manifest.targets.map(t => {
+                  const zip = t.files.find(f => f.path.endsWith('.zip')) ?? t.files[0];
+                  return (
+                    <li key={t.id}>
+                      <span>
+                        {t.name} <em>{t.summary}</em>
+                      </span>
+                      {zip && (
+                        <>
+                          <span className="sk-size">{size(zip.bytes)}</span>
+                          <a href={at(zip.path)} download>
+                            Download
+                          </a>
+                        </>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </details>
+          )}
           {manifest && (
             <details className="sk-more">
               <summary>Developer files</summary>

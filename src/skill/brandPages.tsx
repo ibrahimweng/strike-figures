@@ -8,15 +8,17 @@ import { useThread } from '../social/store';
 import { useLibraryThumb } from '../ui/thumbs';
 import { heroAt, heroScene, heroSvg } from './heroFigure';
 import { Markdown } from './markdown';
+import { MotionPage } from './motion';
 import { at, type Colour, type Copy, Group, type Manifest, ratio, Tip } from './shared';
 
-export type PageId = 'logo' | 'colour' | 'type' | 'illustration' | 'backgrounds' | 'rules';
+export type PageId = 'logo' | 'colour' | 'type' | 'illustration' | 'motion' | 'backgrounds' | 'rules';
 
 export const PAGES: { id: PageId; title: string; line: string }[] = [
   { id: 'logo', title: 'Logo', line: 'The lockup, the mark and the wordmark, in every version.' },
   { id: 'colour', title: 'Colour', line: 'A dark ground and one green, grouped by use.' },
   { id: 'type', title: 'Type', line: 'Geist for everything. Short titles, tight tracking.' },
   { id: 'illustration', title: 'Illustration', line: 'Line art in greys with one green focus.' },
+  { id: 'motion', title: 'Motion', line: 'Two curves: shapes gather into a point, then release from it.' },
   { id: 'backgrounds', title: 'Backgrounds', line: 'Two darks for each medium. About 80% is the darkest.' },
   { id: 'rules', title: 'Rules', line: 'The full set your AI follows, and the check before handing over.' },
 ];
@@ -449,6 +451,7 @@ export function BrandPage({ id, manifest, core, copied, copy }: { id: PageId; ma
   if (id === 'rules') return <RulesPage core={core} />;
   if (id === 'type') return <TypePage />;
   if (id === 'illustration') return <IllustrationPage />;
+  if (id === 'motion') return <MotionPage copied={copied} copy={copy} />;
   if (!manifest) return null;
   if (id === 'logo') return <LogoPage manifest={manifest} />;
   if (id === 'colour') return <ColourPage manifest={manifest} copied={copied} copy={copy} />;

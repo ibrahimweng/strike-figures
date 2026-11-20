@@ -1866,59 +1866,82 @@ select.select:focus {
 
 /* tools */
 .sk-tools {
-  padding: 32px 0 40px;
+  padding: 32px 0 48px;
   border-top: 1px solid var(--line);
 }
-.sk-agents {
-  display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
-  gap: 6px;
+.sk-tools .sk-label {
+  text-align: center;
+  margin-bottom: 18px;
 }
-.sk-agent {
+/* the tools: a row of touching circles; hover = focus, click = press (motion tokens) */
+.sk-tools {
+  container-type: inline-size;
+}
+.sk-orbs {
+  --s: min(56px, calc((100cqw - 16px) / 9.2));
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 16px 4px 12px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: transparent;
-  color: var(--faint);
-  font: inherit;
-  cursor: pointer;
-  min-width: 0;
+  justify-content: center;
+  gap: 2px;
+  height: calc(var(--s) * 1.36);
 }
-.sk-agent:hover {
-  color: var(--muted);
-  border-color: var(--line-2);
-}
-.sk-agent.on {
-  color: var(--text);
-  border-color: var(--line-2);
+.sk-orb {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--s);
+  height: var(--s);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
   background: var(--field);
+  color: var(--faint);
+  cursor: pointer;
+  /* leaving the row: gather back to rest */
+  transition: width 400ms cubic-bezier(0.55, 0, 0.85, 0), height 400ms cubic-bezier(0.55, 0, 0.85, 0), background 200ms cubic-bezier(0.2, 0, 0, 1), color 200ms cubic-bezier(0.2, 0, 0, 1);
 }
-.sk-agent-logo svg {
-  width: 22px;
-  height: 22px;
+.sk-orbs.live .sk-orb {
+  /* within the row: release into the new focus */
+  transition-duration: 320ms, 320ms, 200ms, 200ms;
+  transition-timing-function: cubic-bezier(0.15, 1, 0.6, 1), cubic-bezier(0.15, 1, 0.6, 1), cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1);
+}
+.sk-orb.focus {
+  width: calc(var(--s) * 1.36);
+  height: calc(var(--s) * 1.36);
+  background: var(--raised);
+  color: var(--text);
+}
+.sk-orb.near {
+  width: calc(var(--s) * 0.82);
+  height: calc(var(--s) * 0.82);
+}
+.sk-orb.done {
+  color: var(--accent);
+}
+.sk-orb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.sk-orb-logo {
   display: block;
+  width: 40%;
+  aspect-ratio: 1;
 }
-.sk-agent-name {
-  font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+.sk-orb-logo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
-.sk-how {
-  margin-top: 10px;
-  padding: 22px 24px 24px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-}
-.sk-one {
+.sk-caption {
+  margin: 14px 0 0;
+  text-align: center;
   color: var(--muted);
-  font-size: 14px;
-  margin: 6px 0 16px;
+  font-size: 13px;
+  min-height: 1.4em;
+}
+.sk-caption b {
+  color: var(--text);
+  font-weight: 500;
 }
 .sk-more {
   margin-top: 16px;
@@ -1983,6 +2006,11 @@ select.select:focus {
 .sk-files li span:first-child {
   flex: 1;
 }
+.sk-files em {
+  font-style: normal;
+  color: var(--faint);
+  margin-left: 6px;
+}
 .sk-files a {
   color: var(--muted);
 }
@@ -2017,6 +2045,23 @@ select.select:focus {
 .sk-card:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
+}
+.sk-cards .c-rules {
+  grid-column: 1 / -1;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+}
+.sk-cards .c-rules .sk-card-art {
+  height: auto;
+  padding: 36px 40px;
+}
+.sk-cards .c-rules .sk-card-text {
+  padding: 36px 40px;
+}
+.sk-art-motion {
+  width: 62%;
+  max-width: 300px;
 }
 .sk-card-art {
   height: 260px;
@@ -2654,6 +2699,117 @@ details.sk-group[open] > .sk-swatches {
   border-top: 1px solid var(--line);
 }
 
+/* motion */
+.sk-curves {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.sk-curve-cell {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.sk-curve {
+  width: 120px;
+  height: 120px;
+  overflow: visible;
+}
+.sk-curve-cell h4 {
+  font-size: 15px;
+  color: var(--text);
+}
+.sk-curve-cell h4 span {
+  color: var(--muted);
+  font-weight: 400;
+}
+.sk-curve-cell p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.sk-code {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--field);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+.sk-note .sk-code {
+  margin-top: 0;
+}
+.sk-code:hover {
+  border-color: var(--line-2);
+}
+.sk-compose {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+}
+.sk-compose svg {
+  width: 100%;
+  display: block;
+}
+.sk-moves {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.sk-move {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.sk-move svg {
+  display: block;
+  width: 70%;
+  height: 170px;
+  margin: 0 auto 20px;
+}
+.sk-move h4 {
+  font-size: 15px;
+  color: var(--text);
+}
+.sk-move p {
+  margin: 6px 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.sk-timing {
+  display: flex;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.sk-timing span {
+  min-width: 0;
+  padding-top: 8px;
+  border-top: 2px solid var(--raised);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sk-timing span.t-gather,
+.sk-timing span.t-release {
+  border-top-color: #b3b3b3;
+}
+.sk-timing b {
+  color: var(--text);
+  font-weight: 500;
+}
+
 /* rules */
 .sk-sub .sk-rules {
   margin-top: 8px;
@@ -2709,8 +2865,13 @@ details.sk-group[open] > .sk-swatches {
   .sk-hero h1 {
     font-size: 44px;
   }
-  .sk-agents {
-    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  .sk-curves,
+  .sk-moves,
+  .sk-compose {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sk-compose svg {
+    max-width: 220px;
   }
   .sk-cards {
     grid-template-columns: minmax(0, 1fr);
@@ -2718,6 +2879,10 @@ details.sk-group[open] > .sk-swatches {
   .sk-card-art {
     height: 200px;
     padding: 24px 20px 4px;
+  }
+  .sk-cards .c-rules {
+    flex-direction: column;
+    align-items: stretch;
   }
   .sk-card-text {
     padding: 8px 20px 28px;

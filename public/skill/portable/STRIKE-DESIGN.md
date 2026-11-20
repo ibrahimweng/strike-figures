@@ -6,6 +6,8 @@ Strike is the options exchange that never closes. Its design is calm, exact and 
 
 ## Make it easy
 Give people the simplest way first: one link to copy, one command, one button. Offer downloads and longer steps only as the fallback.
+- **Say each thing once.** No repeated actions, labels or messages on a screen, and nothing that contradicts something else. If two parts do the same job, keep one.
+- Simplify whatever can be simplified. Clear and direct beats complete.
 
 ## Ask first, briefly, when it isn't clear
 - The medium and size (web, app, X post, poster, slide).
@@ -70,7 +72,9 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 ## Illustration and motion
 - Line art in greys with one green focus, on the 2:1 isometric angle or flat (straight down). Faces hide what's behind them; dashed lines mean "not real yet"; dots carry tone.
 - Labels: Geist, a ticker in Medium over its value in Regular ("AMD" / "IV 106.2%").
-- Motion is calm: one thing moves at a time, eased, and returns to rest. No bounce, no flashing.
+- Motion is calm: one thing moves at a time and returns to rest. No bounce, no flashing.
+- Shapes **gather** into a meeting point with an ease-in, cubic-bezier(0.55, 0, 0.85, 0), 400 ms, and **release** from it with an ease-out, cubic-bezier(0.15, 1, 0.6, 1), 320 ms; then rest 280 ms (a 1 s loop). Plain UI uses cubic-bezier(0.2, 0, 0, 1), 120–200 ms.
+- Circle compositions: five equal circles, three over two, each touching its neighbours, in one grey. To move, one circle grows (up to 2×) as the others shrink, always passing back through the five equal circles.
 
 ## Words
 - Verbal branding is still being written: keep copy short, plain and factual. No hype, no exclamation marks, no emoji in brand copy.
@@ -80,7 +84,7 @@ Strike is dark. About 80% of any screen is the darkest background; the lighter o
 - Never target the US or sanctioned regions.
 
 ## Before you hand it over
-Check: dark unless asked · backgrounds from the set · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
+Check: dark unless asked · backgrounds from the set · nothing said twice · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
 
 ---
 
@@ -288,13 +292,31 @@ With the repo's scripts available, generate it: `node scripts/lockup.mjs --name 
 - **Making them:** use the Strike Figures tool (65 ready illustrations, exports SVG, PNG, MP4, GIF, animated SVG and Lottie) when it's available. Otherwise draw with these rules.
 
 ### Motion
-- **Character:** calm and exact. One thing moves at a time, eased, and comes back to rest. The first frame is the still.
-- **UI timing:**
-  - 120 ms for small changes, 200 ms for panels, 320 ms for page transitions;
-  - ease cubic-bezier(0.2, 0, 0, 1);
-  - no bounce, no flashing;
-  - honour reduced motion.
-- **Video and loops:** 3–6 s, seamless. Type fades in; it never flies in.
+- **Character:** calm and exact. One thing moves at a time and comes back to rest. The first frame is the still. No bounce, no flashing; honour reduced motion.
+
+#### The two curves
+Every move has a meeting point: the moment shapes come together (or pass through their rest state). Shapes speed up into it and slow down out of it, so the fastest frame is the meeting.
+
+| Name | Curve | Duration | Use |
+|---|---|---|---|
+| Gather (ease-in) | cubic-bezier(0.55, 0, 0.85, 0) | 400 ms | Into the meeting point; back to rest when a hover ends |
+| Release (ease-out) | cubic-bezier(0.15, 1, 0.6, 1) | 320 ms | Out of it to the new state; hover-in |
+| Rest | — | 280 ms | Still between moves |
+| UI (standard) | cubic-bezier(0.2, 0, 0, 1) | 120 / 200 / 320 ms | Plain UI: colour, small changes, panels, page transitions |
+
+- **A loop** is rest → gather → release: 280 + 400 + 320 = 1000 ms.
+- **Press** (a click): gather in 240 ms, release out 200 ms.
+- Small moves may shorten both, keeping the ratio (gather a little longer than release).
+
+#### Circle composition
+- **Five equal circles, three over two.** Each touches its neighbours: centres 2r apart in a row, rows r·√3 apart, the lower two sitting in the gaps.
+- One grey (ink-2 #B3B3B3 on dark). At most one green, for the one thing that matters.
+- **Focus move:** one circle grows (up to 2×) while the others shrink (down to 0.5×) and stay packed against it. Changing focus always passes back through the five equal circles: gather into them, release out to the new focus.
+- **Press move:** the five circles squeeze towards the centre and back.
+- **In a row** (e.g. icons): the hovered circle grows by about a third and its two neighbours give up the same width between them, so the row keeps its length.
+
+#### Video and loops
+3–6 s, seamless, built from 1 s moves. Type fades in; it never flies in.
 
 ## Data and infographics
 
@@ -406,6 +428,8 @@ Verbal branding is still being written. Until then, keep copy short, plain and f
 - [ ] Profit and loss carry a sign; red only means loss
 - [ ] Nothing invented; no market count; USDC unless told otherwise
 - [ ] Risk line where required
+- [ ] Nothing repeats: each action, label and message appears once; nothing contradicts
+- [ ] Motion uses gather (ease-in, 400 ms) and release (ease-out, 320 ms), or the UI ease for plain UI
 - [ ] Your reply to the user is short and direct
 
 ---
@@ -463,4 +487,4 @@ CSS variables come from tokens.css; Tailwind uses the same names (`bg-ground`, `
 - **Space:** 4, 8, 12, 16, 24, 32, 48, 64, 96, 128 px (`--strike-space-1` to `--strike-space-10`); grid 50px (`--strike-grid`) for posters, cards and illustrations.
 - **Radius:** sm 6px (small controls), md 8px (buttons, inputs), lg 12px (cards), pill 9999px.
 - **Size:** control 40px, control-sm 32px, logo-mark-min 16px, logo-lockup-min-height 20px.
-- **Motion:** fast 120ms, base 200ms, slow 320ms; ease cubic-bezier(0.2, 0, 0, 1).
+- **Motion:** fast 120ms, base 200ms, slow 320ms, gather 400ms, release 320ms, rest 280ms, loop 1000ms, press-in 240ms, press-out 200ms; ease cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.55, 0, 0.85, 0), cubic-bezier(0.15, 1, 0.6, 1).
