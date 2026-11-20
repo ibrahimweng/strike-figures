@@ -116,7 +116,7 @@ Any face can take a solid colour and a dotted fill:
 
 ### Decals and labels
 
-A mark can be laid flat on a top face: the sun from FIG 0.1, any SVG (such as the Strike logo), or a few words.
+A mark can be laid flat on a top face: the Strike logo (the flat version, as on FIG 0.1), any SVG, or a few words.
 
 Labels can float upright or lie on the floor or a wall. Both are set in Geist Mono and drawn as outlines, so they look the same in every viewer, whether or not the font is installed. To rebuild the outlines, run `npm run glyphs`.
 

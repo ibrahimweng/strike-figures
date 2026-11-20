@@ -1,5 +1,4 @@
-/* Decals: a mark laid flat on a top face, like the sun on Linear's FIG 0.1
-   or the Strike logo. Marks are SVG path data in a 1×1 box centred on 0;
+/* Decals: a mark laid flat on a top face, like the Strike logo on FIG 0.1. Marks are SVG path data in a 1×1 box centred on 0;
    every curve is turned into cubic Béziers, which an orthographic camera
    maps exactly, so the mark stays crisp at any angle. */
 import type { P2 } from './math';
@@ -215,22 +214,21 @@ export function cmdsBounds(cmds: Cmd[]) {
   return { minX, minY, maxX, maxY };
 }
 
-/** The sun of FIG 0.1: a disc whose top half is whole and whose lower half is cut into bands, 1 across. */
-export function sunsetPaths(): string[] {
-  const R = 0.5;
-  const at = (y: number) => Math.sqrt(Math.max(0, 1 - y * y)) * R;
-  const f = (v: number) => Number(v.toFixed(5));
-  const horizon = 0.058;
-  const xh = at(horizon);
-  const dome = `M${f(-xh)} ${f(horizon * R)}A${R} ${R} 0 1 1 ${f(xh)} ${f(horizon * R)}Z`;
-  const band = (y0: number, y1: number) => {
-    const x0 = at(y0);
-    const x1 = at(y1);
-    return `M${f(-x0)} ${f(y0 * R)}L${f(x0)} ${f(y0 * R)}A${R} ${R} 0 0 1 ${f(x1)} ${f(y1 * R)}L${f(-x1)} ${f(y1 * R)}A${R} ${R} 0 0 1 ${f(-x0)} ${f(y0 * R)}Z`;
-  };
-  const x2 = at(0.819);
-  const cap = `M${f(-x2)} ${f(0.819 * R)}L${f(x2)} ${f(0.819 * R)}A${R} ${R} 0 0 1 ${f(-x2)} ${f(0.819 * R)}Z`;
-  return [dome, band(0.249, 0.374), band(0.522, 0.67), cap];
+/**
+ * Strike's logo, the flat version for surfaces: a solid chevron over two
+ * chevron bands with rounded valleys. Drawn from the brand file's own
+ * geometry (a 1222-unit square), returned in a 1×1 box centred on 0.
+ */
+export function strikeLogoPaths(): string[] {
+  const band = (dy: number) =>
+    `M249 ${824 + dy}L304 ${780 + dy}L423 ${872 + dy}Q446 ${890 + dy} 469 ${872 + dy}L860 ${563 + dy}L1251 ${872 + dy}Q1274 ${890 + dy} 1297 ${872 + dy}L1416 ${780 + dy}L1471 ${824 + dy}L1471 ${934 + dy}L1275 ${1086 + dy}L860 ${759 + dy}L446 ${1086 + dy}L249 ${934 + dy}Z`;
+  const raw = ['M860 104L1471 583L1471 693L1275 846L860 519L446 846L249 693L249 583Z', band(0), band(240)];
+  const parsed = raw.map(d => parsePath(d));
+  const b = cmdsBounds(parsed.flat());
+  const size = Math.max(b.maxX - b.minX, b.maxY - b.minY);
+  const cx = (b.minX + b.maxX) / 2;
+  const cy = (b.minY + b.maxY) / 2;
+  return parsed.map(cmds => cmdsToPath(cmds, q => ({ x: (q.x - cx) / size, y: (q.y - cy) / size }), 5));
 }
 
 type Affine = [number, number, number, number, number, number];

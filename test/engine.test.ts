@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { clipOutside, curveAt, curveEnd, curveLength, curveStart, type Curve } from '../src/engine/curves';
-import { cmdsBounds, parsePath, parseTransform, sunsetPaths } from '../src/engine/decal';
+import { cmdsBounds, parsePath, parseTransform, strikeLogoPaths } from '../src/engine/decal';
 import { faceDots, gradientValue } from '../src/engine/dots';
 import { hull, insideDepth, makeView, polygonArea, project } from '../src/engine/math';
 import { renderScene } from '../src/engine/render';
@@ -237,14 +237,13 @@ describe('decals', () => {
     expect(m).toEqual([2, 0, 0, 2, 0, 22]);
   });
 
-  it('draws the sun as a dome and three bands', () => {
-    const paths = sunsetPaths();
-    expect(paths.length).toBe(4);
-    for (const p of paths) {
-      const b = cmdsBounds(parsePath(p));
-      /* control points may sit a little outside the disc */
-      expect(b.minX).toBeGreaterThanOrEqual(-0.53);
-      expect(b.maxX).toBeLessThanOrEqual(0.53);
-    }
+  it('draws the Strike logo as a chevron over two bands, in a unit box', () => {
+    const paths = strikeLogoPaths();
+    expect(paths.length).toBe(3);
+    const all = paths.flatMap(p => parsePath(p));
+    const b = cmdsBounds(all);
+    expect(b.maxX - b.minX).toBeCloseTo(1, 2);
+    expect(b.minX).toBeGreaterThanOrEqual(-0.5001);
+    expect(b.maxY).toBeLessThanOrEqual(0.5001);
   });
 });

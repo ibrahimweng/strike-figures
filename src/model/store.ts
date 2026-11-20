@@ -96,7 +96,10 @@ function fillObject(o: Partial<SceneObject>): SceneObject {
       sides: Object.fromEntries(Object.entries(o.faces?.sides ?? {}).map(([k, f]) => [k, face(f)])),
     },
     shadow: { ...base.shadow, ...(o.shadow ?? {}) },
-    decal: o.decal ? { ...o.decal, text: o.decal.text ?? '' } : null,
+    /* the sun mark of earlier versions is now the Strike logo */
+    decal: o.decal
+      ? { ...o.decal, text: o.decal.text ?? '', ...((o.decal.kind as string) === 'sunset' ? { kind: 'strike' as const, source: 'Strike logo', x: 0, y: 0, size: Math.min(o.decal.size, 96) } : {}) }
+      : null,
   } as SceneObject;
 }
 

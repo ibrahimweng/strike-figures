@@ -87,7 +87,8 @@ export interface Shadow {
 }
 
 export interface Decal {
-  kind: 'sunset' | 'svg' | 'text';
+  /** strike: the Strike logo, flat; svg: a mark from a file; text: a few words */
+  kind: 'strike' | 'svg' | 'text';
   /** text: the words, in Geist Mono */
   text: string;
   /** svg: the path data, normalised to a 1×1 box centred on 0 */

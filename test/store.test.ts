@@ -44,4 +44,10 @@ describe('store', () => {
     expect(sc.objects[0]!.faces.top).toEqual({ fill: null, dots: null });
     expect(sc.theme.creaseTrim).toBe(4);
   });
+
+  it("turns the sun mark of earlier versions into the Strike logo", () => {
+    const old = { kind: 'sunset', text: '', paths: [], source: 'Sun', x: 1.16, y: 1.16, size: 109.54, rotation: -45, mode: 'stroke', color: null, width: null, opacity: 1 };
+    const sc = fillScene({ objects: [{ name: 'Slab', shape: { kind: 'box', width: 10, depth: 10, radius: 0 }, height: 5, decal: old } as never] });
+    expect(sc.objects[0]!.decal?.kind).toBe('strike');
+  });
 });

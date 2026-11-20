@@ -608,13 +608,13 @@ function DecalEditor({ obj, up, theme }: { obj: SceneObject; up: (fn: (o: SceneO
   };
   return (
     <Section title="Top decal" defaultOpen={!!dc}>
-      <div className="note">A mark laid flat on the top face, like the sun on FIG 0.1 or your logo.</div>
+      <div className="note">A mark laid flat on the top face: the Strike logo, a mark from an SVG file, or a few words.</div>
       <div className="actions">
         <button
-          className={`btn small ghost${dc?.kind === 'sunset' ? ' on' : ''}`}
-          onClick={() => up(o => void (o.decal = { kind: 'sunset', text: '', paths: [], source: 'Sun', x: 0, y: 0, size, rotation: -45, mode: 'stroke', color: null, width: null, opacity: 1 }))}
+          className={`btn small soft${dc?.kind === 'strike' ? ' on' : ''}`}
+          onClick={() => up(o => void (o.decal = { kind: 'strike', text: '', paths: [], source: 'Strike logo', x: 0, y: 0, size, rotation: -45, mode: 'stroke', color: null, width: null, opacity: 1 }))}
         >
-          Sun
+          Strike logo
         </button>
         <label className="btn small ghost">
           <IconUpload /> SVG…
@@ -629,7 +629,7 @@ function DecalEditor({ obj, up, theme }: { obj: SceneObject; up: (fn: (o: SceneO
       {dc && (
         <>
           <Row label="Mark">
-            <span className="note">{dc.kind === 'sunset' ? 'Sun' : dc.source}</span>
+            <span className="note">{dc.kind === 'strike' ? 'Strike logo' : dc.source}</span>
           </Row>
           <Row label="Centre">
             <div className="grid2">

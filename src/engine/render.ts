@@ -12,7 +12,7 @@
 import type { DotFill, FaceStyle, Label, Scene, SceneObject, Theme } from '../model/types';
 import { textCmds, textWidth } from './text';
 import { type Curve, chain, trimFreeEnds } from './curves';
-import { cmdsToPath, parsePath, sunsetPaths, type Cmd } from './decal';
+import { cmdsToPath, parsePath, strikeLogoPaths, type Cmd } from './decal';
 import { type DotGroup, type FaceFrame, faceDots } from './dots';
 import {
   type M3,
@@ -134,7 +134,7 @@ function cmdsOf(d: string): Cmd[] {
   }
   return c;
 }
-const SUNSET = sunsetPaths();
+const STRIKE_LOGO = strikeLogoPaths();
 
 /** Angle ranges inside [a0, a1] within hw of centre (round the circle). */
 function within(a0: number, a1: number, centre: number, hw: number): [number, number][] {
@@ -545,7 +545,7 @@ function buildObject(o: Placed, view: View, theme: Theme, caps: CapInfo[], all: 
         const d =
           dc.kind === 'text'
             ? cmdsToPath(textCmds(dc.text, 'middle'), f)
-            : (dc.kind === 'sunset' ? SUNSET : dc.paths).map(p => cmdsToPath(cmdsOf(p), f)).join('');
+            : (dc.kind === 'strike' ? STRIKE_LOGO : dc.paths).map(p => cmdsToPath(cmdsOf(p), f)).join('');
         decal = {
           d,
           mode: dc.mode,
