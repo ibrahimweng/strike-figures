@@ -19,7 +19,7 @@ Give people the simplest way first: one link to copy, one command, one button. O
 ## Colour
 | Token | Hex | Use |
 |---|---|---|
-| ground | #0C0C0C | Backgrounds |
+| ground | #0C0C0C | Posters, social cards, illustrations, app modules |
 | ink | #F9F9F9 | Text on ground; ground of light layouts |
 | ink-2 | #B3B3B3 | Secondary text on dark |
 | green | #10B981 | The primary action, focus, one highlight. Never a large area in UI |
@@ -34,6 +34,14 @@ Give people the simplest way first: one link to copy, one command, one button. O
 - **Never set white text on green** (2.4:1). On green use ground text (7.7:1). Green text on light grounds uses deep (5.2:1).
 - Titles reach 7:1 contrast with their ground; body text at least 4.5:1.
 - Profit and loss always carry a sign or an arrow too, never colour alone.
+
+## Backgrounds
+Strike is dark. About 80% of any screen is the darkest background; the lighter one (about 20%) only separates parts and gives depth. Use only these:
+- **Websites and marketing:** page #090B0A; alternate sections and cards #0F1110.
+- **Apps and tools:** modules #0C0C0C sit on a lighter frame #2E2E2E that shows only in the thin gaps between them. Raised controls #161616, hover #202020.
+- **Posters, social cards, illustrations:** #0C0C0C (mint for posters only).
+- No other backgrounds: no gradients, tinted greys or textures made up for the job. Light layouts only when asked.
+- To see it: strikelabs.app (web) and trade.strikelabs.app (app).
 
 ## Type
 - **Geist** for everything: headlines and body. Weights: Light, Regular, Medium, SemiBold.
@@ -75,7 +83,7 @@ Give people the simplest way first: one link to copy, one command, one button. O
 - Never target the US or sanctioned regions.
 
 ## Before you hand it over
-Check: dark unless asked · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
+Check: dark unless asked · backgrounds from the set · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
 
 ## Files
 Paths are relative to this skill's folder. Open the reference for the work in hand before you start; the rules above are the summary.

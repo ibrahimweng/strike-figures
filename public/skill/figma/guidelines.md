@@ -16,7 +16,7 @@ Give people the simplest way first: one link to copy, one command, one button. O
 ## Colour
 | Token | Hex | Use |
 |---|---|---|
-| ground | #0C0C0C | Backgrounds |
+| ground | #0C0C0C | Posters, social cards, illustrations, app modules |
 | ink | #F9F9F9 | Text on ground; ground of light layouts |
 | ink-2 | #B3B3B3 | Secondary text on dark |
 | green | #10B981 | The primary action, focus, one highlight. Never a large area in UI |
@@ -31,6 +31,14 @@ Give people the simplest way first: one link to copy, one command, one button. O
 - **Never set white text on green** (2.4:1). On green use ground text (7.7:1). Green text on light grounds uses deep (5.2:1).
 - Titles reach 7:1 contrast with their ground; body text at least 4.5:1.
 - Profit and loss always carry a sign or an arrow too, never colour alone.
+
+## Backgrounds
+Strike is dark. About 80% of any screen is the darkest background; the lighter one (about 20%) only separates parts and gives depth. Use only these:
+- **Websites and marketing:** page #090B0A; alternate sections and cards #0F1110.
+- **Apps and tools:** modules #0C0C0C sit on a lighter frame #2E2E2E that shows only in the thin gaps between them. Raised controls #161616, hover #202020.
+- **Posters, social cards, illustrations:** #0C0C0C (mint for posters only).
+- No other backgrounds: no gradients, tinted greys or textures made up for the job. Light layouts only when asked.
+- To see it: strikelabs.app (web) and trade.strikelabs.app (app).
 
 ## Type
 - **Geist** for everything: headlines and body. Weights: Light, Regular, Medium, SemiBold.
@@ -72,7 +80,7 @@ Give people the simplest way first: one link to copy, one command, one button. O
 - Never target the US or sanctioned regions.
 
 ## Before you hand it over
-Check: dark unless asked · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
+Check: dark unless asked · backgrounds from the set · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
 
 ---
 
@@ -83,7 +91,9 @@ Tailwind classes use the same names (`bg-ground`, `text-ink-2`); see In code bel
 
 | Token | CSS variable | Dark (default) | Light | Use |
 |---|---|---|---|---|
-| ground | `--strike-ground` | #0C0C0C | #F9F9F9 | Backgrounds |
+| ground | `--strike-ground` | #0C0C0C | #F9F9F9 | The dark background: posters, social cards, illustrations, app modules |
+| web-ground | `--strike-web-ground` | #090B0A | same | Website and marketing page background (about 80%) |
+| web-section | `--strike-web-section` | #0F1110 | same | Website alternate sections and cards (about 20%), for depth and separation |
 | ink | `--strike-ink` | #F9F9F9 | #0C0C0C | Text on ground; ground of light layouts |
 | ink-2 | `--strike-ink-2` | #B3B3B3 | #4A4D52 | Secondary text on dark (9.3:1) |
 | ink-3 | `--strike-ink-3` | #8A8F98 | #6B6F76 | Muted text and icons on dark (6.0:1) |
@@ -96,11 +106,12 @@ Tailwind classes use the same names (`bg-ground`, `text-ink-2`); see In code bel
 | data-yellow | `--strike-data-yellow` | #FFEF3C | same | Charts with several series only |
 | data-sky | `--strike-data-sky` | #0788F7 | same | Charts with several series only |
 | data-purple | `--strike-data-purple` | #976FE6 | same | Charts with several series only |
-| surface-1 | `--strike-surface-1` | #121214 | #FFFFFF | Cards, panels |
-| surface-2 | `--strike-surface-2` | #18181B | #F1F1F1 | Inputs, raised controls, secondary buttons |
-| surface-3 | `--strike-surface-3` | #202024 | #E8E8E9 | Hover |
-| line | `--strike-line` | #F9F9F914 | #0C0C0C14 | Hairlines and borders (8%) |
-| line-strong | `--strike-line-strong` | #F9F9F924 | #0C0C0C24 | Input borders (14%) |
+| frame | `--strike-frame` | #2E2E2E | same | App frame: the lighter background that shows only in the thin gaps between modules |
+| surface-1 | `--strike-surface-1` | #161616 | #FFFFFF | Raised controls on a module: inputs, tabs, secondary buttons |
+| surface-2 | `--strike-surface-2` | #202020 | #F1F1F1 | Hover and selected |
+| surface-3 | `--strike-surface-3` | #2A2A2A | #E8E8E9 | Pressed; the strongest raise |
+| line | `--strike-line` | #FFFFFF1A | #0C0C0C14 | Hairlines (10%) |
+| line-strong | `--strike-line-strong` | #FFFFFF2E | #0C0C0C24 | Input borders and dividers (18%) |
 
 ## Fonts
 | Token | Stack | Use |
@@ -138,6 +149,8 @@ Generated code uses Tailwind v4. Put this in the global stylesheet after `@impor
 @theme {
   --color-*: initial;
   --color-ground: #0C0C0C;
+  --color-web-ground: #090B0A;
+  --color-web-section: #0F1110;
   --color-ink: #F9F9F9;
   --color-ink-2: #B3B3B3;
   --color-ink-3: #8A8F98;
@@ -150,11 +163,12 @@ Generated code uses Tailwind v4. Put this in the global stylesheet after `@impor
   --color-data-yellow: #FFEF3C;
   --color-data-sky: #0788F7;
   --color-data-purple: #976FE6;
-  --color-surface-1: #121214;
-  --color-surface-2: #18181B;
-  --color-surface-3: #202024;
-  --color-line: #F9F9F914;
-  --color-line-strong: #F9F9F924;
+  --color-frame: #2E2E2E;
+  --color-surface-1: #161616;
+  --color-surface-2: #202020;
+  --color-surface-3: #2A2A2A;
+  --color-line: #FFFFFF1A;
+  --color-line-strong: #FFFFFF2E;
 
   --font-*: initial;
   --font-sans: Geist, Arial, sans-serif;

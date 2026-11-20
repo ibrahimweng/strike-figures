@@ -16,7 +16,7 @@ Give people the simplest way first: one link to copy, one command, one button. O
 ## Colour
 | Token | Hex | Use |
 |---|---|---|
-| ground | #0C0C0C | Backgrounds |
+| ground | #0C0C0C | Posters, social cards, illustrations, app modules |
 | ink | #F9F9F9 | Text on ground; ground of light layouts |
 | ink-2 | #B3B3B3 | Secondary text on dark |
 | green | #10B981 | The primary action, focus, one highlight. Never a large area in UI |
@@ -31,6 +31,14 @@ Give people the simplest way first: one link to copy, one command, one button. O
 - **Never set white text on green** (2.4:1). On green use ground text (7.7:1). Green text on light grounds uses deep (5.2:1).
 - Titles reach 7:1 contrast with their ground; body text at least 4.5:1.
 - Profit and loss always carry a sign or an arrow too, never colour alone.
+
+## Backgrounds
+Strike is dark. About 80% of any screen is the darkest background; the lighter one (about 20%) only separates parts and gives depth. Use only these:
+- **Websites and marketing:** page #090B0A; alternate sections and cards #0F1110.
+- **Apps and tools:** modules #0C0C0C sit on a lighter frame #2E2E2E that shows only in the thin gaps between them. Raised controls #161616, hover #202020.
+- **Posters, social cards, illustrations:** #0C0C0C (mint for posters only).
+- No other backgrounds: no gradients, tinted greys or textures made up for the job. Light layouts only when asked.
+- To see it: strikelabs.app (web) and trade.strikelabs.app (app).
 
 ## Type
 - **Geist** for everything: headlines and body. Weights: Light, Regular, Medium, SemiBold.
@@ -72,7 +80,7 @@ Give people the simplest way first: one link to copy, one command, one button. O
 - Never target the US or sanctioned regions.
 
 ## Before you hand it over
-Check: dark unless asked · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
+Check: dark unless asked · backgrounds from the set · Geist only · title ≤ 2 lines · contrast · no white on green · ≤ 5% green · logo version right for the ground · nothing invented · USDC unless told otherwise · risk line where needed. Keep your own reply short and direct.
 
 ---
 
@@ -85,9 +93,11 @@ A near-black ground and one green. Black and white carry the system; green signa
 ### Palette
 | Token | Hex | Use |
 |---|---|---|
-| ground | #0C0C0C | Backgrounds (dark is the default) |
-| surface-1 / 2 / 3 | #121214 / #18181B / #202024 | Cards / inputs and raised controls / hover |
-| line / line-strong | ink at 8% / 14% | Hairlines / input borders |
+| ground | #0C0C0C | Posters, social cards, illustrations, app modules |
+| web.ground / web.section | #090B0A / #0F1110 | Website page / alternate sections and cards |
+| frame | #2E2E2E | App frame, seen only in the gaps between modules |
+| surface-1 / 2 / 3 | #161616 / #202020 / #2A2A2A | Raised controls / hover and selected / pressed |
+| line / line-strong | white at 10% / 18% | Hairlines / input borders and dividers |
 | ink | #F9F9F9 | Text on dark; light ground |
 | ink-2 | #B3B3B3 | Secondary text on dark |
 | ink-3 | #8A8F98 | Muted text, icons |
@@ -97,7 +107,21 @@ A near-black ground and one green. Black and white carry the system; green signa
 | mint | #50EBA0 | Poster grounds |
 | yellow / sky / purple | #FFEF3C / #0788F7 / #976FE6 | Extra chart series only |
 
-Light mode swaps tier for tier: ground #F9F9F9, surfaces #FFFFFF / #F1F1F1 / #E8E8E9, ink #0C0C0C, ink-2 #4A4D52, ink-3 #6B6F76, lines in ground at 8% / 14%.
+Light mode (only when asked) swaps tier for tier: ground #F9F9F9, surfaces #FFFFFF / #F1F1F1 / #E8E8E9, ink #0C0C0C, ink-2 #4A4D52, ink-3 #6B6F76, lines in ground at 8% / 14%.
+
+### Backgrounds
+Strike is dark. About 80% of any screen is the darkest background; the lighter one (about 20%) only separates parts and gives depth. Use only these sets:
+
+| Medium | Darkest (~80%) | Lighter (~20%) | Raised |
+|---|---|---|---|
+| Websites, marketing | #090B0A page | #0F1110 alternate sections, cards | — |
+| Apps, tools | #0C0C0C modules | #2E2E2E frame, seen only in the thin gaps between modules | #161616 controls, #202020 hover |
+| Posters, social cards, illustrations | #0C0C0C | — | — (mint for posters only) |
+
+- In apps, the lighter frame sits *behind* darker modules: panels of #0C0C0C with 2–4 px gaps and rounded corners, so the frame reads as thin lines. The screen stays dark.
+- On websites, alternate a #0F1110 section between #090B0A ones to separate topics; never more lighter than darker.
+- No other backgrounds: no gradients, tinted greys, photos used as texture or noise made up for the job. Light layouts only when asked.
+- Reference: strikelabs.app (web) and trade.strikelabs.app (app).
 
 ### Rules
 - Dark by default for apps, tools and the web. Light only when asked, or for print and documents that will be printed.
@@ -214,24 +238,27 @@ With the repo's scripts available, generate it: `node scripts/lockup.mjs --name 
 - **Breaking the grid:** designers may break poster grids when the layout still holds together. Product UI keeps to the grid.
 
 ### Surfaces
-- **Dark by default:**
-  - ground #0C0C0C;
-  - cards #121214 with a 1 px line (ink at 8%) and a 12 px radius;
+- **Apps and tools (dark by default):**
+  - a lighter frame #2E2E2E behind everything;
+  - modules (chart, order book, ticket, tables) are #0C0C0C panels with 2–4 px gaps and an 8–12 px radius, so the frame reads as thin lines;
+  - inside a module, raised controls #161616, hover #202020;
   - no shadows on dark.
+- **Websites:** page #090B0A; alternate sections and cards #0F1110 with a 1 px line (white at 10%).
+- About 80% of the screen is the darkest background, the lighter one about 20%.
 - **Light mode (when asked):** cards #FFFFFF with a 1 px line (ground at 8%), and at most a soft shadow (0 1px 2px at 6%).
 
 ### Components
 | Component | Spec |
 |---|---|
 | Primary button | Green #10B981 fill, ground text, Geist Medium 14–16 px, 40 px tall (32 small), 8 px radius. One per view |
-| Secondary button | #18181B fill, ink text, 1 px line |
+| Secondary button | #161616 fill, ink text, 1 px line |
 | Ghost button | Text only, ink-2 → ink on hover |
-| Input | #18181B field, 1 px line at 14%, 8 px radius, 40 px tall; label above in Label style; focus ring 2 px green |
-| Card | #121214, 1 px line at 8%, 12 px radius, 24 px padding |
+| Input | #161616 field, 1 px line at 18%, 8 px radius, 40 px tall; label above in Label style; focus ring 2 px green |
+| Card | #0F1110 on websites; a #0C0C0C module on the #2E2E2E frame in apps. 12 px radius, 24 px padding |
 | Pill / tag | Full radius, 24 px tall, Label style |
 | Table | Rows 40 px, hairline dividers, numbers right-aligned in tabular figures, header in Label style ink-3 |
-| Toast | #18181B, 8 px radius, one line, 4 s |
-| Modal | #121214, 12 px radius, max 480 px wide, ground at 70% behind |
+| Toast | #202020, 8 px radius, one line, 4 s |
+| Modal | #0C0C0C with a 1 px line at 18%, 12 px radius, max 480 px wide, ground at 70% behind |
 
 - **States:** default, hover (one step lighter), active, focus (green ring), disabled (40% opacity), loading (no layout shift), error (loss colour plus a line saying what happened and what to do).
 - **Icons:** 24 px grid, 2 px stroke, round ends and corners, outline style; ink-2 by default.
@@ -369,6 +396,7 @@ Verbal branding is still being written. Until then, keep copy short, plain and f
 ## Before you hand it over
 
 - [ ] Dark ground, unless the user asked for light or it's for print
+- [ ] Backgrounds only from the set: #090B0A / #0F1110 on the web, #0C0C0C modules on #2E2E2E in apps, #0C0C0C on posters; about 80% the darkest
 - [ ] Geist only (Geist Mono for code and addresses, Geist Pixel Circle for poster numbers)
 - [ ] Main title at most 2 lines, Geist Medium, tracked tight
 - [ ] Contrast: titles 7:1, body 4.5:1; no white text on green
@@ -389,7 +417,9 @@ CSS variables come from tokens.css; Tailwind uses the same names (`bg-ground`, `
 
 | Token | CSS variable | Dark (default) | Light | Use |
 |---|---|---|---|---|
-| ground | `--strike-ground` | #0C0C0C | #F9F9F9 | Backgrounds |
+| ground | `--strike-ground` | #0C0C0C | #F9F9F9 | The dark background: posters, social cards, illustrations, app modules |
+| web-ground | `--strike-web-ground` | #090B0A | same | Website and marketing page background (about 80%) |
+| web-section | `--strike-web-section` | #0F1110 | same | Website alternate sections and cards (about 20%), for depth and separation |
 | ink | `--strike-ink` | #F9F9F9 | #0C0C0C | Text on ground; ground of light layouts |
 | ink-2 | `--strike-ink-2` | #B3B3B3 | #4A4D52 | Secondary text on dark (9.3:1) |
 | ink-3 | `--strike-ink-3` | #8A8F98 | #6B6F76 | Muted text and icons on dark (6.0:1) |
@@ -402,11 +432,12 @@ CSS variables come from tokens.css; Tailwind uses the same names (`bg-ground`, `
 | data-yellow | `--strike-data-yellow` | #FFEF3C | same | Charts with several series only |
 | data-sky | `--strike-data-sky` | #0788F7 | same | Charts with several series only |
 | data-purple | `--strike-data-purple` | #976FE6 | same | Charts with several series only |
-| surface-1 | `--strike-surface-1` | #121214 | #FFFFFF | Cards, panels |
-| surface-2 | `--strike-surface-2` | #18181B | #F1F1F1 | Inputs, raised controls, secondary buttons |
-| surface-3 | `--strike-surface-3` | #202024 | #E8E8E9 | Hover |
-| line | `--strike-line` | #F9F9F914 | #0C0C0C14 | Hairlines and borders (8%) |
-| line-strong | `--strike-line-strong` | #F9F9F924 | #0C0C0C24 | Input borders (14%) |
+| frame | `--strike-frame` | #2E2E2E | same | App frame: the lighter background that shows only in the thin gaps between modules |
+| surface-1 | `--strike-surface-1` | #161616 | #FFFFFF | Raised controls on a module: inputs, tabs, secondary buttons |
+| surface-2 | `--strike-surface-2` | #202020 | #F1F1F1 | Hover and selected |
+| surface-3 | `--strike-surface-3` | #2A2A2A | #E8E8E9 | Pressed; the strongest raise |
+| line | `--strike-line` | #FFFFFF1A | #0C0C0C14 | Hairlines (10%) |
+| line-strong | `--strike-line-strong` | #FFFFFF2E | #0C0C0C24 | Input borders and dividers (18%) |
 
 ## Fonts
 | Token | Stack | Use |

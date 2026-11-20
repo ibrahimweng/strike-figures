@@ -4,7 +4,9 @@
   color-scheme: dark;
 
   /* Colour */
-  --strike-ground: #0C0C0C; /* Backgrounds */
+  --strike-ground: #0C0C0C; /* The dark background: posters, social cards, illustrations, app modules */
+  --strike-web-ground: #090B0A; /* Website and marketing page background (about 80%) */
+  --strike-web-section: #0F1110; /* Website alternate sections and cards (about 20%), for depth and separation */
   --strike-ink: #F9F9F9; /* Text on ground; ground of light layouts */
   --strike-ink-2: #B3B3B3; /* Secondary text on dark (9.3:1) */
   --strike-ink-3: #8A8F98; /* Muted text and icons on dark (6.0:1) */
@@ -17,20 +19,21 @@
   --strike-data-yellow: #FFEF3C; /* Charts with several series only */
   --strike-data-sky: #0788F7; /* Charts with several series only */
   --strike-data-purple: #976FE6; /* Charts with several series only */
-  --strike-surface-1: #121214; /* Cards, panels */
-  --strike-surface-2: #18181B; /* Inputs, raised controls, secondary buttons */
-  --strike-surface-3: #202024; /* Hover */
-  --strike-line: #F9F9F914; /* Hairlines and borders (8%) */
-  --strike-line-strong: #F9F9F924; /* Input borders (14%) */
+  --strike-frame: #2E2E2E; /* App frame: the lighter background that shows only in the thin gaps between modules */
+  --strike-surface-1: #161616; /* Raised controls on a module: inputs, tabs, secondary buttons */
+  --strike-surface-2: #202020; /* Hover and selected */
+  --strike-surface-3: #2A2A2A; /* Pressed; the strongest raise */
+  --strike-line: #FFFFFF1A; /* Hairlines (10%) */
+  --strike-line-strong: #FFFFFF2E; /* Input borders and dividers (18%) */
   --strike-green-text: var(--strike-green); /* Green text: green on dark, deep on light */
   /* As RGB channels, for rgb(var(--strike-ground-rgb) / 70%) */
   --strike-ground-rgb: 12 12 12;
   --strike-ink-rgb: 249 249 249;
   --strike-ink-2-rgb: 179 179 179;
   --strike-ink-3-rgb: 138 143 152;
-  --strike-surface-1-rgb: 18 18 20;
-  --strike-surface-2-rgb: 24 24 27;
-  --strike-surface-3-rgb: 32 32 36;
+  --strike-surface-1-rgb: 22 22 22;
+  --strike-surface-2-rgb: 32 32 32;
+  --strike-surface-3-rgb: 42 42 42;
 
   /* Type */
   --strike-font-sans: Geist, Arial, sans-serif;

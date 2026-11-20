@@ -7,6 +7,7 @@ alwaysApply: false
 # Before you hand it over
 
 - [ ] Dark ground, unless the user asked for light or it's for print
+- [ ] Backgrounds only from the set: #090B0A / #0F1110 on the web, #0C0C0C modules on #2E2E2E in apps, #0C0C0C on posters; about 80% the darkest
 - [ ] Geist only (Geist Mono for code and addresses, Geist Pixel Circle for poster numbers)
 - [ ] Main title at most 2 lines, Geist Medium, tracked tight
 - [ ] Contrast: titles 7:1, body 4.5:1; no white text on green

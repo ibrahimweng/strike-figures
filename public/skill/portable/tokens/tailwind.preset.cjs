@@ -10,6 +10,8 @@ module.exports = {
       "current": "currentColor",
       "inherit": "inherit",
       "ground": "rgb(var(--strike-ground-rgb, 12 12 12) / <alpha-value>)",
+      "web-ground": "#090B0A",
+      "web-section": "#0F1110",
       "ink": "rgb(var(--strike-ink-rgb, 249 249 249) / <alpha-value>)",
       "ink-2": "rgb(var(--strike-ink-2-rgb, 179 179 179) / <alpha-value>)",
       "ink-3": "rgb(var(--strike-ink-3-rgb, 138 143 152) / <alpha-value>)",
@@ -22,11 +24,12 @@ module.exports = {
       "data-yellow": "#FFEF3C",
       "data-sky": "#0788F7",
       "data-purple": "#976FE6",
-      "surface-1": "rgb(var(--strike-surface-1-rgb, 18 18 20) / <alpha-value>)",
-      "surface-2": "rgb(var(--strike-surface-2-rgb, 24 24 27) / <alpha-value>)",
-      "surface-3": "rgb(var(--strike-surface-3-rgb, 32 32 36) / <alpha-value>)",
-      "line": "var(--strike-line, #F9F9F914)",
-      "line-strong": "var(--strike-line-strong, #F9F9F924)"
+      "frame": "#2E2E2E",
+      "surface-1": "rgb(var(--strike-surface-1-rgb, 22 22 22) / <alpha-value>)",
+      "surface-2": "rgb(var(--strike-surface-2-rgb, 32 32 32) / <alpha-value>)",
+      "surface-3": "rgb(var(--strike-surface-3-rgb, 42 42 42) / <alpha-value>)",
+      "line": "var(--strike-line, #FFFFFF1A)",
+      "line-strong": "var(--strike-line-strong, #FFFFFF2E)"
     },
     "fontFamily": {
       "sans": [

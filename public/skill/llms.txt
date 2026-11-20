@@ -2,7 +2,7 @@
 
 > Strike's brand and design rules for AI tools: the core rules, the detailed rules, design tokens, logo files and fonts, packaged for Claude, ChatGPT, Cursor, AGENTS.md tools, GitHub Copilot, Gemini, Perplexity and Figma.
 
-Strike is the options exchange that never closes. To make anything for Strike, read STRIKE-DESIGN.md and follow it. core.md is the short version (5,742 characters). All links here are relative to this file.
+Strike is the options exchange that never closes. To make anything for Strike, read STRIKE-DESIGN.md and follow it. core.md is the short version (6,468 characters). All links here are relative to this file.
 
 ## Start here
 - [STRIKE-DESIGN.md](STRIKE-DESIGN.md): every rule, the facts you may use and the token values, in one file

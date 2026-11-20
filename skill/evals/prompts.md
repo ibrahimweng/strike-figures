@@ -36,7 +36,7 @@ Write a React component for an options order ticket: buy or sell, strike, expiry
 ```
 
 A passing answer:
-- is dark: surfaces #121214 and #18181B, a 1 px line at 8%, 8 px radius on inputs, 40 px controls;
+- is dark: #0C0C0C modules on a #2E2E2E frame, raised controls #161616, a 1 px line at 10–18%, 8 px radius on inputs, 40 px controls;
 - shows buy and bid in profit #3FD4AB and sell and ask in loss #EE5E74, each with a sign or an arrow, and uses red for nothing else;
 - sets prices in tabular figures and shows the expiry time zone (20:00 ET);
 - has one primary button, a green focus ring, and hover, disabled, loading and error states;

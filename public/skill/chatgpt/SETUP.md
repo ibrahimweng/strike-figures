@@ -3,7 +3,7 @@
 ## As a custom GPT
 1. Open chatgpt.com/gpts/editor and choose **Configure**.
 2. **Name:** Strike design. **Description:** Makes on-brand work for Strike.
-3. **Instructions:** paste all of `instructions.md` (6,121 of 8,000 characters).
+3. **Instructions:** paste all of `instructions.md` (6,847 of 8,000 characters).
 4. **Knowledge:** upload `STRIKE-DESIGN.md`, `tokens.css`, `tokens.json` and `strike-logos.zip` from `knowledge/`. A GPT takes up to 20 files, so the logos come as one zip; single logo files are in `portable/logo/`.
 5. **Capabilities:** turn on Code Interpreter & Data Analysis (it opens the zip and writes files) and Image Generation.
 6. Save it, shared with the people who need it.

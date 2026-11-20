@@ -4,6 +4,8 @@
 @theme {
   --color-*: initial;
   --color-ground: #0C0C0C;
+  --color-web-ground: #090B0A;
+  --color-web-section: #0F1110;
   --color-ink: #F9F9F9;
   --color-ink-2: #B3B3B3;
   --color-ink-3: #8A8F98;
@@ -16,11 +18,12 @@
   --color-data-yellow: #FFEF3C;
   --color-data-sky: #0788F7;
   --color-data-purple: #976FE6;
-  --color-surface-1: #121214;
-  --color-surface-2: #18181B;
-  --color-surface-3: #202024;
-  --color-line: #F9F9F914;
-  --color-line-strong: #F9F9F924;
+  --color-frame: #2E2E2E;
+  --color-surface-1: #161616;
+  --color-surface-2: #202020;
+  --color-surface-3: #2A2A2A;
+  --color-line: #FFFFFF1A;
+  --color-line-strong: #FFFFFF2E;
 
   --font-*: initial;
   --font-sans: Geist, Arial, sans-serif;
