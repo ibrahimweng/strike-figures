@@ -9,6 +9,8 @@
    - contact: an outline lying on another object's face, like the bottom of
      a slab resting on the one below (dim, as a crease);
    - guide: dotted uprights from a floating object down to what is under it. */
+import { drawLine, type LineDraw } from './lines';
+import { onGround } from '../model/ground';
 import type { DotFill, FaceStyle, Label, Scene, SceneObject, Theme } from '../model/types';
 import { textCmds, textWidth } from './text';
 import { type Curve, chain, trimFreeEnds } from './curves';
@@ -81,6 +83,8 @@ export interface Layer {
   piece: number;
   hull: P2[];
   bbox: { minX: number; minY: number; maxX: number; maxY: number };
+  /** paints no faces, so hides nothing */
+  seeThrough: boolean;
   /** the faces you can see, as screen polygons, for picking */
   faces: { key: string; poly: P2[] }[];
   shadow: { blur: number; dx: number; dy: number; opacity: number } | null;
@@ -97,6 +101,8 @@ export interface TextDraw {
   opacity: number;
   /** where the label is anchored on the artboard, for picking */
   at: P2;
+  /** the box its letters fill, for fitting the view */
+  ink: { minX: number; minY: number; maxX: number; maxY: number };
   box: { minX: number; minY: number; maxX: number; maxY: number };
 }
 
@@ -110,6 +116,9 @@ export interface RenderModel {
   groundLabels: TextDraw[];
   /** upright and wall labels, drawn over everything */
   labels: TextDraw[];
+  /** construction lines under the shapes, and over them */
+  linesUnder: LineDraw[];
+  linesOver: LineDraw[];
 }
 
 const FACE_EPS = 1e-7;
@@ -306,8 +315,12 @@ function buildObject(o: Placed, view: View, theme: Theme, caps: CapInfo[], all: 
   const phiV = Math.atan2(B, A);
   const taper = theme.creaseTaper;
   const width = obj.style.lineWidth ?? theme.lineWidth;
-  const outlineStyle: LineStyle = { color: obj.style.outline ?? theme.outline, width, opacity: obj.style.outlineOpacity, dash: null, cap: 'round' };
-  const creaseStyle: LineStyle = { color: obj.style.crease ?? theme.crease, width, opacity: obj.style.creaseOpacity, dash: null, cap: 'round' };
+  const dash = obj.style.dash ? `${obj.style.dash} ${Math.round(obj.style.dash * 80) / 100}` : null;
+  const cap = dash ? 'butt' : 'round';
+  const outlineStyle: LineStyle = { color: obj.style.outline ?? theme.outline, width, opacity: obj.style.outlineOpacity, dash, cap };
+  const creaseStyle: LineStyle = { color: obj.style.crease ?? theme.crease, width, opacity: obj.style.creaseOpacity, dash, cap };
+  /* a see-through shape paints no faces, so it hides nothing behind it */
+  const seeThrough = obj.style.fill === 'none';
   const guideStyle: LineStyle = { color: theme.guide, width: width * 2, opacity: 1, dash: `${width * 2} ${width * 6}`, cap: 'round' };
   const baseFill = obj.style.fill ?? theme.fill;
   const lines: Record<LineKind, Curve[]>[] = geom.pieces.map(() => ({ outline: [], crease: [], contact: [], guide: [] }));
@@ -525,8 +538,8 @@ function buildObject(o: Placed, view: View, theme: Theme, caps: CapInfo[], all: 
       groups.set(color, list);
     }
     const baseRegions = fills.flatMap(f => f.regions);
-    const fillGroups: FillGroup[] = [{ color: baseFill, regions: baseRegions }];
-    for (const [color, regions] of groups) if (color !== baseFill) fillGroups.push({ color, regions });
+    const fillGroups: FillGroup[] = seeThrough ? [] : [{ color: baseFill, regions: baseRegions }];
+    if (!seeThrough) for (const [color, regions] of groups) if (color !== baseFill) fillGroups.push({ color, regions });
 
     /* the decal, on the piece its centre sits on */
     let decal: DecalDraw | null = null;
@@ -581,7 +594,8 @@ function buildObject(o: Placed, view: View, theme: Theme, caps: CapInfo[], all: 
       hull: hullPts,
       bbox,
       faces,
-      shadow: obj.shadow.enabled ? { blur: obj.shadow.blur, dx: obj.shadow.dx, dy: obj.shadow.dy, opacity: obj.shadow.opacity } : null,
+      seeThrough,
+      shadow: obj.shadow.enabled && !seeThrough ? { blur: obj.shadow.blur, dx: obj.shadow.dx, dy: obj.shadow.dy, opacity: obj.shadow.opacity } : null,
       fills: fillGroups,
       dots,
       decal,
@@ -623,7 +637,8 @@ export interface RenderOptions {
   skip?: Set<string>;
 }
 
-export function renderScene(scene: Scene, opts: RenderOptions = {}): RenderModel {
+export function renderScene(drawn: Scene, opts: RenderOptions = {}): RenderModel {
+  const scene = drawn.ground && drawn.ground !== 'dark' ? onGround(drawn, drawn.ground) : drawn;
   const { width, height } = scene.artboard;
   const view = makeView(scene.camera, width, height);
   const visible = scene.objects.filter(o => o.visible && !opts.skip?.has(o.id));
@@ -638,6 +653,7 @@ export function renderScene(scene: Scene, opts: RenderOptions = {}): RenderModel
   }
   const order = paintOrder(solids, view);
   const texts = (scene.labels ?? []).filter(l => l.text.trim()).map(l => drawLabel(l, view, scene.theme));
+  const lines = (scene.lines ?? []).map(l => drawLine(l, view, scene.theme));
   return {
     width,
     height,
@@ -646,12 +662,14 @@ export function renderScene(scene: Scene, opts: RenderOptions = {}): RenderModel
     layers: order.map(i => layers[i]!),
     groundLabels: texts.filter(t => t.ground).map(t => t.draw),
     labels: texts.filter(t => !t.ground).map(t => t.draw),
+    linesUnder: lines.filter(l => l.layer === 'under'),
+    linesOver: lines.filter(l => l.layer === 'over'),
   };
 }
 
 /** A label: its words as outlines, laid in its plane and seen through the camera. */
 function drawLabel(l: Label, view: View, theme: Theme): { ground: boolean; draw: TextDraw } {
-  const cmds = textCmds(l.text, l.align);
+  const cmds = textCmds(l.text, l.align, 0, l.weight ?? 'regular');
   const at = project(view, l.position);
   const ca = Math.cos((l.rotation * Math.PI) / 180);
   const sa = Math.sin((l.rotation * Math.PI) / 180);
@@ -685,13 +703,27 @@ function drawLabel(l: Label, view: View, theme: Theme): { ground: boolean; draw:
       ]);
     };
   }
-  const half = (textWidth(l.text) / 2) * l.size * view.zoom;
+  const half = (textWidth(l.text, 0, l.weight ?? 'regular') / 2) * l.size * view.zoom;
   const tall = l.size * view.zoom;
+  /* a second line (a value under its ticker) sits `offset` lines down, in the label's own plane */
+  const placed = f;
+  const off = (l.offset ?? 0) * 1.75;
+  const ink = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity };
+  const g = (q: P2) => {
+    const p = placed({ x: q.x, y: q.y + off });
+    ink.minX = Math.min(ink.minX, p.x);
+    ink.minY = Math.min(ink.minY, p.y);
+    ink.maxX = Math.max(ink.maxX, p.x);
+    ink.maxY = Math.max(ink.maxY, p.y);
+    return p;
+  };
+  const d = cmdsToPath(cmds, g, 2);
   return {
     ground: l.plane === 'ground',
     draw: {
       id: l.id,
-      d: cmdsToPath(cmds, f, 2),
+      ink,
+      d,
       color: l.color ?? theme.label,
       opacity: l.opacity,
       at,

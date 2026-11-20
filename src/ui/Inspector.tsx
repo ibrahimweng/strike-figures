@@ -11,7 +11,7 @@ import type { DotFill, Gradient, Scene, SceneObject, ShapeSpec, Theme } from '..
 import { ColorField, NumberField, Row, Section, Seg, Select, TextField, Toggle } from './controls';
 import { IconCopy, IconRepeat, IconTrash, IconUpload } from './icons';
 import { facesName } from './view';
-import { LabelsSection, SimpleObject, SimpleScene, ViewSection } from './SimpleInspector';
+import { LabelsSection, MotionSection, SimpleObject, SimpleScene, ViewSection } from './SimpleInspector';
 
 /** a key for edits that should merge into one undo step while a control is being dragged */
 const live = (what: string, isLive: boolean) => (isLive ? `live:${what}` : undefined);
@@ -58,6 +58,7 @@ function SceneInspector({ scene }: { scene: Scene }) {
         </Row>
       </Section>
       <ViewSection scene={scene} />
+      <MotionSection scene={scene} />
       <Section title="Pan" defaultOpen={false}>
         <Row label="Pan">
           <div className="grid2">

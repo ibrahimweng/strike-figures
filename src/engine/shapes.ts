@@ -42,7 +42,9 @@ export type ShapeSpec =
   /** any plan outline (concave is fine): it is cut into convex pieces; radius rounds its outward corners */
   | { kind: 'outline'; points: [number, number][]; radius: number; scaleX?: number; scaleZ?: number }
   /** a slice of a pie: from start, sweep degrees round (counter-clockwise in plan) */
-  | { kind: 'sector'; radius: number; start: number; sweep: number };
+  | { kind: 'sector'; radius: number; start: number; sweep: number }
+  /** a slice of a ring, between inner and outer radii (a segment of a radial chart) */
+  | { kind: 'band'; inner: number; outer: number; start: number; sweep: number };
 
 export const segLength = (s: Seg) => (s.kind === 'line' ? len2(sub2(s.b, s.a)) : s.r * (s.a1 - s.a0));
 
@@ -217,6 +219,8 @@ export function buildShape(spec: ShapeSpec): ShapeGeom {
       );
     case 'sector':
       return sector(Math.max(0.01, spec.radius), spec.start, spec.sweep);
+    case 'band':
+      return band(Math.max(0.01, Math.min(spec.inner, spec.outer - 0.01)), Math.max(0.02, spec.outer), spec.start, spec.sweep);
   }
 }
 
@@ -390,6 +394,34 @@ function sector(r: number, startDeg: number, sweepDeg: number): ShapeGeom {
       { seg: outline[3]!, outline: 3 },
     ],
   ]);
+}
+
+/**
+ * A slice of a ring. The outer edge is a true arc; the inner edge, which
+ * curves inwards and so can't bound a convex piece, is a run of short
+ * chords, one per piece (each piece is then convex: a chord, two radial
+ * seams and a stretch of the outer arc).
+ */
+function band(ri: number, ro: number, startDeg: number, sweepDeg: number): ShapeGeom {
+  const sweep = Math.max(1, Math.min(359, Math.abs(sweepDeg)));
+  const a0 = (startDeg * Math.PI) / 180;
+  const n = Math.max(2, Math.ceil(sweep / 6));
+  const step = (sweep * Math.PI) / 180 / n;
+  const at = (r: number, a: number) => p2(r * Math.cos(a), r * Math.sin(a));
+  const angle = (k: number) => a0 + step * k;
+  const outline: Seg[] = [{ kind: 'line', a: at(ri, angle(0)), b: at(ro, angle(0)), face: 's0' }];
+  for (let k = 0; k < n; k++) outline.push({ kind: 'arc', c: p2(0, 0), r: ro, a0: angle(k), a1: angle(k + 1), face: 'arc' });
+  outline.push({ kind: 'line', a: at(ro, angle(n)), b: at(ri, angle(n)), face: 's1' });
+  for (let k = n; k > 0; k--) outline.push({ kind: 'line', a: at(ri, angle(k)), b: at(ri, angle(k - 1)), face: 'inner' });
+  const pieces: PieceSeg[][] = [];
+  for (let k = 0; k < n; k++) {
+    const first: PieceSeg = k === 0 ? { seg: outline[0]!, outline: 0 } : { seg: { kind: 'line', a: at(ri, angle(k)), b: at(ro, angle(k)), face: 'seam' }, outline: null };
+    const last: PieceSeg =
+      k === n - 1 ? { seg: outline[n + 1]!, outline: n + 1 } : { seg: { kind: 'line', a: at(ro, angle(k + 1)), b: at(ri, angle(k + 1)), face: 'seam' }, outline: null };
+    const chord = n + 2 + (n - 1 - k);
+    pieces.push([first, { seg: outline[1 + k]!, outline: 1 + k }, last, { seg: outline[chord]!, outline: chord }]);
+  }
+  return finish(outline, pieces);
 }
 
 /** Is a plan point inside a convex piece, by at least margin (negative margin lets it sit just outside)? */

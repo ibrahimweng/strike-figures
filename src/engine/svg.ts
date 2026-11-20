@@ -7,6 +7,7 @@
 import { type Curve, clipOutside, curvesToPath, ellipseOf, num, regionToPath } from './curves';
 import type { Dot } from './dots';
 import { insideDepth } from './math';
+import type { LineDraw } from './lines';
 import type { Layer, RenderModel } from './render';
 
 export interface El {
@@ -51,6 +52,7 @@ function occluders(layers: Layer[], i: number) {
   const me = layers[i]!.bbox;
   const out: Layer['hull'][] = [];
   for (let j = i + 1; j < layers.length; j++) {
+    if (layers[j]!.seeThrough) continue;
     const b = layers[j]!.bbox;
     if (b.minX < me.maxX && me.minX < b.maxX && b.minY < me.maxY && me.minY < b.maxY) out.push(layers[j]!.hull);
   }
@@ -77,6 +79,26 @@ export function buildSvg(model: RenderModel, opts: SvgOptions = {}): El {
     return { tag: 'path', attrs };
   };
   if (model.groundLabels.length) body.push({ tag: 'g', attrs: {}, children: model.groundLabels.map(text) });
+  const lines = (list: LineDraw[]) => {
+    if (!list.length) return;
+    const children: El[] = [];
+    for (const l of list) {
+      if (l.d) {
+        const attrs: El['attrs'] = { d: l.d, stroke: l.color, 'stroke-width': l.width, 'stroke-linecap': l.dash ? 'butt' : 'round', 'stroke-linejoin': 'round', fill: 'none' };
+        if (l.opacity < 1) attrs['stroke-opacity'] = num(l.opacity, 2);
+        if (l.dash) attrs['stroke-dasharray'] = l.dash;
+        children.push({ tag: 'path', attrs });
+      }
+      if (l.nodes) {
+        const attrs: El['attrs'] = { d: l.nodes, fill: l.nodeFill };
+        if (l.nodeStroke) Object.assign(attrs, { stroke: l.nodeStroke, 'stroke-width': l.width });
+        if (l.opacity < 1) attrs.opacity = num(l.opacity, 2);
+        children.push({ tag: 'path', attrs });
+      }
+    }
+    body.push({ tag: 'g', attrs: {}, children });
+  };
+  lines(model.linesUnder);
   model.layers.forEach((layer, i) => {
     const g: El[] = [];
     const hide = opts.clipHidden ? occluders(model.layers, i) : [];
@@ -145,6 +167,7 @@ export function buildSvg(model: RenderModel, opts: SvgOptions = {}): El {
     }
     if (g.length) body.push({ tag: 'g', attrs: opts.tagLayers ? { 'data-object': layer.objectId, 'data-piece': layer.piece } : {}, children: g });
   });
+  lines(model.linesOver);
   if (model.labels.length) body.push({ tag: 'g', attrs: {}, children: model.labels.map(text) });
   const children: El[] = [];
   if (defs.length) children.push({ tag: 'defs', attrs: {}, children: defs });

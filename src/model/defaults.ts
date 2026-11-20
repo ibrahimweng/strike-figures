@@ -5,7 +5,7 @@ export const uid = () => Math.random().toString(36).slice(2, 10);
 
 /* Strike's colours, from strikelabs.app: emerald 300–900 on near-black */
 export const STRIKE = {
-  ink: '#08090A',
+  ink: '#0C0C0C',
   emerald300: '#6EE7B7',
   emerald400: '#34D399',
   emerald500: '#10B981',
@@ -15,9 +15,28 @@ export const STRIKE = {
   emerald900: '#064E3B',
 };
 
-/* Linear's line colours, from its homepage figures */
-export const LINEAR = {
-  ink: '#08090A',
+/* Strike's brand palette (brand book, Color). Black and white carry the
+   system; Strike Green is the signal. The rest appear only in data
+   infographics, each with one meaning: Watermelon is loss, Shamrock profit,
+   Yellow, Sky and Purple tell series apart. (The brand book prints Sky's hex
+   as #EE5E74, a copy of Watermelon's; its RGB, 7 136 247, is #0788F7.) */
+export const BRAND = {
+  ground: '#0C0C0C',
+  white: '#F9F9F9',
+  green: '#10B981',
+  deep: '#047857',
+  mint: '#50EBA0',
+  shamrock: '#3FD4AB',
+  watermelon: '#EE5E74',
+  yellow: '#FFEF3C',
+  sky: '#0788F7',
+  purple: '#976FE6',
+};
+
+/* The greys every figure is drawn in: the ground (Strike's #0C0C0C), three
+   line strengths (subject, support, background) and the grey of neutral dots. */
+export const TONE = {
+  ink: '#0C0C0C',
   line: '#D0D6E0',
   mid: '#62666D',
   dim: '#3E3E44',
@@ -27,40 +46,40 @@ export const LINEAR = {
 
 export const THEMES: Theme[] = [
   {
-    name: 'Strike mix',
-    background: LINEAR.ink,
+    name: 'Green dots',
+    background: TONE.ink,
     transparent: false,
-    fill: LINEAR.ink,
-    outline: LINEAR.line,
-    crease: LINEAR.dim,
-    guide: LINEAR.dim,
+    fill: TONE.ink,
+    outline: TONE.line,
+    crease: TONE.dim,
+    guide: TONE.dim,
     dot: STRIKE.emerald500,
     accent: STRIKE.emerald400,
     lineWidth: 0.5,
     creaseTaper: 0.7,
     creaseTrim: 4,
-    label: LINEAR.mid,
+    label: TONE.mid,
   },
   {
-    name: 'Linear grey',
-    background: LINEAR.ink,
+    name: 'Grey dots',
+    background: TONE.ink,
     transparent: false,
-    fill: LINEAR.ink,
-    outline: LINEAR.line,
-    crease: LINEAR.dim,
-    guide: LINEAR.dim,
-    dot: LINEAR.dot,
-    accent: LINEAR.line,
+    fill: TONE.ink,
+    outline: TONE.line,
+    crease: TONE.dim,
+    guide: TONE.dim,
+    dot: TONE.dot,
+    accent: TONE.line,
     lineWidth: 0.5,
     creaseTaper: 0.7,
     creaseTrim: 4,
-    label: LINEAR.mid,
+    label: TONE.mid,
   },
   {
-    name: 'Strike green',
-    background: LINEAR.ink,
+    name: 'Green lines',
+    background: TONE.ink,
     transparent: false,
-    fill: LINEAR.ink,
+    fill: TONE.ink,
     outline: STRIKE.emerald400,
     crease: STRIKE.emerald800,
     guide: STRIKE.emerald800,
@@ -69,7 +88,7 @@ export const THEMES: Theme[] = [
     lineWidth: 0.5,
     creaseTaper: 0.7,
     creaseTrim: 4,
-    label: LINEAR.mid,
+    label: TONE.mid,
   },
 ];
 

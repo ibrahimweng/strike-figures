@@ -2,7 +2,7 @@
    selected it turns the view, picks the colours and edits the labels. With a
    shape selected it sets how bright its lines are, its dots and its height.
    Everything else is behind Advanced. */
-import { THEMES, defaultDots, defaultGradient, LINEAR, STRIKE, uid } from '../model/defaults';
+import { THEMES, defaultDots, defaultGradient, TONE, STRIKE, uid } from '../model/defaults';
 import { useStore } from '../model/store';
 import type { DotFill, FaceStyle, Label, Scene, SceneObject } from '../model/types';
 import { renderScene } from '../engine/render';
@@ -10,6 +10,8 @@ import { Chips, Section, Seg, SliderRow, TextField, Toggle } from './controls';
 import { Gizmo } from './Gizmo';
 import { IconCopy, IconPlus, IconTrash } from './icons';
 import { fitCamera, VIEWS } from './view';
+import { MOTIONS, motionOf, playingKind } from '../anim/motion';
+import { GROUNDS } from '../model/ground';
 
 const live = (what: string, isLive: boolean) => (isLive ? `live:${what}` : undefined);
 
@@ -49,6 +51,42 @@ export function ViewSection({ scene }: { scene: Scene }) {
       >
         Fit to frame
       </button>
+    </Section>
+  );
+}
+
+/** How the figure moves: its own loop or a shared motion, how long a loop takes, and play. */
+export function MotionSection({ scene }: { scene: Scene }) {
+  const update = useStore(s => s.update);
+  const playing = useStore(s => s.playing);
+  const setPlaying = useStore(s => s.setPlaying);
+  const m = motionOf(scene);
+  const kind = playingKind(scene);
+  return (
+    <Section title="Animate">
+      <Seg
+        value={m.kind}
+        options={MOTIONS.map(x => ({ value: x.value, label: x.label, title: x.hint }))}
+        onChange={v => {
+          update(s => void (s.motion = { ...motionOf(s), kind: v }));
+          if (v !== 'none') setPlaying(true);
+        }}
+      />
+      {m.kind === 'designed' && kind !== 'designed' && <div className="note">This figure has no loop of its own, so its dots drift.</div>}
+      <SliderRow
+        label="Length"
+        value={m.duration}
+        min={2}
+        max={10}
+        step={0.5}
+        places={1}
+        unit=" s"
+        onChange={(v, l) => update(s => void (s.motion = { ...motionOf(s), duration: v }), live('length', l))}
+      />
+      <button className="btn soft small" onClick={() => setPlaying(!playing)} disabled={m.kind === 'none'} data-testid="play">
+        {playing ? 'Pause' : 'Play'}
+      </button>
+      <div className="note">Export it as a video, a GIF, an animated SVG or a Lottie file.</div>
     </Section>
   );
 }
@@ -117,10 +155,18 @@ export function SimpleScene({ scene }: { scene: Scene }) {
         <span className="sub">{scene.label}</span>
       </div>
       <ViewSection scene={scene} />
+      <MotionSection scene={scene} />
+      <Section title="Ground">
+        <Seg
+          value={scene.ground ?? 'dark'}
+          options={GROUNDS.map(g => ({ value: g.value, label: g.label, title: `Sits on Strike ${g.label.toLowerCase()} (${g.color})` }))}
+          onChange={v => update(s => void (s.ground = v))}
+        />
+      </Section>
       <Section title="Colours">
         <Chips
           value={THEMES.find(x => x.name === t.name)?.name ?? null}
-          options={THEMES.map(x => ({ value: x.name, label: x.name, swatch: x.name === 'Strike green' ? x.outline : x.dot }))}
+          options={THEMES.map(x => ({ value: x.name, label: x.name, swatch: x.name === 'Green lines' ? x.outline : x.dot }))}
           onChange={name => {
             const th = THEMES.find(x => x.name === name)!;
             update(s => void (s.theme = { ...th, transparent: s.theme.transparent }));
@@ -141,15 +187,15 @@ export function SimpleScene({ scene }: { scene: Scene }) {
 /* ---- a selected shape ---- */
 
 const TIERS = [
-  { value: 'bright', label: 'Bright', outline: LINEAR.line, crease: LINEAR.dim },
-  { value: 'soft', label: 'Soft', outline: LINEAR.mid, crease: LINEAR.dim },
-  { value: 'faint', label: 'Faint', outline: LINEAR.dim, crease: LINEAR.faint },
+  { value: 'bright', label: 'Bright', outline: TONE.line, crease: TONE.dim },
+  { value: 'soft', label: 'Soft', outline: TONE.mid, crease: TONE.dim },
+  { value: 'faint', label: 'Faint', outline: TONE.dim, crease: TONE.faint },
 ] as const;
 
 const DOT_COLOURS = [
   { value: STRIKE.emerald500, label: 'Emerald' },
   { value: STRIKE.emerald300, label: 'Mint' },
-  { value: LINEAR.dot, label: 'Grey' },
+  { value: TONE.dot, label: 'Grey' },
 ] as const;
 
 type Look = 'off' | 'even' | 'fade' | 'wave' | 'glow';

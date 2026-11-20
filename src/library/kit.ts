@@ -1,35 +1,50 @@
 /* The kit every library illustration is built with. It holds the house
-   rules, so that fifty figures by one hand look like one set:
+   rules, one direction for the brand book and the 3D figures, so that every
+   illustration by every hand looks like one set:
 
-   1. Camera: Linear's 2:1 (yaw 45°, pitch 30°), on a 320 × 320 artboard,
-      fitted with a 14% margin.
-   2. Faces are the background colour; the drawing is lines and dots.
-   3. Lines are 0.5 wide. The subject is outlined in #D0D6E0, things that
-      support it in #62666D, and things in the background in #3E3E44.
-      Creases are #3E3E44 (#2E2E32 on background things), trimmed short.
-   4. Corners: the side corners nearly sharp, the front and back ones
-      softly rounded, as Linear draws them.
-   5. Dots: emerald for the one thing that matters, grey for the rest.
-      Halftones for amount, curves for data. One emerald focus per figure.
-   6. Labels: Geist Mono, small, grey, three at most, never on the focus.
-   7. Floating things get a soft shadow and dotted guides down. */
+   1. Two formats, one scene. Flat (straight down) is the simplest
+      expression of an idea; the 2:1 view (yaw 45°, pitch 30°) gives depth
+      when the idea needs it. Flat figures are thin plates in 3D, so turned
+      to 2:1 they keep their look. 320 × 320 frame, fitted with a 14% margin.
+   2. Lines first. Faces are the ground colour, so a shape in front hides
+      what's behind it; every other outline shows. Lines are 0.5 wide (1 px
+      at 2×): the subject #D0D6E0, what supports it #62666D, the background
+      #3E3E44. Creases #3E3E44 (#2E2E32 on background things), trimmed short.
+   3. Dashed means not real yet: possible outcomes, ranges, construction
+      circles, limits.
+   4. Dots carry tone: halftones for amount, dots that follow a curve for
+      data. Nodes (small squares or circles) mark exact points and lie in
+      their plane: square when flat, diamond in 2:1.
+   5. Colour: greys and Strike Green, one green focus per figure.
+      Infographics may also use the brand's data colours, each with one
+      meaning (DATA_COLOURS): Watermelon is loss, Shamrock profit, Yellow,
+      Sky and Purple tell series apart. Use the fewest that work.
+   6. Labels: Geist, small; a ticker in Medium over its value in Regular.
+      Three at most, never on the focus (infographics name every series).
+   7. Corners: side corners nearly sharp, front and back softly rounded.
+      Floating things get a soft shadow and dotted guides down.
+   8. Motion (src/anim): calm and exact. One idea moves at a time, eased,
+      and comes back to rest; the first frame is the still. */
 import { renderScene } from '../engine/render';
 import type { ShapeSpec } from '../engine/shapes';
-import { defaultDots, defaultGradient, defaultTheme, LINEAR, newObject, STRIKE, uid } from '../model/defaults';
-import type { DotFill, Gradient, Label, Scene, SceneObject } from '../model/types';
+import { BRAND, defaultDots, defaultGradient, defaultTheme, TONE, newObject, STRIKE, uid } from '../model/defaults';
+import type { DotFill, Gradient, Label, Line, Scene, SceneObject } from '../model/types';
 import { fitCamera } from '../ui/view';
 
 export const C = {
-  line: LINEAR.line,
-  mid: LINEAR.mid,
-  dim: LINEAR.dim,
-  faint: LINEAR.faint,
-  grey: LINEAR.dot,
+  line: TONE.line,
+  mid: TONE.mid,
+  dim: TONE.dim,
+  faint: TONE.faint,
+  grey: TONE.dot,
   emerald: STRIKE.emerald500,
   bright: STRIKE.emerald400,
   pale: STRIKE.emerald300,
   deep: STRIKE.emerald600,
 };
+
+/** Colours for data infographics only (see BRAND): each means one thing. */
+export const DATA_COLOURS = { loss: BRAND.watermelon, profit: BRAND.shamrock, yellow: BRAND.yellow, sky: BRAND.sky, purple: BRAND.purple };
 
 export type Tier = 'subject' | 'support' | 'ghost';
 export type V = [number, number, number];
@@ -101,6 +116,25 @@ export function wall(profile: [number, number][], thick: number, at: V, opts: Op
 
 /** The face a wall shows to the camera. */
 export const front = (o: SceneObject) => o.faces.bottom;
+
+/** A slice of a ring, from `start` degrees round by `sweep`, between radii inner and outer. */
+export function band(inner: number, outer: number, start: number, sweep: number, h: number, at: V, opts: Opts = {}): SceneObject {
+  const o = style(newObject({ kind: 'band', inner, outer, start, sweep }, h, opts.name ?? 'Segment', at), opts);
+  o.style.showCreases = false;
+  return o;
+}
+
+/** Draw an object's lines dashed: it reads as possible, planned or a boundary, not a solid thing. */
+export function dashed<T extends SceneObject>(o: T, len = 2.2): T {
+  o.style.dash = len;
+  return o;
+}
+
+/** An object that hides nothing behind it: just its lines. */
+export function seeThrough<T extends SceneObject>(o: T): T {
+  o.style.fill = 'none';
+  return o;
+}
 
 export function chevron(w: number, d: number, h: number, at: V, opts: Opts = {}): SceneObject {
   return style(newObject({ kind: 'chevron', width: w, depth: d }, h, opts.name ?? 'Chevron', at), opts);
@@ -206,24 +240,89 @@ export function gearPoints(teeth: number, outer: number, inner: number): [number
   return pts;
 }
 
+/* ---- construction lines ---- */
+
+interface LineOpts {
+  tier?: Tier;
+  color?: string;
+  width?: number;
+  opacity?: number;
+  /** dashes (true: the house dash) */
+  dash?: number | boolean;
+  arrow?: boolean;
+  nodes?: 'square' | 'circle';
+  nodeSize?: number;
+  hollow?: boolean;
+  nodeAt?: number[];
+  under?: boolean;
+  closed?: boolean;
+}
+
+function lineBase(o: LineOpts): Omit<Line, 'kind' | 'points' | 'closed' | 'center' | 'radius' | 'rotation' | 'from' | 'to'> {
+  const tier = o.tier ?? 'support';
+  return {
+    id: uid(),
+    color: o.color ?? (tier === 'subject' ? C.line : tier === 'support' ? C.mid : C.dim),
+    width: o.width ?? null,
+    opacity: o.opacity ?? 1,
+    dash: o.dash === true ? 2.2 : o.dash || null,
+    arrow: o.arrow ?? false,
+    nodes: o.nodes ?? 'none',
+    nodeSize: o.nodeSize ?? 4,
+    nodeFill: o.hollow ? 'hollow' : 'solid',
+    nodeAt: o.nodeAt ?? [],
+    layer: o.under ? 'under' : 'over',
+  };
+}
+
+/** A construction line through points (x, y, z). */
+export function line(points: V[], o: LineOpts = {}): Line {
+  return { ...lineBase(o), kind: 'path', points, closed: o.closed ?? false, center: [0, 0, 0], radius: 0, rotation: [0, 0, 0], from: 0, to: 1 };
+}
+
+/** A construction circle (or arc, from..to of the way round) lying flat, then tilted by rot. */
+export function ring(center: V, radius: number, o: LineOpts & { rot?: V; from?: number; to?: number } = {}): Line {
+  return { ...lineBase(o), kind: 'circle', points: [], closed: false, center, radius, rotation: o.rot ?? [0, 0, 0], from: o.from ?? 0, to: o.to ?? 1 };
+}
+
 /* ---- labels ---- */
 
 export function label(text: string, at: V, opts: Partial<Omit<Label, 'id' | 'text' | 'position'>> = {}): Label {
   return { id: uid(), text, position: at, plane: 'screen', size: 4.2, color: null, opacity: 1, align: 'middle', rotation: 0, ...opts };
 }
 
+/** A ticker over its value, as in the brand's infographics ("AMD" over "IV 106.2%"): Geist Medium over Regular. */
+export function ticker(name: string, value: string, at: V, o: { plane?: Label['plane']; size?: number; align?: Label['align']; color?: string | null; line?: number } = {}): Label[] {
+  const size = o.size ?? 4;
+  const plane = o.plane ?? 'screen';
+  const align = o.align ?? 'start';
+  return [
+    label(name, at, { plane, size, align, weight: 'medium', color: o.color ?? C.line, offset: o.line ?? 0 }),
+    label(value, at, { plane, size: size * 0.86, align, color: o.color ?? C.mid, offset: ((o.line ?? 0) + 1) / 0.86 }),
+  ];
+}
+
 /* ---- the figure ---- */
 
-export function figure(name: string, objects: SceneObject[], labels: Label[] = [], o: { margin?: number; yaw?: number; pitch?: number } = {}): Scene {
+/** The flat view: straight down, +X to the right, −Z up the page. */
+export const FLAT = { yaw: 0, pitch: 90 };
+
+export function figure(
+  name: string,
+  objects: SceneObject[],
+  labels: Label[] = [],
+  o: { margin?: number; yaw?: number; pitch?: number; lines?: Line[]; flat?: boolean } = {},
+): Scene {
   const sc: Scene = {
     id: uid(),
     name,
     label: '',
     artboard: { width: 320, height: 320 },
-    camera: { yaw: o.yaw ?? 45, pitch: o.pitch ?? 30, zoom: 1, panX: 0, panY: 0 },
+    camera: { yaw: o.yaw ?? (o.flat ? FLAT.yaw : 45), pitch: o.pitch ?? (o.flat ? FLAT.pitch : 30), zoom: 1, panX: 0, panY: 0 },
     theme: defaultTheme(),
     objects,
     labels,
+    lines: o.lines ?? [],
     preset: null,
   };
   const cam = fitCamera(sc, renderScene(sc), o.margin ?? 0.14);

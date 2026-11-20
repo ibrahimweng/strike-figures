@@ -13,7 +13,7 @@ import type { Scene } from '../src/model/types';
 const near = (a: number, b: number, eps = 1e-6) => expect(Math.abs(a - b)).toBeLessThan(eps);
 
 describe('camera', () => {
-  it("draws Linear's 2:1 at yaw 45°, pitch 30°", () => {
+  it("draws the 2:1 view at yaw 45°, pitch 30°", () => {
     const v = makeView({ yaw: 45, pitch: 30, zoom: 1, panX: 0, panY: 0 }, 0, 0);
     const x = project(v, [1, 0, 0]);
     const z = project(v, [0, 0, 1]);
@@ -61,39 +61,34 @@ describe('shapes', () => {
   });
 });
 
-describe("Linear's figures", () => {
+/* A stack of five slabs with a sixth lifted off it, the Strike logo on top. */
+function stack(): Scene {
+  const sc = blankScene();
+  const slab = (y: number, name: string) => newObject({ kind: 'box', width: 170, depth: 170, radius: 4 }, 23, name, [0, y, 0]);
+  sc.objects = [0, 1, 2, 3, 4].map(i => slab(18.8 * i, `Slab ${i + 1}`));
+  const top = slab(130, 'Lifted slab');
+  top.guides = true;
+  top.decal = { kind: 'strike', text: '', paths: [], source: 'Strike logo', x: 0, y: 0, size: 96, rotation: -45, mode: 'stroke', color: null, width: null, opacity: 1 };
+  sc.objects.push(top);
+  return sc;
+}
+
+describe('figures', () => {
   const layersOf = (sc: Scene, name: string) => {
     const m = renderScene(sc);
     const id = sc.objects.find(o => o.name === name)!.id;
     return { m, layers: m.layers.filter(l => l.objectId === id), order: m.layers.map(l => sc.objects.find(o => o.id === l.objectId)!.name) };
   };
 
-  it('FIG 0.1 lands on the points measured off Linear’s SVG', () => {
-    const sc = presetScene('fig01')!;
-    const { layers } = layersOf(sc, 'Lifted slab');
-    const xs = layers[0]!.hull.map(p => p.x);
-    near(Math.min(...xs), 12.25, 0.3);
-    near(Math.max(...xs), 252.25, 0.3);
-    const { layers: base } = layersOf(sc, 'Slab 1');
-    /* Linear rounds the bottom-front corner to a lowest point of 259.94 */
-    const ys = base[0]!.hull.map(p => p.y);
-    near(Math.max(...ys), 259.94, 0.3);
-  });
-
-  it('FIG 0.1 paints the stack bottom to top, the lifted slab last', () => {
-    const { order } = layersOf(presetScene('fig01')!, 'Slab 1');
+  it('paints a stack bottom to top, the lifted slab last', () => {
+    const { order } = layersOf(stack(), 'Slab 1');
     expect(order).toEqual(['Slab 1', 'Slab 2', 'Slab 3', 'Slab 4', 'Slab 5', 'Lifted slab']);
   });
 
-  it('FIG 0.1 dims the edges where a slab rests on the one below, and guides the lifted one', () => {
-    const sc = presetScene('fig01')!;
+  it('dims the edges where a slab rests on the one below, and guides the lifted one', () => {
+    const sc = stack();
     const kinds = (name: string) => layersOf(sc, name).layers[0]!.strokes.map(s => s.kind);
-    const lowest = (name: string, kind: string) =>
-      Math.max(-Infinity, ...layersOf(sc, name).layers[0]!.strokes.filter(s => s.kind === kind).flatMap(s => s.curves.flatMap(c => [0, 0.5, 1].map(t => curveAt(c, t).y))));
-    /* the bottom slab's bottom edge is bright; the ones resting on a slab are dim */
-    expect(lowest('Slab 1', 'outline')).toBeGreaterThan(255);
-    expect(lowest('Slab 1', 'contact')).toBeLessThan(250);
-    expect(lowest('Slab 2', 'contact')).toBeGreaterThan(240);
+    expect(kinds('Slab 2')).toContain('contact');
     expect(kinds('Lifted slab')).toContain('guide');
     expect(kinds('Lifted slab')).not.toContain('contact');
     const lifted = layersOf(sc, 'Lifted slab').layers[0]!;
@@ -101,22 +96,8 @@ describe("Linear's figures", () => {
     expect(lifted.strokes.find(s => s.kind === 'guide')!.curves.length).toBe(3);
   });
 
-  it('FIG 0.2 puts the back column where Linear has it', () => {
-    const { layers } = layersOf(presetScene('fig02')!, 'Back column');
-    const xs = layers[0]!.hull.map(p => p.x);
-    near(Math.min(...xs), 96.25, 0.3);
-    near(Math.max(...xs), 207.75, 0.3);
-  });
-
-  it('FIG 0.3 has fifteen fins, painted back to front', () => {
-    const sc = presetScene('fig03')!;
-    const { order } = layersOf(sc, 'Fin 1');
-    expect(order).toEqual(sc.objects.map(o => o.name));
-  });
-
   it('every figure renders at any angle without a NaN', () => {
-    for (const id of ['fig01', 'fig02', 'fig03', 'strike']) {
-      const sc = presetScene(id)!;
+    for (const sc of [stack(), presetScene('strike')!]) {
       for (const [yaw, pitch] of [
         [45, 30],
         [0, 0],
@@ -177,7 +158,7 @@ describe('lines', () => {
   });
 
   it('chains curves so that runs join end to start', () => {
-    const sc = presetScene('fig01')!;
+    const sc = stack();
     for (const l of renderScene(sc).layers)
       for (const s of l.strokes)
         s.curves.forEach((c, i) => {

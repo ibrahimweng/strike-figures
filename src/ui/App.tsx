@@ -2,6 +2,8 @@ import { type ReactElement, useEffect, useState } from 'react';
 import { renderScene } from '../engine/render';
 import { KINDS, type Kind } from '../model/defaults';
 import { useStore } from '../model/store';
+import { useThread } from '../social/store';
+import { ModeSwitch, ThreadActions, ThreadTool } from '../social/ThreadTool';
 import { Canvas } from './Canvas';
 import { ExportDialog, saveFigure } from './ExportDialog';
 import { IconBox, IconChevron, IconCylinder, IconDownload, IconFin, IconHex, IconRedo, IconSlab, IconUndo, StrikeMark } from './icons';
@@ -26,12 +28,13 @@ export function App() {
   const canRedo = useStore(s => !s.preview && (s.future[s.activeId]?.length ?? 0) > 0);
   const { add, undo, redo, setAdvanced, update } = useStore.getState();
   const [exporting, setExporting] = useState(false);
+  const threadMode = useThread(s => s.mode === 'thread');
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement;
       if (el.closest('input, select, textarea, [contenteditable]')) return;
-      if (exporting) return;
+      if (exporting || useThread.getState().mode === 'thread') return;
       const st = useStore.getState();
       const mod = e.metaKey || e.ctrlKey;
       const sel = st.selection.objectId;
@@ -72,6 +75,8 @@ export function App() {
         const sc = st.scene();
         const cam = fitCamera(sc, renderScene(sc));
         if (cam) st.update(s => void (s.camera = cam));
+      } else if (!mod && e.key.toLowerCase() === 'p') {
+        st.setPlaying(!st.playing);
       } else if (!mod) {
         const v = VIEWS.find(x => x.key === e.key);
         if (v)
@@ -85,14 +90,31 @@ export function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [exporting]);
 
+  /* Thread mode: the X thread maker (src/social) in place of the editor */
+  if (threadMode)
+    return (
+      <div className="app">
+        <header className="top">
+          <div className="brand">
+            <StrikeMark size={20} />
+            <span className="word">STRIKE</span>
+          </div>
+          <ModeSwitch />
+          <span className="spacer" />
+          <ThreadActions />
+        </header>
+        <ThreadTool />
+      </div>
+    );
+
   return (
     <div className="app">
       <header className="top">
         <div className="brand">
           <StrikeMark size={20} />
           <span className="word">STRIKE</span>
-          <span className="tool">Figures</span>
         </div>
+        <ModeSwitch />
         <input
           key={scene.id}
           className="title-field"

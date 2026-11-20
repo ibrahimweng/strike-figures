@@ -4,6 +4,7 @@
    to zoom. Clicking empty space clears the selection. */
 import { type ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { renderScene } from '../engine/render';
+import { motionOf, sceneAt } from '../anim/motion';
 import { buildSvg } from '../engine/svg';
 import { DEG, type P2 } from '../engine/math';
 import { useStore } from '../model/store';
@@ -32,7 +33,24 @@ export function Canvas() {
   const clicked = useRef<string | null>(null);
   const space = useRef(false);
 
-  const model = useMemo(() => renderScene(scene), [scene]);
+  const playing = useStore(s => s.playing);
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    if (!playing) {
+      setT(0);
+      return;
+    }
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const secs = motionOf(useStore.getState().scene()).duration;
+      setT((((now - start) / 1000) % secs) / secs);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [playing]);
+  const model = useMemo(() => renderScene(playing ? sceneAt(scene, t) : scene), [scene, playing, t]);
   const art = useMemo(() => (buildSvg(model, { tagLayers: true, idPrefix: 'stage', background: true }).children ?? []).map((c, i) => toReact(c, i)), [model]);
 
   useEffect(() => {
@@ -262,6 +280,11 @@ export function Canvas() {
           ))}
           <button onClick={fit} title="Fit the figure to its frame (F)">
             <IconFit /> Fit
+          </button>
+        </div>
+        <div className="seg" onPointerDown={e => e.stopPropagation()}>
+          <button className={playing ? 'on' : ''} onClick={() => useStore.getState().setPlaying(!playing)} title="Play the figure's animation (P)" data-testid="hud-play">
+            {playing ? 'Pause' : 'Play'}
           </button>
         </div>
         <span className="hint">

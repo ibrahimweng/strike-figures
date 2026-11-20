@@ -41,7 +41,7 @@ function Library({ tabs }: { tabs: React.ReactNode }) {
     <>
       <div className="panel-top">
         {tabs}
-        <input className="search" placeholder="Search 50 illustrations" value={q} onChange={e => setQ(e.target.value)} aria-label="Search the library" />
+        <input className="search" placeholder={`Search ${LIBRARY.length} illustrations`} value={q} onChange={e => setQ(e.target.value)} aria-label="Search the library" />
         <div className="chips" role="radiogroup" aria-label="Category">
           {[{ id: 'all' as const, label: 'All' }, ...CATEGORIES].map(c => (
             <button key={c.id} className={`chip${cat === c.id ? ' on' : ''}`} onClick={() => setCat(c.id)} role="radio" aria-checked={cat === c.id}>

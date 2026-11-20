@@ -55,6 +55,8 @@ export interface DotFill {
   region: { x: number; y: number; w: number; h: number } | null;
   /** keep dots to one side of a curve */
   mask: DotMask | null;
+  /** a band of light passing across the dots (animation): where it is, 0..1 across the face, and how much it dims the rest */
+  sweep?: { phase: number; amount: number } | null;
 }
 
 export interface FaceStyle {
@@ -76,6 +78,8 @@ export interface ObjectStyle {
   creaseTrim: number | null;
   /** draw the creases along a cap this far down the sides, in world units */
   creaseDrop: number;
+  /** dashed lines: the length of each dash, in artboard units (null: solid). Dashed shapes read as possible, not real. */
+  dash?: number | null;
 }
 
 export interface Shadow {
@@ -163,6 +167,54 @@ export interface Label {
   align: 'start' | 'middle' | 'end';
   /** degrees, turning the text within its plane */
   rotation: number;
+  /** Geist Regular, or Medium for a ticker over its value */
+  weight?: 'regular' | 'medium';
+  /** move the text this many lines down its own plane (a value under its ticker) */
+  offset?: number;
+}
+
+/**
+ * A construction line: a path through points, or a circle (or part of one),
+ * drawn over or under the shapes. Lines don't hide anything. Nodes mark
+ * exact points: little squares or circles lying in the line's plane.
+ */
+export interface Line {
+  id: string;
+  kind: 'path' | 'circle';
+  /** path: the points it runs through */
+  points: [number, number, number][];
+  closed: boolean;
+  /** circle: centre, radius, and how it's turned (a flat circle on the ground, then tilted like an object) */
+  center: [number, number, number];
+  radius: number;
+  rotation: [number, number, number];
+  /** circle: the part drawn, 0..1 round from +X towards +Z (0 to 1 is the whole circle) */
+  from: number;
+  to: number;
+  color: string | null;
+  width: number | null;
+  opacity: number;
+  /** the length of each dash (null: solid) */
+  dash: number | null;
+  /** an arrowhead at the end */
+  arrow: boolean;
+  nodes: 'none' | 'square' | 'circle';
+  /** a node's width, in world units */
+  nodeSize: number;
+  /** solid nodes are filled with the line's colour; hollow ones with the ground, outlined */
+  nodeFill: 'solid' | 'hollow';
+  /** path: which points get nodes (empty: all); circle: where round it they sit, 0..1 */
+  nodeAt: number[];
+  /** under the shapes, or over them */
+  layer: 'under' | 'over';
+}
+
+/** How a figure moves when animated. Every loop ends where it starts. */
+export interface Motion {
+  /** designed: the illustration's own loop; turn: the camera goes round; build: the shapes rise into place; drift: light passes across the dots; none: still */
+  kind: 'designed' | 'turn' | 'build' | 'drift' | 'none';
+  /** seconds per loop */
+  duration: number;
 }
 
 export interface Scene {
@@ -175,6 +227,11 @@ export interface Scene {
   theme: Theme;
   objects: SceneObject[];
   labels: Label[];
+  /** construction lines: dashed circles, spokes, rays, orbits */
+  lines?: Line[];
   /** a built-in figure, which can be reset to how it shipped */
   preset: string | null;
+  motion?: Motion;
+  /** the ground it sits on; figures are drawn for the dark one and redrawn for the others */
+  ground?: 'dark' | 'light' | 'green';
 }

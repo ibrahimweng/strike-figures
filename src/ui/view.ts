@@ -9,12 +9,16 @@ export const VIEWS: { id: string; label: string; yaw: number; pitch: number; key
   { id: 'iso', label: 'ISO', yaw: 45, pitch: 35.264, key: '2' },
   { id: 'front', label: 'FRONT', yaw: 0, pitch: 0, key: '3' },
   { id: 'side', label: 'SIDE', yaw: 90, pitch: 0, key: '4' },
-  { id: 'top', label: 'TOP', yaw: 45, pitch: 90, key: '5' },
+  { id: 'top', label: 'FLAT', yaw: 0, pitch: 90, key: '5' },
 ];
 
 /** The camera that fits everything in the artboard with a margin. */
 export function fitCamera(scene: Scene, model: RenderModel, margin = 0.1): Camera | null {
-  const pts = model.layers.flatMap(l => l.hull);
+  const pts = [
+    ...model.layers.flatMap(l => l.hull),
+    ...[...model.linesUnder, ...model.linesOver].flatMap(l => l.pts),
+    ...[...model.labels, ...model.groundLabels].flatMap(t => (Number.isFinite(t.ink.minX) ? [{ x: t.ink.minX, y: t.ink.minY }, { x: t.ink.maxX, y: t.ink.maxY }] : [])),
+  ];
   if (!pts.length) return null;
   const xs = pts.map(p => p.x);
   const ys = pts.map(p => p.y);

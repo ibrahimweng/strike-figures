@@ -6,7 +6,7 @@ import { buildShape, convexPieces, segPoint } from '../src/engine/shapes';
 import { toSvgString } from '../src/engine/svg';
 import { textCmds, textWidth } from '../src/engine/text';
 import { LIBRARY, libraryScene } from '../src/library';
-import { C, gearPoints } from '../src/library/kit';
+import { C, DATA_COLOURS, gearPoints } from '../src/library/kit';
 import { defaultDots } from '../src/model/defaults';
 
 describe('free-form outlines', () => {
@@ -71,35 +71,44 @@ describe('dot masks', () => {
 });
 
 describe('labels', () => {
-  it('sets text in Geist Mono outlines, centred when asked', () => {
+  it('sets text in Geist outlines, centred when asked, spaced by each letter and kerned', () => {
     const cmds = textCmds('382.5', 'middle');
     const xs = cmds.flatMap(c => (c.k === 'Z' ? [] : [c.p.x]));
     expect(Math.min(...xs)).toBeLessThan(-0.5);
     expect(Math.max(...xs)).toBeGreaterThan(0.5);
-    expect(textWidth('ABCD')).toBeCloseTo(4 * textWidth('A'), 6);
+    /* proportional: an i is narrower than an M */
+    expect(textWidth('i')).toBeLessThan(textWidth('M') * 0.6);
+    /* kerned: AV sits closer than A and V apart */
+    expect(textWidth('AV')).toBeLessThan(textWidth('A') + textWidth('V'));
+    /* Medium is a touch wider than Regular */
+    expect(textWidth('AMZN', 0, 'medium')).toBeGreaterThan(textWidth('AMZN'));
   });
 });
 
 describe('the library', () => {
-  it('has fifty illustrations: 17 data, 17 options, 16 tech', () => {
-    expect(LIBRARY.length).toBe(50);
+  it('has sixty-five illustrations: 17 data, 17 options, 16 tech, 15 from the brand book', () => {
+    expect(LIBRARY.length).toBe(65);
     const count = (c: string) => LIBRARY.filter(x => x.category === c).length;
-    expect([count('data'), count('options'), count('tech')]).toEqual([17, 17, 16]);
-    expect(new Set(LIBRARY.map(x => x.id)).size).toBe(50);
+    expect([count('data'), count('options'), count('tech'), count('brand')]).toEqual([17, 17, 16, 15]);
+    expect(new Set(LIBRARY.map(x => x.id)).size).toBe(65);
   });
 
   it('draws every illustration by the house rules', () => {
-    const allowed = new Set([C.line, C.mid, C.dim, C.faint, C.grey, C.emerald, C.bright, C.pale, C.deep, '#08090A', '#000']);
+    const allowed = new Set([C.line, C.mid, C.dim, C.faint, C.grey, C.emerald, C.bright, C.pale, C.deep, '#0C0C0C', '#000']);
+    const data = new Set(Object.values(DATA_COLOURS).map(c => c.toUpperCase()));
     for (const item of LIBRARY) {
       const sc = libraryScene(item.id)!;
-      expect(sc.camera.yaw, item.id).toBe(45);
-      expect(sc.camera.pitch, item.id).toBe(30);
+      const infographic = item.tags.includes('infographic');
+      /* the 2:1 view, or flat (straight down); the globe looks a little lower */
+      const view = `${sc.camera.yaw}/${sc.camera.pitch}`;
+      expect(['45/30', '0/90', '45/18'], item.id).toContain(view);
       expect(sc.artboard, item.id).toEqual({ width: 320, height: 320 });
-      expect(sc.labels.length, item.id).toBeLessThanOrEqual(3);
+      /* labels: three at most, except infographics, which name every series (a ticker is two lines) */
+      if (!infographic) expect(sc.labels.filter(l => l.weight === 'medium' || !l.offset).length, item.id).toBeLessThanOrEqual(3);
       const svg = toSvgString(renderScene(sc), { clipHidden: true });
       expect(svg, item.id).not.toMatch(/NaN|Infinity/);
       const colours = [...svg.matchAll(/(?:fill|stroke)="(#[0-9A-Fa-f]{3,6})"/g)].map(m => m[1]!.toUpperCase());
-      for (const c of colours) expect(allowed.has(c) || allowed.has(c.toLowerCase()), `${item.id} uses ${c}`).toBe(true);
+      for (const c of colours) expect(allowed.has(c) || allowed.has(c.toLowerCase()) || (infographic && data.has(c)), `${item.id} uses ${c}`).toBe(true);
     }
   });
 

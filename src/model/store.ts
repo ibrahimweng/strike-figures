@@ -4,7 +4,7 @@
    Changes made by one drag share a key, so the drag undoes as one step. */
 import { create } from 'zustand';
 import { blankScene, defaultDots, defaultGradient, defaultTheme, emptyFace, KINDS, type Kind, newObject, uid } from './defaults';
-import { PRESETS, presetScene } from './presets';
+import { PRESETS, presetScene, RETIRED } from './presets';
 import { shapeOf } from '../engine/render';
 import { libraryScene } from '../library';
 import type { DotFill, FaceStyle, Scene, SceneObject } from './types';
@@ -36,6 +36,9 @@ interface State {
   lastAt: number;
   /** a message for the status line */
   notice: string | null;
+  /** the figure's animation is playing on the stage */
+  playing: boolean;
+  setPlaying: (on: boolean) => void;
 
   scene: () => Scene;
   setActive: (id: string) => void;
@@ -119,8 +122,19 @@ export function fillScene(s: Partial<Scene>): Scene {
     theme: { ...defaultTheme(), ...(s.theme ?? {}) },
     objects: (s.objects ?? []).map(fillObject),
     labels: (s.labels ?? []).map(l => ({ ...l })),
+    lines: (s.lines ?? []).map(l => ({ ...l })),
     preset: s.preset ?? null,
   };
+}
+
+/** Earlier versions could save two figures under one id (resetting a card that wasn't open). Give the later ones ids of their own. */
+export function dedupe(scenes: Scene[]): Scene[] {
+  const seen = new Set<string>();
+  for (const s of scenes) {
+    if (seen.has(s.id)) s.id = uid();
+    seen.add(s.id);
+  }
+  return scenes;
 }
 
 function load(): { scenes: Scene[]; activeId: string } {
@@ -128,7 +142,7 @@ function load(): { scenes: Scene[]; activeId: string } {
     const raw = localStorage.getItem(STORAGE);
     if (raw) {
       const data = JSON.parse(raw) as { scenes?: Partial<Scene>[]; activeId?: string };
-      const scenes = (data.scenes ?? []).map(fillScene);
+      const scenes = dedupe((data.scenes ?? []).filter(s => !RETIRED.has(s.preset ?? '')).map(fillScene));
       if (scenes.length) return { scenes, activeId: scenes.some(s => s.id === data.activeId) ? data.activeId! : scenes[0]!.id };
     }
   } catch {
@@ -171,6 +185,8 @@ export const useStore = create<State>((set, get) => {
     previewId: null,
     advanced: loadAdvanced(),
     tab: 'library',
+    playing: false,
+    setPlaying: on => set({ playing: on }),
     selection: { objectId: null, face: null },
     past: {},
     future: {},
@@ -326,16 +342,26 @@ export const useStore = create<State>((set, get) => {
         return { scenes, activeId, selection: { objectId: null, face: null } };
       });
     },
+    /* Resets the figure the card belongs to, which need not be the open one,
+       and opens it. Resetting through update() would rewrite the open figure. */
     resetPreset: id => {
-      const src = get().scenes.find(s => s.id === id);
+      const st = get();
+      const src = st.scenes.find(s => s.id === id);
       const fromLib = src?.preset?.startsWith('lib:') ? libraryScene(src.preset.slice(4)) : null;
       const fresh = fromLib ? clone(fromLib) : src?.preset ? presetScene(src.preset) : null;
       if (!src || !fresh) return;
       fresh.id = src.id;
-      get().update(s => {
-        Object.assign(s, fresh);
+      fresh.preset = src.preset;
+      set({
+        scenes: st.scenes.map(s => (s.id === id ? fresh : s)),
+        past: { ...st.past, [id]: [...(st.past[id] ?? []), src].slice(-HISTORY) },
+        future: { ...st.future, [id]: [] },
+        activeId: id,
+        preview: null,
+        previewId: null,
+        selection: { objectId: null, face: null },
+        lastKey: null,
       });
-      set({ selection: { objectId: null, face: null } });
     },
     importScene: s => {
       const sc = fillScene(s);

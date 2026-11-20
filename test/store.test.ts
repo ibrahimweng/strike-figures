@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { fillScene, useStore } from '../src/model/store';
+import { LIBRARY, libraryScene } from '../src/library';
+import { dedupe, fillScene, useStore } from '../src/model/store';
 
 describe('store', () => {
-  it('starts with the four built-in figures', () => {
+  it('starts with the Strike mark, and none of Linear\'s figures', () => {
     const st = useStore.getState();
-    expect(st.scenes.map(s => s.preset)).toEqual(['fig01', 'fig02', 'fig03', 'strike']);
+    expect(st.scenes.map(s => s.preset)).toEqual(['strike']);
   });
 
   it('undoes and redoes a change, and a drag undoes as one step', () => {
@@ -49,5 +50,27 @@ describe('store', () => {
     const old = { kind: 'sunset', text: '', paths: [], source: 'Sun', x: 1.16, y: 1.16, size: 109.54, rotation: -45, mode: 'stroke', color: null, width: null, opacity: 1 };
     const sc = fillScene({ objects: [{ name: 'Slab', shape: { kind: 'box', width: 10, depth: 10, radius: 0 }, height: 5, decal: old } as never] });
     expect(sc.objects[0]!.decal?.kind).toBe('strike');
+  });
+
+  it('resets the card it was asked to, not the figure that is open', () => {
+    useStore.getState().importScene(libraryScene(LIBRARY[0]!.id)!);
+    const st = useStore.getState();
+    const [a, b] = st.scenes;
+    st.setActive(a!.id);
+    useStore.getState().update(s => void (s.camera.yaw = 12));
+    useStore.getState().resetPreset(b!.id);
+    const after = useStore.getState();
+    expect(new Set(after.scenes.map(s => s.id)).size).toBe(after.scenes.length);
+    expect(after.scenes.find(s => s.id === a!.id)!.camera.yaw).toBe(12);
+    expect(after.scenes.find(s => s.id === b!.id)!.preset).toBe(b!.preset);
+    expect(after.activeId).toBe(b!.id);
+  });
+
+  it('gives figures saved under one id ids of their own', () => {
+    const one = fillScene({ id: 'x', name: 'One' });
+    const two = fillScene({ id: 'x', name: 'Two' });
+    const out = dedupe([one, two]);
+    expect(out[0]!.id).toBe('x');
+    expect(out[1]!.id).not.toBe('x');
   });
 });

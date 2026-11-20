@@ -157,6 +157,11 @@ export function faceDots(fill: DotFill, frame: FaceFrame, color: string): DotGro
       const g = gradientValue(fill.gradient, nu, nv);
       const r = sizeBy ? lerp(fill.sizeMin, fill.size, g) : fill.size;
       let o = fadeBy ? lerp(fill.opacityMin, fill.opacity, g) : fill.opacity;
+      if (fill.sweep && fill.sweep.amount > 0) {
+        /* a soft diagonal band of light, wrapping round so a loop has no seam */
+        const band = 0.5 + 0.5 * Math.cos(TAU * ((nu + nv) / 2 - fill.sweep.phase));
+        o *= 1 - fill.sweep.amount + fill.sweep.amount * band * band * band;
+      }
       let col = color;
       if (mask && !onSide(mask, nu, nv)) {
         if (!mask.altColor) continue;
