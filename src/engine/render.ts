@@ -9,7 +9,8 @@
    - contact: an outline lying on another object's face, like the bottom of
      a slab resting on the one below (dim, as a crease);
    - guide: dotted uprights from a floating object down to what is under it. */
-import type { DotFill, FaceStyle, Scene, SceneObject, Theme } from '../model/types';
+import type { DotFill, FaceStyle, Label, Scene, SceneObject, Theme } from '../model/types';
+import { textCmds, textWidth } from './text';
 import { type Curve, chain, trimFreeEnds } from './curves';
 import { cmdsToPath, parsePath, sunsetPaths, type Cmd } from './decal';
 import { type DotGroup, type FaceFrame, faceDots } from './dots';
@@ -25,6 +26,7 @@ import {
   dot3,
   hull as convexHull,
   makeView,
+  project,
   rotation,
 } from './math';
 import { paintOrder, type Solid } from './order';
@@ -88,12 +90,26 @@ export interface Layer {
   strokes: StrokeGroup[];
 }
 
+export interface TextDraw {
+  id: string;
+  d: string;
+  color: string;
+  opacity: number;
+  /** where the label is anchored on the artboard, for picking */
+  at: P2;
+  box: { minX: number; minY: number; maxX: number; maxY: number };
+}
+
 export interface RenderModel {
   width: number;
   height: number;
   theme: Theme;
   view: View;
   layers: Layer[];
+  /** labels lying on the ground, drawn under everything */
+  groundLabels: TextDraw[];
+  /** upright and wall labels, drawn over everything */
+  labels: TextDraw[];
 }
 
 const FACE_EPS = 1e-7;
@@ -526,8 +542,10 @@ function buildObject(o: Placed, view: View, theme: Theme, caps: CapInfo[], all: 
           const z = dc.y + (q.x * sa + q.y * ca) * dc.size;
           return proj(o, x, h, z);
         };
-        const paths = dc.kind === 'sunset' ? SUNSET : dc.paths;
-        const d = paths.map(p => cmdsToPath(cmdsOf(p), f)).join('');
+        const d =
+          dc.kind === 'text'
+            ? cmdsToPath(textCmds(dc.text, 'middle'), f)
+            : (dc.kind === 'sunset' ? SUNSET : dc.paths).map(p => cmdsToPath(cmdsOf(p), f)).join('');
         decal = {
           d,
           mode: dc.mode,
@@ -588,7 +606,8 @@ function sideFrame(
     uMax: global ? perimeter : len,
     vMin: 0,
     vMax: h,
-    nu: u => u / Math.max(1e-9, global ? perimeter : len),
+    /* a side is read from outside, where its counter-clockwise run goes right to left: so 0 is its left edge */
+    nu: u => 1 - u / Math.max(1e-9, global ? perimeter : len),
     nv: v => v / Math.max(1e-9, h),
     inside: (u, v, inset) => {
       if (v < inset || v > h - inset) return false;
@@ -618,7 +637,67 @@ export function renderScene(scene: Scene, opts: RenderOptions = {}): RenderModel
     solids.push(...b.solids);
   }
   const order = paintOrder(solids, view);
-  return { width, height, theme: scene.theme, view, layers: order.map(i => layers[i]!) };
+  const texts = (scene.labels ?? []).filter(l => l.text.trim()).map(l => drawLabel(l, view, scene.theme));
+  return {
+    width,
+    height,
+    theme: scene.theme,
+    view,
+    layers: order.map(i => layers[i]!),
+    groundLabels: texts.filter(t => t.ground).map(t => t.draw),
+    labels: texts.filter(t => !t.ground).map(t => t.draw),
+  };
+}
+
+/** A label: its words as outlines, laid in its plane and seen through the camera. */
+function drawLabel(l: Label, view: View, theme: Theme): { ground: boolean; draw: TextDraw } {
+  const cmds = textCmds(l.text, l.align);
+  const at = project(view, l.position);
+  const ca = Math.cos((l.rotation * Math.PI) / 180);
+  const sa = Math.sin((l.rotation * Math.PI) / 180);
+  /* the text's own axes: x along the line, y down the letters */
+  let f: (q: P2) => P2;
+  if (l.plane === 'screen') {
+    const k = l.size * view.zoom;
+    f = q => ({ x: at.x + (q.x * ca - q.y * sa) * k, y: at.y + (q.x * sa + q.y * ca) * k });
+  } else {
+    const axes: Record<'ground' | 'xy' | 'zy', [V3, V3]> = {
+      ground: [
+        [ca, 0, -sa],
+        [sa, 0, ca],
+      ],
+      xy: [
+        [ca, sa, 0],
+        [sa, -ca, 0],
+      ],
+      zy: [
+        [0, sa, -ca],
+        [0, -ca, -sa],
+      ],
+    };
+    const [ax, ay] = axes[l.plane];
+    f = q => {
+      const s = l.size;
+      return project(view, [
+        l.position[0] + (ax[0] * q.x + ay[0] * q.y) * s,
+        l.position[1] + (ax[1] * q.x + ay[1] * q.y) * s,
+        l.position[2] + (ax[2] * q.x + ay[2] * q.y) * s,
+      ]);
+    };
+  }
+  const half = (textWidth(l.text) / 2) * l.size * view.zoom;
+  const tall = l.size * view.zoom;
+  return {
+    ground: l.plane === 'ground',
+    draw: {
+      id: l.id,
+      d: cmdsToPath(cmds, f, 2),
+      color: l.color ?? theme.label,
+      opacity: l.opacity,
+      at,
+      box: { minX: at.x - half * 2.2, minY: at.y - tall * 1.6, maxX: at.x + half * 2.2, maxY: at.y + tall * 1.6 },
+    },
+  };
 }
 
 /** Is a dot fill switched on anywhere on this object? (Used by the inspector.) */

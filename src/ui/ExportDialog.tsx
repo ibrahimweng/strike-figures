@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { renderScene } from '../engine/render';
 import { toSvgString } from '../engine/svg';
 import type { Scene } from '../model/types';
-import { Row, Seg, TextField, Toggle } from './controls';
+import { useStore } from '../model/store';
+import { Seg, TextField, Toggle } from './controls';
 import { IconDownload } from './icons';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'figure';
@@ -51,6 +52,7 @@ export function ExportDialog({ scene, onClose }: { scene: Scene; onClose: () => 
   const [scale, setScale] = useState<'1' | '2' | '4'>('2');
   const [name, setName] = useState(slug(`${scene.label} ${scene.name}`));
   const [copied, setCopied] = useState(false);
+  const advanced = useStore(s => s.advanced);
   const model = useMemo(() => renderScene(scene), [scene]);
   const svg = useMemo(() => toSvgString(model, { clipHidden, background, shadows, idPrefix: slug(scene.name) }), [model, clipHidden, background, shadows, scene.name]);
   const { width: W, height: H } = scene.artboard;
@@ -74,56 +76,55 @@ export function ExportDialog({ scene, onClose }: { scene: Scene; onClose: () => 
         </div>
         <div className="opts">
           <h2>Export</h2>
-          <Row label="Format">
-            <Seg value={format} options={[{ value: 'svg', label: 'SVG' }, { value: 'png', label: 'PNG' }]} onChange={setFormat} />
-          </Row>
+          <div className="field-label">Format</div>
+          <Seg value={format} options={[{ value: 'svg', label: 'SVG' }, { value: 'png', label: 'PNG' }]} onChange={setFormat} />
+          <div className="note">{format === 'svg' ? 'Sharp at any size. Opens in Figma, and drops into a website.' : 'A picture, for slides, chats and docs.'}</div>
           {format === 'png' && (
-            <Row label="Scale">
-              <Seg value={scale} options={[{ value: '1', label: '1×' }, { value: '2', label: '2×' }, { value: '4', label: '4×' }]} onChange={setScale} />
-            </Row>
+            <>
+              <div className="field-label">Size</div>
+              <Seg value={scale} options={[{ value: '1', label: `${W}px` }, { value: '2', label: `${W * 2}px` }, { value: '4', label: `${W * 4}px` }]} onChange={setScale} />
+            </>
           )}
-          <Row label="File">
-            <TextField value={name} onChange={setName} />
-          </Row>
           <Toggle on={background} onChange={setBackground}>
-            Background
+            Dark background
           </Toggle>
-          {format === 'svg' && (
+          {advanced && format === 'svg' && (
             <Toggle on={clipHidden} onChange={setClipHidden}>
               Cut away hidden lines
             </Toggle>
           )}
-          <Toggle on={shadows} onChange={setShadows}>
-            Shadows
-          </Toggle>
+          {advanced && (
+            <Toggle on={shadows} onChange={setShadows}>
+              Shadows
+            </Toggle>
+          )}
+          <div className="field-label">File name</div>
+          <TextField value={name} onChange={setName} />
           <div className="meta">
-            {W} × {H}
-            {format === 'png' ? ` → ${W * Number(scale)} × ${H * Number(scale)} px` : ` · ${(svg.length / 1024).toFixed(1)} KB`}
+            {format === 'png' ? `${W * Number(scale)} × ${H * Number(scale)} px` : `${W} × ${H} · ${(svg.length / 1024).toFixed(1)} KB`}
           </div>
-          <div className="actions">
-            <button className="btn primary" onClick={go} data-testid="export-go">
-              <IconDownload /> Download {format.toUpperCase()}
+          <button className="btn primary wide" onClick={go} data-testid="export-go">
+            <IconDownload /> Download {format.toUpperCase()}
+          </button>
+          {format === 'svg' && (
+            <button
+              className="btn soft wide"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(svg);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1600);
+                } catch {
+                  setCopied(false);
+                }
+              }}
+            >
+              {copied ? 'Copied' : 'Copy SVG code'}
             </button>
-            {format === 'svg' && (
-              <button
-                className="btn ghost"
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(svg);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 1600);
-                  } catch {
-                    setCopied(false);
-                  }
-                }}
-              >
-                {copied ? 'Copied' : 'Copy SVG'}
-              </button>
-            )}
-            <button className="btn" onClick={onClose}>
-              Close
-            </button>
-          </div>
+          )}
+          <button className="btn wide" onClick={onClose}>
+            Close
+          </button>
         </div>
       </div>
     </div>

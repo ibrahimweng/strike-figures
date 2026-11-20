@@ -10,18 +10,23 @@ import { faceStyleOf, setFaceStyle, useStore } from '../model/store';
 import type { DotFill, Gradient, Scene, SceneObject, ShapeSpec, Theme } from '../model/types';
 import { ColorField, NumberField, Row, Section, Seg, Select, TextField, Toggle } from './controls';
 import { IconCopy, IconRepeat, IconTrash, IconUpload } from './icons';
-import { facesName, VIEWS } from './view';
+import { facesName } from './view';
+import { LabelsSection, SimpleObject, SimpleScene, ViewSection } from './SimpleInspector';
 
 /** a key for edits that should merge into one undo step while a control is being dragged */
 const live = (what: string, isLive: boolean) => (isLive ? `live:${what}` : undefined);
 
 export function Inspector() {
-  const scene = useStore(s => s.scenes.find(x => x.id === s.activeId) ?? s.scenes[0]!);
+  const scene = useStore(s => s.scene());
   const selection = useStore(s => s.selection);
+  const advanced = useStore(s => s.advanced);
   const obj = scene.objects.find(o => o.id === selection.objectId) ?? null;
+  let body;
+  if (advanced) body = obj ? <ObjectInspector scene={scene} obj={obj} face={selection.face} /> : <SceneInspector scene={scene} />;
+  else body = obj ? <SimpleObject obj={obj} /> : <SimpleScene scene={scene} />;
   return (
-    <aside className="right" data-testid="inspector">
-      {obj ? <ObjectInspector scene={scene} obj={obj} face={selection.face} /> : <SceneInspector scene={scene} />}
+    <aside className="right card" data-testid="inspector">
+      {body}
     </aside>
   );
 }
@@ -34,7 +39,10 @@ function SceneInspector({ scene }: { scene: Scene }) {
   const setTheme = <K extends keyof Theme>(k: K) => (v: Theme[K], l = false) => update(s => void (s.theme[k] = v), live(`theme-${k}`, l));
   return (
     <>
-      <div className="panel-head">Figure</div>
+      <div className="head">
+        <h2>Figure</h2>
+        <span className="sub">All settings</span>
+      </div>
       <Section title="Artboard">
         <Row label="Name">
           <TextField value={scene.name} onChange={v => update(s => void (s.name = v))} />
@@ -49,27 +57,8 @@ function SceneInspector({ scene }: { scene: Scene }) {
           </div>
         </Row>
       </Section>
-      <Section title="Camera">
-        <Seg
-            value={(VIEWS.find(v => Math.abs(v.yaw - cam.yaw) < 0.01 && Math.abs(v.pitch - cam.pitch) < 0.01)?.id ?? '') as string}
-            options={VIEWS.map(v => ({ value: v.id, label: v.label }))}
-            onChange={id => {
-              const v = VIEWS.find(x => x.id === id)!;
-              update(s => {
-                s.camera.yaw = v.yaw;
-                s.camera.pitch = v.pitch;
-              });
-            }}
-          />
-        <Row label="Turn">
-          <NumberField value={cam.yaw} step={1} min={-180} max={180} unit="°" onChange={setCam('yaw')} title="Yaw: turns the camera round the figure" />
-        </Row>
-        <Row label="Tilt">
-          <NumberField value={cam.pitch} step={1} min={-90} max={90} unit="°" onChange={setCam('pitch')} title="Pitch: 30° is Linear's 2:1, 35.26° true isometric" />
-        </Row>
-        <Row label="Zoom">
-          <NumberField value={cam.zoom} step={0.01} min={0.02} max={80} places={3} onChange={setCam('zoom')} />
-        </Row>
+      <ViewSection scene={scene} />
+      <Section title="Pan" defaultOpen={false}>
         <Row label="Pan">
           <div className="grid2">
             <NumberField label="X" value={cam.panX} step={1} onChange={setCam('panX')} />
@@ -116,8 +105,9 @@ function SceneInspector({ scene }: { scene: Scene }) {
           Export without the background
         </Toggle>
       </Section>
-      <div className="empty">
-        Select an object to edit it, or Alt-click one of its faces to paint that face. Add shapes from the top bar.
+      <LabelsSection scene={scene} advanced />
+      <div className="section">
+        <div className="note">Select an object to edit it, or Alt-click one of its faces to paint that face. Add shapes from the top bar.</div>
       </div>
     </>
   );
@@ -136,8 +126,8 @@ function ObjectInspector({ scene, obj, face }: { scene: Scene; obj: SceneObject;
 
   return (
     <>
-      <div className="panel-head">
-        <span>Object</span>
+      <div className="head">
+        <h2>{obj.name}</h2>
         <span className="actions">
           <button className="btn icon small" title="Duplicate (⌘D)" onClick={duplicate}>
             <IconCopy />
@@ -311,7 +301,11 @@ function ShapeFields({ obj, up }: { obj: SceneObject; up: (fn: (o: SceneObject) 
             ? { kind, radius: size / 2 }
             : kind === 'polygon'
               ? { kind, sides: 6, radius: size / 2, corner: 2 }
-              : { kind, width: size * 2, depth: size };
+              : kind === 'sector'
+                ? { kind, radius: size / 2, start: -90, sweep: 120 }
+                : kind === 'outline'
+                  ? { kind, points: [[-30, -30], [30, -30], [30, 0], [0, 0], [0, 30], [-30, 30]], radius: 2 }
+                  : { kind: 'chevron', width: size * 2, depth: size };
       o.faces.sides = {};
     });
   return (
@@ -608,7 +602,7 @@ function DecalEditor({ obj, up, theme }: { obj: SceneObject; up: (fn: (o: SceneO
         return;
       }
       up(o => {
-        o.decal = { kind: 'svg', paths, source: file.name, x: 0, y: 0, size, rotation: -45, mode: 'fill', color: null, width: null, opacity: 1 };
+        o.decal = { kind: 'svg', text: '', paths, source: file.name, x: 0, y: 0, size, rotation: -45, mode: 'fill', color: null, width: null, opacity: 1 };
       });
     });
   };
@@ -618,7 +612,7 @@ function DecalEditor({ obj, up, theme }: { obj: SceneObject; up: (fn: (o: SceneO
       <div className="actions">
         <button
           className={`btn small ghost${dc?.kind === 'sunset' ? ' on' : ''}`}
-          onClick={() => up(o => void (o.decal = { kind: 'sunset', paths: [], source: 'Sun', x: 0, y: 0, size, rotation: -45, mode: 'stroke', color: null, width: null, opacity: 1 }))}
+          onClick={() => up(o => void (o.decal = { kind: 'sunset', text: '', paths: [], source: 'Sun', x: 0, y: 0, size, rotation: -45, mode: 'stroke', color: null, width: null, opacity: 1 }))}
         >
           Sun
         </button>

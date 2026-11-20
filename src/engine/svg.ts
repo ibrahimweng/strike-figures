@@ -70,6 +70,13 @@ export function buildSvg(model: RenderModel, opts: SvgOptions = {}): El {
   const body: El[] = [];
   const background = opts.background ?? !theme.transparent;
   if (background) body.push({ tag: 'rect', attrs: { width, height, fill: theme.background } });
+  const text = (t: RenderModel['labels'][number]): El => {
+    const attrs: El['attrs'] = { d: t.d, fill: t.color };
+    if (t.opacity < 1) attrs['fill-opacity'] = num(t.opacity, 2);
+    if (opts.tagLayers) attrs['data-label'] = t.id;
+    return { tag: 'path', attrs };
+  };
+  if (model.groundLabels.length) body.push({ tag: 'g', attrs: {}, children: model.groundLabels.map(text) });
   model.layers.forEach((layer, i) => {
     const g: El[] = [];
     const hide = opts.clipHidden ? occluders(model.layers, i) : [];
@@ -138,6 +145,7 @@ export function buildSvg(model: RenderModel, opts: SvgOptions = {}): El {
     }
     if (g.length) body.push({ tag: 'g', attrs: opts.tagLayers ? { 'data-object': layer.objectId, 'data-piece': layer.piece } : {}, children: g });
   });
+  if (model.labels.length) body.push({ tag: 'g', attrs: {}, children: model.labels.map(text) });
   const children: El[] = [];
   if (defs.length) children.push({ tag: 'defs', attrs: {}, children: defs });
   children.push(...body);

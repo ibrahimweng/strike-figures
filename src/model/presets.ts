@@ -18,6 +18,7 @@ function scene(name: string, label: string, w: number, h: number, panX: number, 
     camera: { yaw: 45, pitch: 30, zoom: 1, panX, panY },
     theme: defaultTheme(),
     objects,
+    labels: [],
     preset,
   };
 }
@@ -38,7 +39,7 @@ function fig01(): Scene {
   const top = slab((201.155 - 67.4405) * UP - thick, 'Lifted slab');
   top.shadow = { enabled: true, blur: 6, dx: 0, dy: 4, opacity: 0.6 };
   top.guides = true;
-  top.decal = { kind: 'sunset', paths: [], source: 'Sun', x: 1.16, y: 1.16, size: 109.54, rotation: -45, mode: 'stroke', color: LINEAR.dim, width: null, opacity: 1 };
+  top.decal = { kind: 'sunset', text: '', paths: [], source: 'Sun', x: 1.16, y: 1.16, size: 109.54, rotation: -45, mode: 'stroke', color: LINEAR.dim, width: null, opacity: 1 };
   objects.push(top);
   return scene('Purpose-built', 'FIG 0.1', 265, 262, -0.25, 201.155 - 131, objects, 'fig01');
 }

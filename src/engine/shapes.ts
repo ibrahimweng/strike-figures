@@ -38,7 +38,11 @@ export type ShapeSpec =
   | { kind: 'box'; width: number; depth: number; radius: number; corners?: [number, number, number, number] | null }
   | { kind: 'cylinder'; radius: number }
   | { kind: 'polygon'; sides: number; radius: number; corner: number }
-  | { kind: 'chevron'; width: number; depth: number };
+  | { kind: 'chevron'; width: number; depth: number }
+  /** any plan outline (concave is fine): it is cut into convex pieces; radius rounds its outward corners */
+  | { kind: 'outline'; points: [number, number][]; radius: number; scaleX?: number; scaleZ?: number }
+  /** a slice of a pie: from start, sweep degrees round (counter-clockwise in plan) */
+  | { kind: 'sector'; radius: number; start: number; sweep: number };
 
 export const segLength = (s: Seg) => (s.kind === 'line' ? len2(sub2(s.b, s.a)) : s.r * (s.a1 - s.a0));
 
@@ -206,7 +210,186 @@ export function buildShape(spec: ShapeSpec): ShapeGeom {
     }
     case 'chevron':
       return chevron(Math.max(0.01, spec.width), Math.max(0.01, spec.depth));
+    case 'outline':
+      return outlineShape(
+        spec.points.map(([x, z]) => p2(x * (spec.scaleX ?? 1), z * (spec.scaleZ ?? 1))),
+        Math.max(0, spec.radius),
+      );
+    case 'sector':
+      return sector(Math.max(0.01, spec.radius), spec.start, spec.sweep);
   }
+}
+
+/* ---- free-form outlines ---- */
+
+const turn = (a: P2, b: P2, c: P2) => cross2(sub2(b, a), sub2(c, b));
+
+/** Drop repeated and straight-through points, so every vertex is a real corner. */
+function cleanPolygon(pts: P2[]): P2[] {
+  let out = pts.filter((p, i) => len2(sub2(p, pts[(i + 1) % pts.length]!)) > 1e-7);
+  let changed = true;
+  while (changed && out.length > 3) {
+    changed = false;
+    for (let i = 0; i < out.length; i++) {
+      const a = out[(i - 1 + out.length) % out.length]!;
+      const b = out[i]!;
+      const c = out[(i + 1) % out.length]!;
+      const scale = len2(sub2(b, a)) * len2(sub2(c, b));
+      if (Math.abs(turn(a, b, c)) <= 1e-9 * Math.max(1, scale) && dot2(sub2(b, a), sub2(c, b)) > 0) {
+        out = out.filter((_, k) => k !== i);
+        changed = true;
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+function isConvex(pts: P2[], idx: number[]): boolean {
+  const n = idx.length;
+  for (let i = 0; i < n; i++) {
+    const a = pts[idx[(i - 1 + n) % n]!]!;
+    const b = pts[idx[i]!]!;
+    const c = pts[idx[(i + 1) % n]!]!;
+    const scale = Math.max(1e-12, len2(sub2(b, a)) * len2(sub2(c, b)));
+    if (turn(a, b, c) / scale < -1e-9) return false;
+  }
+  return true;
+}
+
+function pointInTri(p: P2, a: P2, b: P2, c: P2) {
+  return turn(a, b, p) >= -1e-12 && turn(b, c, p) >= -1e-12 && turn(c, a, p) >= -1e-12;
+}
+
+/** Ear clipping, then Hertel–Mehlhorn: merge triangles back while they stay convex. Indices into pts, counter-clockwise. */
+export function convexPieces(pts: P2[]): number[][] {
+  const n = pts.length;
+  if (n < 3) return [];
+  const all = pts.map((_, i) => i);
+  if (isConvex(pts, all)) return [all];
+  const tris: number[][] = [];
+  const left = all.slice();
+  let guard = 0;
+  while (left.length > 3 && guard++ < n * n) {
+    let clipped = false;
+    for (let i = 0; i < left.length; i++) {
+      const ia = left[(i - 1 + left.length) % left.length]!;
+      const ib = left[i]!;
+      const ic = left[(i + 1) % left.length]!;
+      const [a, b, c] = [pts[ia]!, pts[ib]!, pts[ic]!];
+      if (turn(a, b, c) <= 1e-12) continue;
+      if (left.some(k => k !== ia && k !== ib && k !== ic && pointInTri(pts[k]!, a, b, c))) continue;
+      tris.push([ia, ib, ic]);
+      left.splice(i, 1);
+      clipped = true;
+      break;
+    }
+    if (!clipped) break;
+  }
+  if (left.length >= 3) tris.push(left.slice());
+  /* merge neighbours across a shared diagonal while the result stays convex */
+  let polys = tris;
+  let merged = true;
+  while (merged) {
+    merged = false;
+    outer: for (let i = 0; i < polys.length; i++) {
+      for (let j = i + 1; j < polys.length; j++) {
+        const A = polys[i]!;
+        const B = polys[j]!;
+        for (let k = 0; k < A.length; k++) {
+          const u = A[k]!;
+          const v = A[(k + 1) % A.length]!;
+          const m = B.findIndex((x, q) => x === v && B[(q + 1) % B.length] === u);
+          if (m < 0) continue;
+          /* walk A from v round to u, then B from u round to v */
+          const joined: number[] = [];
+          for (let t = 0; t < A.length; t++) joined.push(A[(k + 1 + t) % A.length]!);
+          for (let t = 2; t < B.length; t++) joined.push(B[(m + t) % B.length]!);
+          if (!isConvex(pts, joined)) continue;
+          polys = polys.filter((_, q) => q !== i && q !== j).concat([joined]);
+          merged = true;
+          break outer;
+        }
+      }
+    }
+  }
+  return polys;
+}
+
+/** A concave or convex outline: outward corners rounded, then cut into convex pieces along seams. */
+function outlineShape(raw: P2[], radius: number): ShapeGeom {
+  let pts = cleanPolygon(raw);
+  if (pts.length < 3) pts = [p2(-1, -1), p2(1, -1), p2(1, 1), p2(-1, 1)];
+  pts = ccw(pts);
+  const all = pts.map((_, i) => i);
+  if (isConvex(pts, all)) return single(roundedPolygon(pts, radius));
+  /* the outline: outward corners become arcs, inward ones stay sharp */
+  const n = pts.length;
+  const outline: Seg[] = [];
+  const corners: { t1: P2; t2: P2; arc: Seg | null }[] = pts.map((v, i) => {
+    const prev = pts[(i - 1 + n) % n]!;
+    const next = pts[(i + 1) % n]!;
+    if (radius <= 0 || turn(prev, v, next) <= 0) return { t1: v, t2: v, arc: null };
+    /* the corner at v is the first one the triangle (v, next, prev) rounds */
+    const seg = roundedPolygon([v, next, prev], radius)[0];
+    if (!seg || seg.kind !== 'arc') return { t1: v, t2: v, arc: null };
+    return { t1: segStart(seg), t2: segEnd(seg), arc: { ...seg, face: `c${i}` } };
+  });
+  for (let i = 0; i < n; i++) {
+    const cur = corners[i]!;
+    const nxt = corners[(i + 1) % n]!;
+    if (cur.arc) outline.push(cur.arc);
+    if (len2(sub2(nxt.t1, cur.t2)) > 1e-9) outline.push({ kind: 'line', a: cur.t2, b: nxt.t1, face: `s${i}` });
+  }
+  /* cut the polygon of segment starts (each arc stands in as its chord) */
+  const starts = outline.map(segStart);
+  const pieces = convexPieces(starts).map(idx =>
+    idx.map((ia, k): PieceSeg => {
+      const ib = idx[(k + 1) % idx.length]!;
+      if (ib === (ia + 1) % starts.length) return { seg: outline[ia]!, outline: ia };
+      return { seg: { kind: 'line', a: starts[ia]!, b: starts[ib]!, face: 'seam' }, outline: null };
+    }),
+  );
+  return finish(outline, pieces);
+}
+
+/** A pie slice; past half a turn it is cut in two along its middle so each piece stays convex. */
+function sector(r: number, startDeg: number, sweepDeg: number): ShapeGeom {
+  const sweep = Math.max(1, Math.min(360, Math.abs(sweepDeg)));
+  if (sweep >= 359.999) return single([{ kind: 'arc', c: p2(0, 0), r, a0: 0, a1: TAU, face: 'arc' }]);
+  const a0 = (startDeg * Math.PI) / 180;
+  const a1 = a0 + (sweep * Math.PI) / 180;
+  const o = p2(0, 0);
+  const at = (a: number) => p2(r * Math.cos(a), r * Math.sin(a));
+  if (sweep <= 180) {
+    const outline: Seg[] = [
+      { kind: 'line', a: o, b: at(a0), face: 's0' },
+      { kind: 'arc', c: o, r, a0, a1, face: 'arc' },
+      { kind: 'line', a: at(a1), b: o, face: 's1' },
+    ];
+    return single(outline);
+  }
+  const mid = (a0 + a1) / 2;
+  const outline: Seg[] = [
+    { kind: 'line', a: o, b: at(a0), face: 's0' },
+    { kind: 'arc', c: o, r, a0, a1: mid, face: 'arc' },
+    { kind: 'arc', c: o, r, a0: mid, a1, face: 'arc' },
+    { kind: 'line', a: at(a1), b: o, face: 's1' },
+  ];
+  const seamOut: Seg = { kind: 'line', a: at(mid), b: o, face: 'seam' };
+  const seamIn: Seg = { kind: 'line', a: o, b: at(mid), face: 'seam' };
+  return finish(outline, [
+    [
+      { seg: outline[0]!, outline: 0 },
+      { seg: outline[1]!, outline: 1 },
+      { seg: seamOut, outline: null },
+    ],
+    [
+      { seg: seamIn, outline: null },
+      { seg: outline[2]!, outline: 2 },
+      { seg: outline[3]!, outline: 3 },
+    ],
+  ]);
 }
 
 /** Is a plan point inside a convex piece, by at least margin (negative margin lets it sit just outside)? */

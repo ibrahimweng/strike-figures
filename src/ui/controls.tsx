@@ -1,6 +1,7 @@
-/* Inspector controls. Numbers can be typed or scrubbed by dragging their
-   label; a scrub is one undo step. Colours take a hex or the picker, and an
-   inherited colour shows the theme's value until it is set. */
+/* Controls, in Strike's style. The everyday ones are a slider row (label,
+   slider, value you can type), chips and switches. A drag on a slider is one
+   undo step. The advanced ones are number fields you can type or scrub,
+   colour fields and selects. */
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { IconChev } from './icons';
 
@@ -8,11 +9,13 @@ export function Section({ title, children, defaultOpen = true, extra }: { title:
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className={`section${open ? '' : ' closed'}`}>
-      <button className="head" onClick={() => setOpen(!open)} aria-expanded={open}>
-        {title}
-        {extra}
-        <span className="chev">
-          <IconChev />
+      <button className="title" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span>{title}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {extra}
+          <span className="chev">
+            <IconChev />
+          </span>
         </span>
       </button>
       <div className="body">{children}</div>
@@ -36,6 +39,70 @@ const fmt = (v: number, places: number) => {
   return String(Math.round(v * k) / k);
 };
 
+/** A label, a slider and a value box you can type into. */
+export function SliderRow({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  places = 0,
+  unit = '',
+  onChange,
+  title,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  places?: number;
+  unit?: string;
+  onChange: (v: number, live: boolean) => void;
+  title?: string;
+}) {
+  const [text, setText] = useState(fmt(value, places) + unit);
+  const [editing, setEditing] = useState(false);
+  useEffect(() => {
+    if (!editing) setText(fmt(value, places) + unit);
+  }, [value, places, unit, editing]);
+  const fill = `${(Math.max(0, Math.min(1, (value - min) / (max - min))) * 100).toFixed(1)}%`;
+  return (
+    <div className="srow" title={title}>
+      <span className="label">{label}</span>
+      <input
+        className="slider"
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={Math.max(min, Math.min(max, value))}
+        style={{ ['--fill' as string]: fill }}
+        onChange={e => onChange(Number(e.target.value), true)}
+        aria-label={label}
+      />
+      <input
+        className="vbox"
+        value={text}
+        inputMode="decimal"
+        onFocus={e => {
+          setEditing(true);
+          setText(fmt(value, places));
+          e.target.select();
+        }}
+        onChange={e => setText(e.target.value)}
+        onBlur={() => {
+          setEditing(false);
+          const v = Number(text.replace(unit, ''));
+          if (Number.isFinite(v)) onChange(Math.max(min, Math.min(max, v)), false);
+        }}
+        onKeyDown={e => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
+        aria-label={`${label} value`}
+      />
+    </div>
+  );
+}
+
 export function NumberField({
   value,
   onChange,
@@ -48,7 +115,6 @@ export function NumberField({
   title,
 }: {
   value: number;
-  /** live: part of a scrub, which should share one undo step */
   onChange: (v: number, live: boolean) => void;
   label?: string;
   step?: number;
@@ -73,23 +139,25 @@ export function NumberField({
   const start = useRef<{ x: number; v: number } | null>(null);
   return (
     <label className="num" title={title}>
-      <span
-        className="scrub"
-        onPointerDown={e => {
-          e.preventDefault();
-          (e.target as HTMLElement).setPointerCapture(e.pointerId);
-          start.current = { x: e.clientX, v: value };
-        }}
-        onPointerMove={e => {
-          if (!start.current) return;
-          const dx = e.clientX - start.current.x;
-          const mult = e.shiftKey ? 10 : e.altKey ? 0.1 : 1;
-          onChange(clampv(Number(fmt(start.current.v + Math.round(dx / 2) * step * mult, places))), true);
-        }}
-        onPointerUp={() => (start.current = null)}
-      >
-        {label ?? '·'}
-      </span>
+      {label && (
+        <span
+          className="scrub"
+          onPointerDown={e => {
+            e.preventDefault();
+            (e.target as HTMLElement).setPointerCapture(e.pointerId);
+            start.current = { x: e.clientX, v: value };
+          }}
+          onPointerMove={e => {
+            if (!start.current) return;
+            const dx = e.clientX - start.current.x;
+            const mult = e.shiftKey ? 10 : e.altKey ? 0.1 : 1;
+            onChange(clampv(Number(fmt(start.current.v + Math.round(dx / 2) * step * mult, places))), true);
+          }}
+          onPointerUp={() => (start.current = null)}
+        >
+          {label}
+        </span>
+      )}
       <input
         value={text}
         inputMode="decimal"
@@ -101,11 +169,6 @@ export function NumberField({
         onBlur={commit}
         onKeyDown={e => {
           if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
-          if (e.key === 'Escape') {
-            setText(fmt(value, places));
-            setEditing(false);
-            (e.target as HTMLInputElement).blur();
-          }
           if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
             const v = clampv(value + (e.key === 'ArrowUp' ? 1 : -1) * step * (e.shiftKey ? 10 : 1));
@@ -113,6 +176,7 @@ export function NumberField({
             setText(fmt(v, places));
           }
         }}
+        style={label ? undefined : { paddingLeft: 10 }}
       />
       {unit && <span className="unit">{unit}</span>}
     </label>
@@ -133,7 +197,6 @@ export function ColorField({
   allowInherit = false,
 }: {
   value: string | null;
-  /** shown when value is null */
   inherited?: string;
   onChange: (v: string | null, live: boolean) => void;
   allowInherit?: boolean;
@@ -181,11 +244,34 @@ export function Select<T extends string>({ value, options, onChange }: { value: 
   );
 }
 
-export function Seg<T extends string>({ value, options, onChange }: { value: T; options: { value: T; label: string }[]; onChange: (v: T) => void }) {
+export function Seg<T extends string>({
+  value,
+  options,
+  onChange,
+  accent,
+}: {
+  value: T;
+  options: { value: T; label: ReactNode; title?: string }[];
+  onChange: (v: T) => void;
+  accent?: boolean;
+}) {
   return (
-    <div className="seg" role="radiogroup">
+    <div className={`seg${accent ? ' accent' : ''}`} role="radiogroup">
       {options.map(o => (
-        <button key={o.value} className={o.value === value ? 'on' : ''} onClick={() => onChange(o.value)} role="radio" aria-checked={o.value === value}>
+        <button key={o.value} className={o.value === value ? 'on' : ''} onClick={() => onChange(o.value)} role="radio" aria-checked={o.value === value} title={o.title}>
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export function Chips<T extends string>({ value, options, onChange }: { value: T | null; options: { value: T; label: ReactNode; swatch?: string }[]; onChange: (v: T) => void }) {
+  return (
+    <div className="chips" role="radiogroup">
+      {options.map(o => (
+        <button key={o.value} className={`chip${o.value === value ? ' on' : ''}`} onClick={() => onChange(o.value)} role="radio" aria-checked={o.value === value}>
+          {o.swatch && <span className="sw" style={{ background: o.swatch }} />}
           {o.label}
         </button>
       ))}
@@ -196,8 +282,8 @@ export function Seg<T extends string>({ value, options, onChange }: { value: T; 
 export function Toggle({ on, onChange, children }: { on: boolean; onChange: (v: boolean) => void; children: ReactNode }) {
   return (
     <button className={`toggle${on ? ' on' : ''}`} onClick={() => onChange(!on)} role="switch" aria-checked={on}>
-      <span className="track" />
-      {children}
+      <span>{children}</span>
+      <span className="switch" />
     </button>
   );
 }

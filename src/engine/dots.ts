@@ -1,7 +1,7 @@
 /* Dotted fills: dots laid flat on a face, either an even grid or a halftone
    whose dots grow, shrink or fade with a gradient. Each dot is a circle on
    the face, so on screen it is the ellipse the face's tilt makes of it. */
-import type { DotFill, Gradient } from '../model/types';
+import type { DotFill, DotMask, Gradient } from '../model/types';
 import { type P2, DEG, TAU, clamp, lerp } from './math';
 
 /** A dot on the artboard: centre and two conjugate half-axes. */
@@ -90,6 +90,24 @@ export function gradientValue(g: Gradient, x: number, y: number): number {
   return g.invert ? 1 - v : v;
 }
 
+/** The height of a mask's curve at x, straight between its points. */
+export function curveY(points: [number, number][], x: number): number {
+  if (!points.length) return 0.5;
+  const pts = points.slice().sort((a, b) => a[0] - b[0]);
+  if (x <= pts[0]![0]) return pts[0]![1];
+  for (let i = 1; i < pts.length; i++) {
+    const [x1, y1] = pts[i]!;
+    const [x0, y0] = pts[i - 1]!;
+    if (x <= x1) return x1 - x0 < 1e-12 ? y1 : y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
+  }
+  return pts[pts.length - 1]![1];
+}
+
+const onSide = (m: DotMask, x: number, y: number) => {
+  const c = curveY(m.points, x);
+  return m.mode === 'below' ? y <= c + 1e-9 : y >= c - 1e-9;
+};
+
 /** The dots a fill puts on one face. */
 export function faceDots(fill: DotFill, frame: FaceFrame, color: string): DotGroup[] {
   if (!fill.enabled || fill.spacing <= 0) return [];
@@ -120,7 +138,8 @@ export function faceDots(fill: DotFill, frame: FaceFrame, color: string): DotGro
   const iMax = Math.ceil(Math.max(...corners.map(c => Math.abs(c[0]))) / s) + 1;
   const jMax = Math.ceil(Math.max(...corners.map(c => Math.abs(c[1]))) / s) + 1;
   if ((2 * iMax + 1) * (2 * jMax + 1) > MAX_DOTS * 4) return [];
-  const buckets = new Map<number, Dot[]>();
+  const buckets = new Map<string, Dot[]>();
+  const mask = fill.mask && fill.mask.points.length ? fill.mask : null;
   let count = 0;
   const sizeBy = fill.gradient.type !== 'none' && fill.gradient.affects !== 'opacity';
   const fadeBy = fill.gradient.type !== 'none' && fill.gradient.affects !== 'size';
@@ -133,9 +152,17 @@ export function faceDots(fill: DotFill, frame: FaceFrame, color: string): DotGro
       const v = cv + gx * sa + gy * ca;
       if (u < u0 - 1e-9 || u > u1 + 1e-9 || v < v0 - 1e-9 || v > v1 + 1e-9) continue;
       if (!frame.inside(u, v, fill.inset)) continue;
-      const g = gradientValue(fill.gradient, frame.nu(u), frame.nv(v));
+      const nu = frame.nu(u);
+      const nv = frame.nv(v);
+      const g = gradientValue(fill.gradient, nu, nv);
       const r = sizeBy ? lerp(fill.sizeMin, fill.size, g) : fill.size;
-      const o = fadeBy ? lerp(fill.opacityMin, fill.opacity, g) : fill.opacity;
+      let o = fadeBy ? lerp(fill.opacityMin, fill.opacity, g) : fill.opacity;
+      let col = color;
+      if (mask && !onSide(mask, nu, nv)) {
+        if (!mask.altColor) continue;
+        col = mask.altColor;
+        o *= mask.altOpacity;
+      }
       if (r < 0.02 || o < 0.01) continue;
       const m = frame.map(u, v);
       if (!m) continue;
@@ -145,7 +172,7 @@ export function faceDots(fill: DotFill, frame: FaceFrame, color: string): DotGro
         a = { x: (m.U.x * ca + m.V.x * sa) * r, y: (m.U.y * ca + m.V.y * sa) * r };
         b = { x: (-m.U.x * sa + m.V.x * ca) * r, y: (-m.U.y * sa + m.V.y * ca) * r };
       }
-      const key = Math.round(clamp(o) * 20);
+      const key = `${col}|${Math.round(clamp(o) * 20)}`;
       let list = buckets.get(key);
       if (!list) buckets.set(key, (list = []));
       list.push({ c: m.c, a, b });
@@ -154,6 +181,9 @@ export function faceDots(fill: DotFill, frame: FaceFrame, color: string): DotGro
     if (count >= MAX_DOTS) break;
   }
   return [...buckets.entries()]
-    .sort((x, y) => x[0] - y[0])
-    .map(([k, dots]) => ({ color, opacity: k / 20, shape: fill.shape, dots }));
+    .map(([k, dots]) => {
+      const [c, q] = k.split('|');
+      return { color: c!, opacity: Number(q) / 20, shape: fill.shape, dots };
+    })
+    .sort((x, y) => (x.color === y.color ? x.opacity - y.opacity : x.color === color ? 1 : -1));
 }

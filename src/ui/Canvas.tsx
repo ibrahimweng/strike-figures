@@ -18,7 +18,8 @@ type Drag =
 let drags = 0;
 
 export function Canvas() {
-  const scene = useStore(s => s.scenes.find(x => x.id === s.activeId) ?? s.scenes[0]!);
+  const scene = useStore(s => s.scene());
+  const advanced = useStore(s => s.advanced);
   const selection = useStore(s => s.selection);
   const notice = useStore(s => s.notice);
   const update = useStore(s => s.update);
@@ -28,6 +29,7 @@ export function Canvas() {
   const [box, setBox] = useState({ w: 900, h: 640 });
   const [hover, setHover] = useState<{ id: string; face: string | null; alt: boolean } | null>(null);
   const drag = useRef<Drag | null>(null);
+  const clicked = useRef<string | null>(null);
   const space = useRef(false);
 
   const model = useMemo(() => renderScene(scene), [scene]);
@@ -77,7 +79,7 @@ export function Canvas() {
       return;
     }
     const hit = pick(model, toArt(e), locked);
-    if (hit) {
+    if (hit && advanced) {
       if (e.altKey) {
         select(hit.objectId, hit.face);
         drag.current = null;
@@ -88,6 +90,8 @@ export function Canvas() {
       drag.current = { mode: e.shiftKey ? 'lift' : 'move', x0: e.clientX, y0: e.clientY, cam, moved: false, key, id: o.id, pos: [...o.position] };
       return;
     }
+    /* in the simple mode every drag turns the view; a click picks the shape under it */
+    clicked.current = hit?.objectId ?? null;
     drag.current = { mode: 'orbit', x0: e.clientX, y0: e.clientY, cam, moved: false, key };
   };
 
@@ -154,7 +158,8 @@ export function Canvas() {
   const onPointerUp = () => {
     const d = drag.current;
     drag.current = null;
-    if (d && d.mode === 'orbit' && !d.moved) select(null);
+    if (d && d.mode === 'orbit' && !d.moved) select(clicked.current);
+    clicked.current = null;
   };
 
   const onWheel = (e: React.WheelEvent) => {
@@ -227,7 +232,7 @@ export function Canvas() {
 
   return (
     <div
-      className="stage"
+      className="stage card"
       ref={wrap}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -236,7 +241,7 @@ export function Canvas() {
       onPointerLeave={() => !drag.current && setHover(null)}
       onWheel={onWheel}
       onContextMenu={e => e.preventDefault()}
-      style={{ cursor: drag.current?.mode === 'orbit' ? 'grabbing' : hover ? 'move' : 'grab' }}
+      style={{ cursor: advanced && hover ? 'move' : hover ? 'pointer' : 'grab' }}
       data-testid="stage"
     >
       <div className="caption" style={{ left, top: top - 22 }}>
@@ -249,19 +254,20 @@ export function Canvas() {
       </svg>
       {notice && <div className="notice">{notice}</div>}
       <div className="hud">
-        <div className="views" onPointerDown={e => e.stopPropagation()}>
-          {VIEWS.map(v => (
-            <button key={v.id} className={`btn small${view?.id === v.id ? ' on' : ''}`} onClick={() => setView(v.yaw, v.pitch)} title={`${v.label} view (${v.key})`}>
-              {v.label}
+        <div className="seg" onPointerDown={e => e.stopPropagation()}>
+          {VIEWS.filter(v => advanced || v.id !== 'side').map(v => (
+            <button key={v.id} className={view?.id === v.id ? 'on' : ''} onClick={() => setView(v.yaw, v.pitch)} title={`${v.label} view (${v.key})`}>
+              {v.id === 'linear' ? 'Standard' : v.label.charAt(0) + v.label.slice(1).toLowerCase()}
             </button>
           ))}
-          <button className="btn small" onClick={fit} title="Fit to the artboard (F)">
-            <IconFit /> FIT
+          <button onClick={fit} title="Fit the figure to its frame (F)">
+            <IconFit /> Fit
           </button>
         </div>
-        <span className="hint">Drag to rotate · Drag an object to move it (Shift lifts) · Alt-click a face to paint it · Right-drag pans · Scroll zooms</span>
-        <span className="readout">
-          YAW {scene.camera.yaw.toFixed(1)}° · PITCH {scene.camera.pitch.toFixed(1)}° · ZOOM {scene.camera.zoom.toFixed(2)}
+        <span className="hint">
+          {advanced
+            ? 'Drag empty space to turn · Drag a shape to move it (Shift lifts) · Alt-click a face to paint it · Right-drag pans · Scroll zooms'
+            : 'Drag to turn · Scroll to zoom · Click a shape to change it'}
         </span>
       </div>
     </div>

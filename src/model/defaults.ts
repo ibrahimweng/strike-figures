@@ -39,6 +39,7 @@ export const THEMES: Theme[] = [
     lineWidth: 0.5,
     creaseTaper: 0.7,
     creaseTrim: 4,
+    label: LINEAR.mid,
   },
   {
     name: 'Linear grey',
@@ -53,6 +54,7 @@ export const THEMES: Theme[] = [
     lineWidth: 0.5,
     creaseTaper: 0.7,
     creaseTrim: 4,
+    label: LINEAR.mid,
   },
   {
     name: 'Strike green',
@@ -67,6 +69,7 @@ export const THEMES: Theme[] = [
     lineWidth: 0.5,
     creaseTaper: 0.7,
     creaseTrim: 4,
+    label: LINEAR.mid,
   },
 ];
 
@@ -101,6 +104,7 @@ export const defaultDots = (color = ''): DotFill => ({
   inset: 2,
   angle: 0,
   region: null,
+  mask: null,
 });
 
 export const emptyFace = (): FaceStyle => ({ fill: null, dots: null });
@@ -144,6 +148,7 @@ export function blankScene(name = 'Untitled figure'): Scene {
     camera: { yaw: 45, pitch: 30, zoom: 1, panX: 0, panY: 40 },
     theme: defaultTheme(),
     objects: [],
+    labels: [],
     preset: null,
   };
 }

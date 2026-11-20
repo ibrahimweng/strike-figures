@@ -24,6 +24,15 @@ export interface Gradient {
   invert: boolean;
 }
 
+/** A curve across a face (0..1 each way, y up the face) that dots stay below or above, like a payoff or an area chart drawn in dots. */
+export interface DotMask {
+  mode: 'below' | 'above';
+  points: [number, number][];
+  /** draw the dots on the other side of the curve in this colour instead of leaving them out */
+  altColor: string | null;
+  altOpacity: number;
+}
+
 /** Dots laid flat on a face: an even grid, or a halftone when a gradient drives them. */
 export interface DotFill {
   enabled: boolean;
@@ -44,6 +53,8 @@ export interface DotFill {
   angle: number;
   /** only fill part of the face: centre and size as fractions of the face */
   region: { x: number; y: number; w: number; h: number } | null;
+  /** keep dots to one side of a curve */
+  mask: DotMask | null;
 }
 
 export interface FaceStyle {
@@ -76,7 +87,9 @@ export interface Shadow {
 }
 
 export interface Decal {
-  kind: 'sunset' | 'svg';
+  kind: 'sunset' | 'svg' | 'text';
+  /** text: the words, in Geist Mono */
+  text: string;
   /** svg: the path data, normalised to a 1×1 box centred on 0 */
   paths: string[];
   /** the name of the file it came from */
@@ -131,6 +144,24 @@ export interface Theme {
   creaseTaper: number;
   /** creases stop this far short of the outline, in artboard units */
   creaseTrim: number;
+  /** labels' colour */
+  label: string;
+}
+
+/** A few words in Geist Mono: floating upright, or lying on the ground or a wall. */
+export interface Label {
+  id: string;
+  text: string;
+  position: [number, number, number];
+  /** screen: always upright; ground: lying on the floor; xy / zy: on a wall facing +Z / +X */
+  plane: 'screen' | 'ground' | 'xy' | 'zy';
+  /** capital height, in world units */
+  size: number;
+  color: string | null;
+  opacity: number;
+  align: 'start' | 'middle' | 'end';
+  /** degrees, turning the text within its plane */
+  rotation: number;
 }
 
 export interface Scene {
@@ -142,6 +173,7 @@ export interface Scene {
   camera: Camera;
   theme: Theme;
   objects: SceneObject[];
+  labels: Label[];
   /** a built-in figure, which can be reset to how it shipped */
   preset: string | null;
 }
