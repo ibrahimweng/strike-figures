@@ -16,12 +16,12 @@
         {
           "path": "claude/strike-design.zip",
           "label": "Skill (zip)",
-          "bytes": 2858635
+          "bytes": 2859812
         },
         {
           "path": "claude/strike-design/SKILL.md",
           "label": "SKILL.md",
-          "bytes": 10488
+          "bytes": 10537
         }
       ]
     },
@@ -39,7 +39,7 @@
         {
           "path": "chatgpt/strike-design-chatgpt.zip",
           "label": "Everything (zip)",
-          "bytes": 740628
+          "bytes": 741789
         },
         {
           "path": "chatgpt/instructions.md",
@@ -49,7 +49,7 @@
         {
           "path": "chatgpt/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 41497
+          "bytes": 44210
         },
         {
           "path": "chatgpt/knowledge/tokens.css",
@@ -86,12 +86,12 @@
         {
           "path": "cursor/strike-design-cursor.zip",
           "label": "Rules and files (zip)",
-          "bytes": 1018099
+          "bytes": 1019295
         },
         {
           "path": "cursor/rules/strike-design.mdc",
           "label": "strike-design.mdc",
-          "bytes": 10388
+          "bytes": 10437
         },
         {
           "path": "cursor/rules/strike-color.mdc",
@@ -126,7 +126,7 @@
         {
           "path": "cursor/rules/strike-formats.mdc",
           "label": "strike-formats.mdc",
-          "bytes": 2577
+          "bytes": 5202
         },
         {
           "path": "cursor/rules/strike-words.mdc",
@@ -136,7 +136,7 @@
         {
           "path": "cursor/rules/strike-checklist.mdc",
           "label": "strike-checklist.mdc",
-          "bytes": 1713
+          "bytes": 1862
         }
       ]
     },
@@ -153,12 +153,12 @@
         {
           "path": "agents/strike-design-agents.zip",
           "label": "AGENTS.md and files (zip)",
-          "bytes": 1016933
+          "bytes": 1018116
         },
         {
           "path": "agents/AGENTS.md",
           "label": "AGENTS.md",
-          "bytes": 10181
+          "bytes": 10230
         }
       ]
     },
@@ -175,12 +175,12 @@
         {
           "path": "copilot/strike-design-copilot.zip",
           "label": "Instructions and files (zip)",
-          "bytes": 1017069
+          "bytes": 1018252
         },
         {
           "path": "copilot/copilot-instructions.md",
           "label": "copilot-instructions.md",
-          "bytes": 10181
+          "bytes": 10230
         }
       ]
     },
@@ -197,7 +197,7 @@
         {
           "path": "gemini/strike-design-gemini.zip",
           "label": "Everything (zip)",
-          "bytes": 39080
+          "bytes": 40241
         },
         {
           "path": "gemini/gem-instructions.md",
@@ -207,7 +207,7 @@
         {
           "path": "gemini/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 41497
+          "bytes": 44210
         },
         {
           "path": "gemini/knowledge/tokens.css",
@@ -234,7 +234,7 @@
         {
           "path": "perplexity/strike-design-perplexity.zip",
           "label": "Everything (zip)",
-          "bytes": 35845
+          "bytes": 37006
         },
         {
           "path": "perplexity/space-instructions.md",
@@ -244,7 +244,7 @@
         {
           "path": "perplexity/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 41497
+          "bytes": 44210
         }
       ]
     },
@@ -293,12 +293,12 @@
         {
           "path": "STRIKE-DESIGN.md",
           "label": "STRIKE-DESIGN.md",
-          "bytes": 41637
+          "bytes": 44350
         },
         {
           "path": "portable/strike-design-kit.zip",
           "label": "Brand kit: logos, fonts, posters, tokens (zip)",
-          "bytes": 3903943
+          "bytes": 3905086
         }
       ]
     }
@@ -307,7 +307,7 @@
     {
       "path": "STRIKE-DESIGN.md",
       "label": "All the rules in one file",
-      "bytes": 41637,
+      "bytes": 44350,
       "kind": "markdown"
     },
     {
@@ -319,43 +319,43 @@
     {
       "path": "claude/strike-design.zip",
       "label": "For Claude",
-      "bytes": 2858635,
+      "bytes": 2859812,
       "kind": "zip"
     },
     {
       "path": "chatgpt/strike-design-chatgpt.zip",
       "label": "For ChatGPT",
-      "bytes": 740628,
+      "bytes": 741789,
       "kind": "zip"
     },
     {
       "path": "cursor/strike-design-cursor.zip",
       "label": "For Cursor",
-      "bytes": 1018099,
+      "bytes": 1019295,
       "kind": "zip"
     },
     {
       "path": "agents/strike-design-agents.zip",
       "label": "For Codex and other AGENTS.md tools",
-      "bytes": 1016933,
+      "bytes": 1018116,
       "kind": "zip"
     },
     {
       "path": "copilot/strike-design-copilot.zip",
       "label": "For GitHub Copilot",
-      "bytes": 1017069,
+      "bytes": 1018252,
       "kind": "zip"
     },
     {
       "path": "gemini/strike-design-gemini.zip",
       "label": "For Gemini",
-      "bytes": 39080,
+      "bytes": 40241,
       "kind": "zip"
     },
     {
       "path": "perplexity/strike-design-perplexity.zip",
       "label": "For Perplexity",
-      "bytes": 35845,
+      "bytes": 37006,
       "kind": "zip"
     },
     {
@@ -367,7 +367,7 @@
     {
       "path": "portable/strike-design-kit.zip",
       "label": "Brand kit",
-      "bytes": 3903943,
+      "bytes": 3905086,
       "kind": "zip"
     },
     {

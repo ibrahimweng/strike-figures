@@ -618,7 +618,7 @@ const BANNED = [
 ];
 
 // Words the brand book says to avoid (0.6). "guaranteed" is a banned claim above.
-const AVOID = [
+export const AVOID = [
   { re: /(?<![\w/])24\s*\/\s*7(?![\w/])/g, word: '24/7', fix: 'say "every hour" or "open 168 hours a week"' },
   { re: /\brevolution(?:ary|ize|ise)s?\b/gi, word: 'revolutionary', fix: 'state the fact that makes it new' },
   { re: /\bunforgettable\b/gi, word: 'unforgettable', fix: 'state a fact the reader can check' },
@@ -626,7 +626,7 @@ const AVOID = [
 ];
 
 // British spellings: the brand writes US English (0.6). Mapped to the US form.
-const UK_SPELLING = {
+export const UK_SPELLING = {
   colour: 'color', colours: 'colors', coloured: 'colored', colourful: 'colorful', recolour: 'recolor',
   grey: 'gray', greys: 'grays', centre: 'center', centres: 'centers', centred: 'centered',
   favour: 'favor', favourite: 'favorite', favourites: 'favorites', behaviour: 'behavior', honour: 'honor', humour: 'humor',
@@ -639,7 +639,7 @@ const UK_SPELLING = {
 };
 const UK_RE = new RegExp(`\\b(${Object.keys(UK_SPELLING).join('|')})\\b`, 'gi');
 
-const TAGLINE = 'Options on every market, every hour.';
+export const TAGLINE = 'Options on every market, every hour.';
 const TAGLINE_RE = /options\s+on\s+every\s+market,?\s+every\s+hour\.?/gi;
 
 // Rule names that were renamed, so older ignore comments still work.
@@ -747,7 +747,7 @@ function headingChecks(text, offset, level, add) {
 }
 
 // Names that keep their capital in a sentence-case heading.
-const PROPER = new Set('strike geist ciburial arial pantone openai anthropic figma claude chatgpt cursor codex copilot gemini perplexity windsurf jules github x ethereum bitcoin solana asia europe america monday tuesday wednesday thursday friday saturday sunday january february march april may june july august september october november december ornn tailwind green deep light'.split(' ')); // and the palette names: Strike Green, Mark Deep, Mark Light
+export const PROPER = new Set('strike geist ciburial arial pantone openai anthropic figma claude chatgpt cursor codex copilot gemini perplexity windsurf jules github x ethereum bitcoin solana asia europe america monday tuesday wednesday thursday friday saturday sunday january february march april may june july august september october november december ornn tailwind green deep light'.split(' ')); // and the palette names: Strike Green, Mark Deep, Mark Light
 
 /** True when most words after the first are capitalized: "Our Tone of Voice", "Options On Every Market". */
 function titleCase(text) {

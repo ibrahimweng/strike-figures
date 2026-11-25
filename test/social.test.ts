@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CARD_SIZES, type CardSpec, fitFigure, GRID, layoutCard, type Measure, PALETTES } from '../src/social/layout';
+import { CARD_SIZES, type CardSize, type CardSpec, CLEAR, fitFigure, GRID, headlineFont, headlineLeading, layoutCard, LOCKUP_RATIO, type Measure, occupied, PALETTES, RISK_LINE, type Visual } from '../src/social/layout';
 import { findUrls, parseHighlight, plainOf, postText, ragOf, wrap, wrapBalanced, X_LIMIT, xLength } from '../src/social/text';
 
 /* a monospaced fake: every character is half an em, plus the tracking */
@@ -117,40 +117,99 @@ describe('card layout', () => {
     size: 'landscape',
     ground: 'dark',
     side: 'left',
+    visual: 'panel',
+    aspect: null,
+    logo: 'auto',
     eyebrow: 'Options',
     headline: 'Options on every market, *every hour.*',
     sub: 'Stocks, indices, crypto and compute, on one exchange.',
     number: '1/3',
+    risk: true,
     ...p,
   });
-  const inside = (r: { x: number; y: number; w: number; h: number }, W: number, H: number) => r.x >= 0 && r.y >= 0 && r.x + r.w <= W && r.y + r.h <= H;
+  type R = { x: number; y: number; w: number; h: number };
+  const inside = (r: R, W: number, H: number) => r.x >= -0.5 && r.y >= -0.5 && r.x + r.w <= W + 0.5 && r.y + r.h <= H + 0.5;
+  const overlaps = (a: R, b: R) => a.x < b.x + b.w - 0.5 && b.x < a.x + a.w - 0.5 && a.y < b.y + b.h - 0.5 && b.y < a.y + a.h - 0.5;
+  const grow = (r: R, d: number): R => ({ x: r.x - d, y: r.y - d, w: r.w + 2 * d, h: r.h + 2 * d });
+  const VISUALS: Visual[] = ['panel', 'corner', 'screenshot', 'photo', 'none'];
+  const SIZES: CardSize[] = ['landscape', 'square', 'portrait'];
+
+  it('comes in three sizes: 16:9, 1:1 and 4:5, all on the 50 px grid', () => {
+    expect(CARD_SIZES.landscape).toMatchObject({ width: 1600, height: 900 });
+    expect(CARD_SIZES.square).toMatchObject({ width: 1200, height: 1200 });
+    expect(CARD_SIZES.portrait).toMatchObject({ width: 1200, height: 1500 });
+    for (const s of SIZES) expect([CARD_SIZES[s].width % GRID, CARD_SIZES[s].height % GRID]).toEqual([0, 0]);
+  });
+
+  it('keeps everything on the card, nothing overlapping and the logo clear, in every size, picture and option', () => {
+    const headlines = ['Every hour.', 'Options on every market, *every hour.*', 'A much longer headline that has to wrap over several lines to fit in the space'];
+    for (const size of SIZES)
+      for (const visual of VISUALS)
+        for (const side of ['left', 'right'] as const)
+          for (const headline of headlines)
+            for (const risk of [true, false])
+              for (const number of ['2/5', null])
+                for (const aspect of [0.5, 1.6, 2.4]) {
+                  const L = layoutCard(spec({ size, visual, side, headline, risk, number, aspect, sub: 'And a sub-line that is a full sentence long, to see where it stops.' }), fake);
+                  const { width: W, height: H } = CARD_SIZES[size];
+                  const where = `${size}/${visual}/${side}/${risk}/${number}/${aspect}: ${headline}`;
+                  expect(inside(L.logo, W, H), where).toBe(true);
+                  const boxes = occupied(L);
+                  for (const b of boxes) expect(inside(b, W, H), `${where} inside`).toBe(true);
+                  /* nothing comes within the logo's clear space */
+                  for (const b of boxes) expect(overlaps(b, grow(L.logo, L.logo.clear)), `${where} clear space`).toBe(false);
+                  /* words never touch the picture */
+                  const words = occupied({ ...L, panel: null, frame: null, number: null, risk: null });
+                  for (const pic of [L.panel, L.frame]) if (pic) for (const w of words) expect(overlaps(w, pic), `${where} words/picture`).toBe(false);
+                  /* the number and the risk line keep off the words */
+                  const foot = occupied({ ...L, panel: null, frame: null, eyebrow: null, headline: null, sub: null });
+                  for (const a of foot) for (const w of words) expect(overlaps(a, w), `${where} foot/words`).toBe(false);
+                  /* a corner drawing is clipped clear of the words and the logo */
+                  if (L.figureClip && visual === 'corner') {
+                    for (const w of words) expect(overlaps(w, L.figureClip), `${where} corner/words`).toBe(false);
+                    expect(overlaps(grow(L.logo, L.logo.clear), L.figureClip), `${where} corner/logo`).toBe(false);
+                  }
+                }
+  });
+
+  it('signs off with the full lockup when it fits, the mark when asked', () => {
+    for (const size of SIZES) for (const visual of VISUALS) expect(layoutCard(spec({ size, visual }), fake).logo.kind).toBe('lockup');
+    const L = layoutCard(spec({ logo: 'mark' }), fake);
+    expect(L.logo.kind).toBe('mark');
+    expect(L.logo.w).toBe(L.logo.h);
+    expect(L.logoFellBack).toBe(false);
+    const lockup = layoutCard(spec(), fake).logo;
+    expect(lockup.w / lockup.h).toBeCloseTo(LOCKUP_RATIO);
+    expect(lockup.clear).toBe(Math.ceil(CLEAR * lockup.h));
+  });
+
+  it('puts the risk line on the logo row when it fits, on its own row when it does not', () => {
+    const wide = layoutCard(spec({ visual: 'none' }), fake);
+    expect(wide.risk!.lines).toHaveLength(1);
+    expect(wide.risk!.align).toBe('right');
+    const narrow = layoutCard(spec({ visual: 'panel' }), fake);
+    expect(narrow.risk!.lines[0]!.baseline).toBeLessThan(narrow.logo.y);
+    expect(layoutCard(spec({ risk: false }), fake).risk).toBeNull();
+    expect(plainOf(wide.risk!.lines.map(l => l.line.text).join(' '))).toBe(RISK_LINE);
+  });
 
   it('puts a square panel on the grid, the words in the other column', () => {
     const L = layoutCard(spec(), fake);
     expect([L.width, L.height]).toEqual([1600, 900]);
     expect(L.panel).toEqual({ x: GRID, y: GRID, w: 800, h: 800 });
-    expect(L.column.x).toBeGreaterThanOrEqual(L.panel.x + L.panel.w + GRID);
+    expect(L.column.x).toBeGreaterThanOrEqual(L.panel!.x + L.panel!.w + GRID);
     expect(L.column.x + L.column.w).toBeLessThanOrEqual(1600 - GRID);
     const R = layoutCard(spec({ side: 'right' }), fake);
-    expect(R.panel.x + R.panel.w).toBe(1600 - GRID);
-    expect(R.column.x + R.column.w).toBeLessThanOrEqual(R.panel.x - GRID);
+    expect(R.panel!.x + R.panel!.w).toBe(1600 - GRID);
+    expect(R.column.x + R.column.w).toBeLessThanOrEqual(R.panel!.x - GRID);
   });
 
-  it('never lets the words run into the panel or past the lock-up', () => {
-    for (const side of ['left', 'right'] as const)
-      for (const size of ['landscape', 'square'] as const) {
-        const L = layoutCard(spec({ side, size, headline: 'A much longer headline that has to wrap over several lines to fit in', sub: 'And a sub-line that is a full sentence long, to see where it stops.' }), fake);
-        const { width: W, height: H } = CARD_SIZES[size];
-        expect(inside(L.panel, W, H)).toBe(true);
-        for (const b of [L.eyebrow, L.headline, L.sub])
-          for (const { baseline, line } of b?.lines ?? []) {
-            expect(b!.x + line.width).toBeLessThanOrEqual(L.column.x + L.column.w + 0.5);
-            expect(baseline).toBeLessThan(L.logo.y - GRID / 2);
-            /* words and panel don't overlap */
-            const top = baseline - b!.font.size;
-            const clear = baseline < L.panel.y || top > L.panel.y + L.panel.h || b!.x >= L.panel.x + L.panel.w || b!.x + line.width <= L.panel.x;
-            expect(clear).toBe(true);
-          }
+  it('frames a screenshot in its own shape', () => {
+    for (const size of SIZES)
+      for (const aspect of [0.5, 1, 1.78, 2.5]) {
+        const L = layoutCard(spec({ size, visual: 'screenshot', aspect }), fake);
+        expect(L.panel).toBeNull();
+        expect(L.frame!.w / L.frame!.h).toBeCloseTo(aspect, 2);
       }
   });
 
@@ -162,36 +221,53 @@ describe('card layout', () => {
     expect(long.overflow).toBe(false);
   });
 
+  it('sets the headline by the type chart: leading and tracking follow the size', () => {
+    for (const [size, lead, track] of [[120, 0.9, -0.03], [64, 1, -0.02], [40, 1.2, -0.01], [20, 1.3, 0]] as const) {
+      expect(headlineLeading(size)).toBe(lead);
+      expect(headlineFont(size).tracking).toBe(track);
+    }
+  });
+
   it('says so when the words cannot fit at all', () => {
     const L = layoutCard(spec({ headline: 'word '.repeat(200) }), fake);
     expect(L.overflow).toBe(true);
   });
 
-  it('stacks a square card: the panel spans the width, above or below the words', () => {
-    const top = layoutCard(spec({ size: 'square', side: 'left' }), fake);
-    expect(top.panel.x).toBe(GRID);
-    expect(top.panel.w).toBe(1200 - 2 * GRID);
-    expect(top.panel.y).toBe(GRID);
-    expect(top.headline!.lines[0]!.baseline).toBeGreaterThan(top.panel.y + top.panel.h);
-    const below = layoutCard(spec({ size: 'square', side: 'right' }), fake);
-    expect(below.headline!.lines.at(-1)!.baseline).toBeLessThan(below.panel.y);
-    /* the panel's edges sit on the grid */
-    for (const L of [top, below]) for (const v of [L.panel.x, L.panel.y, L.panel.w, L.panel.h]) expect(v % GRID).toBe(0);
+  it('stacks a square or portrait card: the picture spans the width, above or below the words', () => {
+    for (const size of ['square', 'portrait'] as const) {
+      const W = CARD_SIZES[size].width;
+      const top = layoutCard(spec({ size, side: 'left' }), fake);
+      expect(top.panel!.x).toBe(GRID);
+      expect(top.panel!.w).toBe(W - 2 * GRID);
+      expect(top.panel!.y).toBe(GRID);
+      expect(top.headline!.lines[0]!.baseline).toBeGreaterThan(top.panel!.y + top.panel!.h);
+      const below = layoutCard(spec({ size, side: 'right' }), fake);
+      expect(below.headline!.lines.at(-1)!.baseline).toBeLessThan(below.panel!.y);
+      /* the panel's edges sit on the grid */
+      for (const L of [top, below]) for (const v of [L.panel!.x, L.panel!.y, L.panel!.w, L.panel!.h]) expect(v % GRID).toBe(0);
+    }
   });
 
-  it('colours highlights by ground: green on black and white, black on green', () => {
+  it('colors highlights by ground: green on black, Mark Deep on white, black on green, green on photos', () => {
     expect(layoutCard(spec({ ground: 'dark' }), fake).headline!.hlColor).toBe('#10B981');
-    expect(layoutCard(spec({ ground: 'light' }), fake).headline!.hlColor).toBe('#10B981');
+    expect(layoutCard(spec({ ground: 'light' }), fake).headline!.hlColor).toBe('#047857');
     expect(layoutCard(spec({ ground: 'green' }), fake).headline!.hlColor).toBe('#0C0C0C');
+    expect(layoutCard(spec({ visual: 'photo', ground: 'light' }), fake).headline!.color).toBe('#FFFFFF');
     expect(PALETTES.green.text).toBe('#FFFFFF');
+    expect(PALETTES.green.gradient).not.toBeNull();
   });
 
   it('leaves out what is empty', () => {
-    const L = layoutCard(spec({ eyebrow: '', sub: '  ', number: null }), fake);
+    const L = layoutCard(spec({ eyebrow: '', sub: '  ', number: null, risk: false }), fake);
     expect(L.eyebrow).toBeNull();
     expect(L.sub).toBeNull();
     expect(L.number).toBeNull();
-    expect(L.headline!.lines[0]!.baseline).toBeLessThan(GRID + 100);
+    expect(L.risk).toBeNull();
+    expect(L.headline!.lines[0]!.baseline).toBeLessThan(GRID + 160);
+  });
+
+  it('sets the small line above as typed, in sentence case', () => {
+    expect(layoutCard(spec({ eyebrow: 'Trading hours' }), fake).eyebrow!.lines[0]!.line.text).toBe('Trading hours');
   });
 
   it('fits a figure by its drawing, centred in the panel', () => {

@@ -28,11 +28,12 @@ export function figureName(ref: FigureRef): string {
 
 const HEX = /^#[0-9a-f]{6}$/i;
 
-/** The figure as it sits in a card's panel: redrawn for the ground, faces filled in the panel's colour (so the panel's grid stays behind them), lines heavier, and moving or still. */
-export function cardScene(sc: Scene, ground: Ground, motion: { animated: boolean; duration: number | null }): Scene {
+/** The figure as it sits on a card: redrawn for the ground, faces filled in the panel's color (so the panel's grid stays behind them) or, drawn from a corner, the ground's own, lines heavier, and moving or still. */
+export function cardScene(sc: Scene, ground: Ground, motion: { animated: boolean; duration: number | null }, faces: 'panel' | 'ground' = 'panel'): Scene {
   const pal = PALETTES[ground];
   const from = pal.ground.toUpperCase();
-  const json = JSON.stringify(onGround(sc, ground), (_k, v) => (typeof v === 'string' && HEX.test(v) && v.toUpperCase() === from ? pal.panel : v));
+  const fill = faces === 'ground' && !pal.gradient ? pal.ground : pal.panel;
+  const json = JSON.stringify(onGround(sc, ground), (_k, v) => (typeof v === 'string' && HEX.test(v) && v.toUpperCase() === from ? fill : v));
   const out = JSON.parse(json) as Scene;
   out.theme.lineWidth *= LINE_BOOST;
   for (const o of out.objects) if (o.style.lineWidth != null) o.style.lineWidth *= LINE_BOOST;
@@ -43,11 +44,17 @@ export function cardScene(sc: Scene, ground: Ground, motion: { animated: boolean
   return out;
 }
 
-/** A post's figure, ready for its card, or null if it can't be found. */
+/** A post's figure, ready for its card, or null if it can't be found or the post has no illustration. */
 export function postScene(post: Post, ground: Ground, animated = post.animated): Scene | null {
+  if (!hasFigure(post)) return null;
   const sc = resolveFigure(post.figure);
-  return sc ? cardScene(sc, ground, { animated, duration: post.duration }) : null;
+  return sc ? cardScene(sc, ground, { animated, duration: post.duration }, facesOf(post)) : null;
 }
+
+/** Whether a post's picture is an illustration. */
+export const hasFigure = (post: Post) => post.visual === 'panel' || post.visual === 'corner';
+/** Corner figures sit straight on the ground; panel figures on the panel. */
+export const facesOf = (post: Post): 'panel' | 'ground' => (post.visual === 'corner' ? 'ground' : 'panel');
 
 /** One frame of the figure as SVG (t in [0, 1); 0 is the still picture). */
 export const figureSvg = (sc: Scene, t: number, idPrefix: string) => frameSvg(sc, t, { clipHidden: true, background: false, idPrefix });

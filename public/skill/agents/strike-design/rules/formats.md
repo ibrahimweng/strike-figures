@@ -3,19 +3,35 @@
 ## Sizes
 | Format | Size |
 |---|---|
-| X post image | 1600 × 900 (16:9) or 1200 × 1200 |
+| Post, landscape 16:9 (X, LinkedIn) | 1600 × 900 |
+| Post, square 1:1 | 1200 × 1200 |
+| Post, portrait 4:5 (Instagram) | 1200 × 1500 (or 1080 × 1350) |
 | Link preview (OG) | 1200 × 630 |
-| Instagram | 1080 × 1350 or 1080 × 1080 |
 | Poster | A-series portrait, 50 px grid |
 | Slides | 1920 × 1080 |
 | Email | 600 px wide |
 
-## X posts and threads
-- **Card:** one card per post, with the illustration on one side and the words on the other.
-  - The headline is at most 2 lines and 8 words, with one phrase in green (on green grounds, that phrase is in ground black).
-  - The lockup goes in a bottom corner, with the post number ("2/5") opposite.
+## Posts and threads (X, Instagram, LinkedIn)
+- **Size from the picture:** a wide screenshot or chart → 16:9; a tall one → 4:5; an illustration or words alone → any, 1:1 by default. Never A4.
+- **Hierarchy:** the headline is the largest, highest-contrast thing on the card. Then the picture, then the sub; the logo, post number and risk line stay quiet. An illustration never outweighs the headline: draw it quieter or crop it off an edge.
+- **Words:** an optional eyebrow (a few words); the headline (required, about 8 words, sentence case); an optional sub (one sentence). One phrase in the headline is highlighted, usually the number or the claim: green on black, deep on light, ground black on the green gradient.
+- **Type:** the headline sets as large as its space allows, with line height and tracking from the chart in strike-design/rules/type.md; when the words stand alone they set larger, up to 3 lines.
+- **One picture, or none:**
+  - *Illustration:* a line illustration beside the words (16:9) or under them (1:1, 4:5), on its own panel; or bleeding off a corner, cropped and dimmer. Pick the one that says the headline (a clock for hours, a globe for markets, a shield for custody).
+  - *Screenshot (analytics):* as it is, in a frame (12–16 px corners, 1 px hairline), never recolored or redrawn; crop to the part that matters. A tall one sits beside the words at full height.
+  - *Photo:* fills the card, cropped on its subject, toned down so the words read; the logo is white.
+- **Logo:** one, in a bottom corner on the grid, with clear space of 0.37 × the mark's height on every side: nothing touches or overlaps it. The lockup when it fits; the mark alone when space is tight, never a squeezed lockup. The version for the ground: 3D green on black, 3D black on light, flat white on the green gradient and on photos.
+- **Foot:** in a thread, the post number ("2/5") sits opposite the logo. The risk line is on single posts and the last post of a thread, on by default.
+- **Grid:** 50 px cells, 50 px margins; edges of text, panels and frames on the grid.
 - **Thread:** 3–7 posts, one idea each, numbered "1/5" at the end. The last post carries the risk line.
 - **Hashtags:** none, or one tag for an event.
+
+### Reviewing a post
+When asked to check or improve a post, list what you noticed as problems (one line each), then the next step for each: a better size, the illustration that fits, the phrase to highlight, a shorter headline, a number to check. Suggest, don't force: keep the user's words unless they ask for a rewrite, and let them pick which fixes to take. Check:
+- The headline reads at a glance and is the biggest thing; nothing overlaps the logo.
+- The picture fits the headline, and the size fits the picture.
+- One phrase highlighted, sentence case, the tagline as written, US spelling, no avoided words or exclamation marks.
+- Numbers are real and sourced ("about 80 underlyings", times in ET, USD or USDC); the risk line is there when required.
 
 ## Posters
 - **Kinds:** tagline posters carry "Options on every market, every hour."; campaign posters carry one fact ("Listed options are closed 81% of the week") or one product line ("The terminal, rebuilt for options.").

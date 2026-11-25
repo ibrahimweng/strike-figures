@@ -1645,6 +1645,269 @@ select.select:focus {
   color: var(--text);
 }
 
+/* posts and threads: the switch at the top of the list */
+.tp-posts-top {
+  display: grid;
+  gap: 10px;
+}
+.tp-posts-top .seg {
+  width: 100%;
+}
+.tp-posts-top .seg button {
+  flex: 1;
+}
+
+/* the kinds of picture, as little cards */
+.tp-visuals {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+.tp-visual {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding: 8px 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--field);
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+.tp-visual:hover {
+  border-color: var(--line-2);
+  color: var(--text);
+}
+.tp-visual.on {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+/* illustrations that fit the headline */
+.tp-suggest {
+  display: grid;
+  gap: 6px;
+}
+.tp-suggest-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.tp-suggest-pic {
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: #08090a;
+  overflow: hidden;
+}
+.tp-suggest-pic img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.tp-suggest-pic:hover {
+  border-color: var(--line-2);
+}
+.tp-suggest-pic.on {
+  border-color: var(--accent);
+}
+
+/* adding a screenshot or photo */
+.tp-upload {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r);
+  background: var(--field);
+  color: var(--text);
+  text-align: left;
+}
+.tp-upload:hover {
+  border-color: var(--accent);
+}
+.tp-upload > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: 12px;
+}
+.tp-upload strong {
+  font-weight: 500;
+  font-size: 13px;
+}
+.tp-upload .tp-faint {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* dragging a picture on the card */
+.tp-shadow {
+  position: relative;
+}
+.tp-drag {
+  position: absolute;
+  cursor: grab;
+  touch-action: none;
+}
+.tp-drag:active {
+  cursor: grabbing;
+}
+.tp-drag span {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  background: rgba(12, 12, 12, 0.8);
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.3;
+  opacity: 0;
+  transition: opacity var(--t-base, 200ms) var(--ease-ui, ease);
+  pointer-events: none;
+}
+.tp-drag:hover span {
+  opacity: 1;
+}
+.tp-canvas.drop .tp-shadow {
+  outline: 2px dashed var(--accent);
+  outline-offset: 6px;
+}
+.tp-drop {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+/* the first-time guide */
+.tp-guide {
+  position: absolute;
+  inset: auto 24px 24px auto;
+  width: min(380px, calc(100% - 48px));
+  padding: 18px 18px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  background: rgba(12, 12, 12, 0.96);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  display: grid;
+  gap: 12px;
+  z-index: 2;
+}
+.tp-guide h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+.tp-guide ol {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.tp-guide strong {
+  color: var(--text);
+  font-weight: 500;
+}
+.tp-guide-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11.5px;
+}
+
+/* suggestions */
+.tp-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  display: inline-grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent-hi);
+  font-size: 11px;
+  font-weight: 500;
+}
+.tp-badge.fix {
+  background: rgba(251, 191, 36, 0.14);
+  color: #fbbf24;
+}
+.tp-tips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.tp-tip {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr);
+  gap: 4px 8px;
+  padding: 8px 8px 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--field);
+}
+.tp-tip-dot {
+  width: 6px;
+  height: 6px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.tp-tip.fix .tp-tip-dot {
+  background: #fbbf24;
+}
+.tp-tip-text {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text);
+}
+.tp-tip-acts {
+  grid-column: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}
+.tp-tips-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.tp-tips-off {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.tp-side .head .sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 /* the illustration picker */
 .tp-picker {
   width: min(880px, 100%);

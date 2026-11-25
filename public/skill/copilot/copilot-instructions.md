@@ -87,7 +87,7 @@ Paths are relative to the project's root. Open the rule file for the work in han
 - `strike-design/rules/layout-ui.md`: Grid, margins, spacing, surfaces and component specs (buttons, inputs, cards, tables, modals, states, icons). Read for any UI or layout.
 - `strike-design/rules/illustration-motion.md`: Line illustration rules (isometric or flat, line grays, 1 px lines, fills, dashes, labels) and motion timing. Read for illustrations and animation.
 - `strike-design/rules/data.md`: Charts and infographics: number first, chart types, colors, labels, axes, sources. Read for any chart or data graphic.
-- `strike-design/rules/formats.md`: Sizes and layouts for X posts and threads, posters, slides, documents, merch and email. Read when making one of these.
+- `strike-design/rules/formats.md`: Sizes and layouts for posts and threads (16:9, 1:1, 4:5), how to review a post, posters, slides, documents, merch and email. Read when making or checking one of these.
 - `strike-design/rules/words.md`: The verbal brand: tagline, mission, positioning, personality, tone, writing examples, words to use and avoid, mechanics, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
 - `strike-design/rules/checklist.md`: The checks to run before handing work over.
 - `strike-design/tokens/tokens.css`: CSS variables (dark on `:root`, light under `[data-theme="light"]`) and type classes (`.strike-h1` and the rest). The same values are in `strike-design/tokens/tokens.json`, `strike-design/tokens/tailwind.preset.cjs` (Tailwind v3) and `strike-design/tokens/theme.css` (Tailwind v4).

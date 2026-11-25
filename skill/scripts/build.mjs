@@ -40,7 +40,7 @@ const RULE_INFO = {
   'layout-ui': 'Grid, margins, spacing, surfaces and component specs (buttons, inputs, cards, tables, modals, states, icons). Read for any UI or layout.',
   'illustration-motion': 'Line illustration rules (isometric or flat, line grays, 1 px lines, fills, dashes, labels) and motion timing. Read for illustrations and animation.',
   data: 'Charts and infographics: number first, chart types, colors, labels, axes, sources. Read for any chart or data graphic.',
-  formats: 'Sizes and layouts for X posts and threads, posters, slides, documents, merch and email. Read when making one of these.',
+  formats: 'Sizes and layouts for posts and threads (16:9, 1:1, 4:5), how to review a post, posters, slides, documents, merch and email. Read when making or checking one of these.',
   words: 'The verbal brand: tagline, mission, positioning, personality, tone, writing examples, words to use and avoid, mechanics, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.',
   checklist: 'The checks to run before handing work over.',
 };
