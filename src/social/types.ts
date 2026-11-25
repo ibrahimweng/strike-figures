@@ -3,8 +3,10 @@
    thread numbers them and signs off with the risk line on its last card. */
 import type { Ground } from '../model/ground';
 import type { Scene } from '../model/types';
+import type { PatternSpec } from '../pattern/spec';
+import type { ChartSpec } from './chart';
 import type { PostImage } from './images';
-import type { CardSize, LogoChoice, Side, Visual } from './layout';
+import type { CardSize, LogoChoice, PostLayout, Side, Visual } from './layout';
 
 export type FigureRef =
   | { kind: 'library'; id: string }
@@ -24,6 +26,14 @@ export interface Post {
   figure: FigureRef;
   /** the screenshot or photo, when the picture is one */
   image: PostImage | null;
+  /** the chart, when the picture is one */
+  chart: ChartSpec;
+  /** a halftone dot pattern behind everything, or none */
+  pattern: PatternSpec | null;
+  /** the pattern shrinks away behind the words and the logo */
+  patternClear: boolean;
+  /** the standard layout, or one of the brand book's poster layouts */
+  layout: PostLayout;
   animated: boolean;
   /** seconds per loop; null keeps the figure's own */
   duration: number | null;

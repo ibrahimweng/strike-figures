@@ -1,8 +1,8 @@
 # Strike Figures
 
-Figures is Strike's design tool. It has three parts: the Strike design skill for AI tools, an illustration maker, and an X thread maker.
+Figures is Strike's design tool. It has four parts: the Strike design skill for AI tools, an illustration maker, a post and thread maker, and a dot pattern maker.
 
-The illustration maker makes Strike's illustrations: line-art figures, flat or in 3D, that move. It also makes posts for X threads, with an illustration on one side and words on the other.
+The illustration maker makes Strike's illustrations: line-art figures, flat or in 3D, that move. The post maker lays out posts for X and Instagram from the brand book's rules and posters. The pattern maker makes halftone dot patterns for posts and posters that look empty.
 
 Every figure is a real 3D scene. You can:
 - turn it to any angle, or look straight down for the flat version;
@@ -40,7 +40,7 @@ The skill's source lives in `skill/` (see `skill/README.md`):
 | `npm run skill:lockup -- --name "Markets" --layout horizontal --version 3d-green` | Build a sub-brand lockup (only when one is asked for) |
 | `npm run skill:test` | Run the skill's tests |
 
-Links: `#figures` and `#thread` open those parts directly.
+Links: `#figures`, `#thread` and `#patterns` open those parts directly.
 
 ## Using it (no setup knowledge needed)
 
@@ -64,28 +64,29 @@ The **Advanced** switch in the top bar shows every setting:
 - exact positions and rotations;
 - per-face fills, decals and label placement.
 
-## Making an X thread
+## Making posts and threads
 
-Switch the top bar from **Figures** to **Thread**. Each post is two things: the text you paste into X, and a card. The card puts an illustration on one side and your words on the other, laid out on Strike's 50 px grid.
+Switch the top bar to **Thread**. Pick **Posts** (single posts) or **Thread** (one numbered X thread). Each post is two things: the text you paste into X, and a card.
 
-1. **Write the post.** The counter counts the way X does: links are 23 characters, emoji 2. Turn on "Add 1/5" and each post's text ends with its number.
-2. **Write the card.**
-   - A small line on top (optional).
-   - The headline. Put \*stars\* round words to color them Strike Green.
-   - One sentence underneath (optional).
-   - The headline sizes itself to fit, and avoids leaving a word alone on a line.
-3. **Pick the illustration** from the Library or My figures, and choose **Still** or **Animated**.
-4. **Lay it out:**
-   - the picture left or right;
-   - the ground: Black, White or Green;
-   - the size: 16:9 (1600 × 900) or 1:1 (1200 × 1200, words on top).
-   - "Whole thread" sets these once for every post.
-5. **Copy and paste into X:**
-   - **Copy text** and **Copy image** go straight to your clipboard.
-   - **PNG**, **MP4** and **GIF** download.
-   - **Copy all text** and **Download all images** do the whole thread at once.
+1. **Start** from a blank post (**Add**) or from a poster in the brand book (**Templates**: tagline posters 4.9, campaign posters 4.10, the photo cover 1.5).
+2. **Write the card:** a headline (put \*stars\* round the phrase to highlight), an optional line below and an optional small line above. The type sizes itself by the brand's type chart.
+3. **Pick a picture:** an illustration (in a panel or from a corner), a **chart** from your numbers (big number, bars, histogram, line, area, rings, wheel, rays; type or paste the rows), your screenshot, a photo, or none.
+4. **Backdrop:** a quiet dot pattern behind the card, for cards that look empty. It keeps clear of the words and the logo.
+5. **Layout:** Standard, Tagline, Big number, Split, Card or Cover; 16:9, 1:1 or 4:5; Black, White or Green. The logo is the full lockup when it fits, the mark when it doesn't, always with clear space.
+6. **Suggestions** point out what could read better or break a brand rule. Apply them, dismiss them, or turn them off.
+7. **Copy or download:** Copy text, Copy image, PNG, and MP4 or GIF when the post is **Animated** (figures move, charts grow in, patterns drift).
 
-The thread saves as you go in your browser.
+Everything saves as you go, in your browser.
+
+## Making dot patterns
+
+Switch the top bar to **Patterns**. Start from a look (wave, soft wave, ribbon, halftone discs, rings, cube, stack, steps, sphere), from an image, or from any figure. Then set:
+- the **dots**: grid, staggered or rings; spacing, size, round, square or ASCII;
+- the **color**: Quiet by default (dark gray on black, very light gray on white), or any color you pick;
+- the **motion**: a slow drift and a glitch that flickers single dots;
+- the **artboard**: post sizes, a 9:16 story, an A-series poster, a slide or an X header.
+
+Download a PNG, an SVG (every dot editable), an MP4 or a GIF, or **Use on a post** to put it behind the post you're working on.
 
 ## Run it
 
@@ -269,10 +270,15 @@ The engine is in `src/engine`. It turns a scene into an SVG in four steps:
 
 The editor (`src/ui`, `src/model`) is React with a small zustand store. The canvas draws the same SVG that the export writes. The library is in `src/library`.
 
-The thread tool is in `src/social`:
-- `layout.ts`: one card layout, used by the preview and every export;
-- `render.ts`: draws cards on a canvas;
+The post tool is in `src/social`:
+- `layout.ts`: the card layouts (standard and the poster layouts), used by the preview and every export;
+- `render.ts`: draws cards on a canvas, still or moving;
+- `chart.ts`, `chartDraw.ts`: chart data and drawing;
+- `advice.ts`, `voice.ts`: the suggestions and the brand's word rules;
+- `templates.ts`: the brand book's posters as posts;
 - `text.ts`: X's character count, highlights and line breaking.
+
+The pattern maker is in `src/pattern`: tone fields (`field.ts`), the dot screen (`halftone.ts`), drawing and SVG (`draw.ts`), and tone from images and figures (`sources.ts`).
 
 The animation code is in `src/anim`:
 - `motion.ts`: a figure at moment t of its loop;

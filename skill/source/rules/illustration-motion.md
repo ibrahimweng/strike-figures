@@ -19,6 +19,14 @@ Strike's visual language is precise and plain: strong type, line-art illustratio
 - **On cards and hover:** rest still; on hover make one move on the motion curves (gather, release), revealing detail (color as dots, the green focus) only then.
 - **Making them:** use the Strike Figures tool (66 ready illustrations, exports SVG, PNG, MP4, GIF, animated SVG and Lottie) when it's available. Otherwise draw with these rules.
 
+## Halftone dot patterns
+A field of dots that grow and shrink to draw a shape: a wave or band, a twisted ribbon, discs shaded from one side, concentric rings swelling into blobs, a dotted isometric cube (or stack, steps, cylinder, sphere), any line figure redrawn in dots, or a photo turned into dots. They fill posts, posters, slides and headers that look empty; they are texture, never the message.
+- **Quiet by default:** on black, dark gray dots (#2A2A2A, about 1.3:1 against #0C0C0C); on white, very light gray (#E8E8E9); on light gray (#E8E8E9), white; on the green gradient, white at about 16%. Another brand color only when asked, and then quiet enough that the headline stays first (under about 1.9:1 against the ground behind words).
+- **Clear of the words:** dots shrink away behind the headline, the sub-line and the logo's clear space. One pattern per layout, and not with a busy photo or a full illustration on top.
+- **The screen:** a square grid, a staggered grid or concentric rings, 12–24 px apart on a 1600 px card; the largest dot about 0.9 of the spacing. Round dots; squares or ASCII characters (· : + * #) only for a deliberate technical feel.
+- **Motion:** a slow drift (the band flows, the rings sway, light passes over the cube) and, if wanted, a light glitch (single dots flicker). Both loop seamlessly, 6–12 s.
+- **Export:** SVG keeps every dot editable; PNG, MP4 or GIF for posts.
+
 ## Motion
 - **Character:** calm and exact. One thing moves at a time and comes back to rest. The first frame is the still. No bounce, no flashing; honor reduced motion.
 

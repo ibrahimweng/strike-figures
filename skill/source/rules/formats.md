@@ -23,6 +23,13 @@
 - **Logo:** one, in a bottom corner on the grid, with clear space of 0.37 × the mark's height on every side: nothing touches or overlaps it. The lockup when it fits; the mark alone when space is tight, never a squeezed lockup. The version for the ground: 3D green on black, 3D black on light, flat white on the green gradient and on photos.
 - **Foot:** in a thread, the post number ("2/5") sits opposite the logo. The risk line is on single posts and the last post of a thread, on by default.
 - **Grid:** 50 px cells, 50 px margins; edges of text, panels and frames on the grid.
+- **Poster layouts for posts** (from the brand book):
+  - *Tagline* (4.9): the picture fills the top and runs off it; the lockup sits above the words at the foot.
+  - *Big number* (4.10): the headline's number set huge, the words before it above and after it below ("Listed options are closed / 81% / of the week."), a faint chart behind it, the mark centered at the foot. Geist Medium, or Geist Pixel Circle.
+  - *Split* (4.10): the headline in two parts, top left and right of center, broken at its comma; rays from the mark at the foot to each ticker.
+  - *Card* (4.10): the words on a white card over a screenshot or photo; the rest of the sentence continues in gray at the same size.
+  - *Cover* (1.5): a photo or a quiet dot pattern, the lockup large in the middle (a third of the width at most), the tagline small and centered at the foot.
+- **Empty card:** words alone can carry a quiet halftone pattern behind them (see illustration-motion.md).
 - **Thread:** 3–7 posts, one idea each, numbered "1/5" at the end. The last post carries the risk line.
 - **Hashtags:** none, or one tag for an event.
 

@@ -3,8 +3,10 @@
 import { create } from 'zustand';
 import { uid } from '../model/defaults';
 import type { Ground } from '../model/ground';
-import type { CardSize } from './layout';
-import { postText } from './text';
+import { fillPattern } from '../pattern/spec';
+import { DEFAULT_CHART, fillChart } from './chart';
+import { type CardSize, LAYOUTS } from './layout';
+import { plainOf, postText } from './text';
 import type { Post, Thread } from './types';
 
 const STORAGE = 'strike-figures:thread';
@@ -12,8 +14,8 @@ const STORAGE_POSTS = 'strike-figures:posts';
 const STORAGE_PREFS = 'strike-figures:post-prefs';
 
 /** The three parts of the tool: the design skill (where everyone lands), the figure editor, and the post and thread maker. */
-export type Mode = 'skill' | 'figures' | 'thread';
-const MODES: Mode[] = ['skill', 'figures', 'thread'];
+export type Mode = 'skill' | 'figures' | 'thread' | 'patterns';
+const MODES: Mode[] = ['skill', 'figures', 'thread', 'patterns'];
 
 /** Single posts, or one numbered thread. */
 export type Category = Thread['kind'];
@@ -29,6 +31,10 @@ export function newPost(p: Partial<Post> = {}): Post {
     visual: 'panel',
     figure: { kind: 'library', id: 'every-market' },
     image: null,
+    chart: { ...DEFAULT_CHART },
+    pattern: null,
+    patternClear: true,
+    layout: 'standard',
     animated: false,
     duration: null,
     side: 'left',
@@ -125,7 +131,10 @@ export function fillList(t: Partial<Thread>, kind: Category): Thread | null {
     posts: t.posts.map(p => {
       const post = newPost({ ...(p as Partial<Post>), id: p.id ?? uid() });
       if (!Array.isArray(post.dismissed)) post.dismissed = [];
-      if (!['panel', 'corner', 'screenshot', 'photo', 'none'].includes(post.visual)) post.visual = 'panel';
+      if (!['panel', 'corner', 'screenshot', 'photo', 'chart', 'none'].includes(post.visual)) post.visual = 'panel';
+      post.chart = fillChart(post.chart);
+      post.pattern = post.pattern ? fillPattern(post.pattern) : null;
+      if (!LAYOUTS.includes(post.layout)) post.layout = 'standard';
       if (!['auto', 'lockup', 'mark'].includes(post.logo)) post.logo = 'auto';
       return post;
     }),
@@ -193,6 +202,8 @@ interface ThreadState {
   updatePost: (id: string, patch: Partial<Post>) => void;
   setDefaults: (patch: Partial<Pick<Thread, 'ground' | 'size' | 'numberText' | 'numberCards'>>) => void;
   addPost: () => void;
+  /** a new post after the selected one, from a template */
+  addFrom: (patch: Partial<Post>) => void;
   duplicatePost: (id: string) => void;
   removePost: (id: string) => void;
   movePost: (id: string, by: -1 | 1) => void;
@@ -234,6 +245,14 @@ export const useThread = create<ThreadState>((set, get) => {
     select: id => set(st => ({ selectedId: id, selected: { ...st.selected, [st.category]: id } })),
     updatePost: (id, patch) => setList({ ...get().thread, posts: get().thread.posts.map(p => (p.id === id ? { ...p, ...patch } : p)) }),
     setDefaults: patch => setList({ ...get().thread, ...patch }),
+    addFrom: patch => {
+      const { thread, selectedId } = get();
+      const i = thread.posts.findIndex(p => p.id === selectedId);
+      const post = newPost({ ...JSON.parse(JSON.stringify(patch)) as Partial<Post>, text: plainOf(patch.headline ?? '') + (patch.sub ? ` ${plainOf(patch.sub)}` : '') });
+      const posts = thread.posts.slice();
+      posts.splice(i < 0 ? posts.length : i + 1, 0, post);
+      setList({ ...thread, posts }, post.id);
+    },
     addPost: () => {
       const { thread, selectedId } = get();
       const i = thread.posts.findIndex(p => p.id === selectedId);

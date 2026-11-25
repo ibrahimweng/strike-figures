@@ -4,9 +4,11 @@
    step; none is forced, and each can be dismissed. Pure: no canvas, so it is
    tested directly. */
 import { LIBRARY } from '../library';
-import type { CardLayout, CardSize } from './layout';
+import { LOUD, patternContrast, presetSpec } from '../pattern/spec';
+import { chartIssues } from './chart';
+import { type CardLayout, type CardSize, splitHero } from './layout';
 import { parseHighlight, plainOf } from './text';
-import { type Post, riskOfPost, sizeOfPost, type Thread } from './types';
+import { groundOfPost, type Post, riskOfPost, sizeOfPost, type Thread } from './types';
 import { avoidedIn, britishIn, isTitleCase, taglineVariant, TAGLINE, toSentenceCase, toUS } from './voice';
 
 export interface Advice {
@@ -122,6 +124,7 @@ export interface AdviceContext {
 export function adviseFor(thread: Thread, post: Post, index: number, ctx: AdviceContext): Advice[] {
   const out: Advice[] = [];
   const size = sizeOfPost(thread, post);
+  const ground = groundOfPost(thread, post);
   const head = post.headline;
   const headPlain = plainOf(head).trim();
   const fields: [keyof Post & ('headline' | 'sub' | 'eyebrow' | 'text'), string][] = [
@@ -154,6 +157,19 @@ export function adviseFor(thread: Thread, post: Post, index: number, ctx: Advice
       });
     if (!post.sub.trim()) out.push({ id: 'shot:caption', level: 'tip', about: 'numbers', text: 'Say what the screenshot shows in the line below: what, when, where it comes from.' });
   }
+  /* the poster layouts need their words in a certain shape */
+  if (post.layout === 'hero' && !splitHero(head)) out.push({ id: 'hero:number', level: 'fix', about: 'numbers', text: 'The big-number layout sets the headline’s number huge, but this headline has no number. Add one, or pick another layout.' });
+  if (post.layout === 'card' && post.visual !== 'screenshot' && post.visual !== 'photo' && post.visual !== 'chart' && !post.pattern) out.push({ id: 'card:picture', level: 'tip', about: 'picture', text: 'The card layout puts the words on a white card over a picture. Add a screenshot or a photo behind it.', apply: { label: 'Use a screenshot', patch: { visual: 'screenshot' } } });
+  if (post.layout === 'cover' && post.visual !== 'photo' && !post.pattern) out.push({ id: 'cover:picture', level: 'tip', about: 'picture', text: 'The cover reads best over a photo, or a quiet dot pattern.', apply: { label: 'Add a pattern', patch: { pattern: presetSpec('soft-wave') } } });
+
+  /* a chart: the brand's data rules */
+  if (post.visual === 'chart') chartIssues(post.chart).forEach((text, i) => out.push({ id: `chart:${i}:${text.slice(0, 24)}`, level: 'tip', about: 'numbers', text }));
+  /* a card with nothing but a few words can carry a quiet pattern */
+  if (post.visual === 'none' && !post.pattern && headPlain && headPlain.split(/\s+/).length <= 10 && !post.sub.trim())
+    out.push({ id: 'pattern:empty', level: 'tip', about: 'picture', text: 'The card is mostly empty. A quiet dot pattern can fill it without taking over.', apply: { label: 'Add a pattern', patch: { pattern: presetSpec('wave') } } });
+  if (post.pattern && patternContrast(post.pattern, post.visual === 'photo' ? 'green' : ground) > LOUD)
+    out.push({ id: 'pattern:loud', level: 'tip', about: 'picture', text: 'The dot pattern is loud enough to compete with the headline. Quiet keeps the words first.', apply: { label: 'Make it quiet', patch: { pattern: { ...post.pattern, color: null, opacity: 1 } } } });
+
   /* a size where the headline sets clearly larger, when the picture doesn't decide */
   if (ctx.headlineSizes && post.visual !== 'screenshot') {
     const now = ctx.headlineSizes[size];

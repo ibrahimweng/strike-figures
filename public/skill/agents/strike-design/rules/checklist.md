@@ -13,6 +13,7 @@
 - [ ] Nothing invented; "about 80 underlyings" is the only count; USDC unless told otherwise
 - [ ] Risk line where required
 - [ ] Posts: the size fits the picture; the headline is the biggest thing; one picture at most; the logo has clear space (the mark alone when tight)
+- [ ] Dot patterns quiet (dark gray on black, very light gray on white) and clear of the words and the logo; charts with one mark in green and a source line
 - [ ] Illustrations are line art (flat or 2:1), 1 px lines, never the logo or a solid block, and quieter than their titles; nothing tiny (no text under 12 px)
 - [ ] Nothing repeats: each action, label and message appears once; nothing contradicts
 - [ ] Motion uses gather (ease-in, 400 ms) and release (ease-out, 320 ms), or the UI ease for plain UI

@@ -17,10 +17,16 @@ import { cardScene, facesOf, figureName, figureSvg, hasFigure, loopFrames, loopS
 import { ACCEPT, addImage, coverRect } from './images';
 import { CARD_SIZES, type CardLayout, type CardSize, layoutCard, PALETTES, type Visual } from './layout';
 import { Picker } from './Picker';
-import { cardGif, cardPng, cardVideo, ensureFonts, figureRect, GIF_LIMIT, layoutOf, measure, paintCard, specOf } from './render';
-import { type Category, GROUND_OPTIONS, type Mode, SIZE_OPTIONS, threadText, useThread } from './store';
+import { baseMoves, canMove, cardAssets, cardGif, cardPng, cardVideo, drawBase, ensureFonts, figureRect, GIF_LIMIT, isMoving, layoutOf, loopOfPost, measure, paintCard, specOf } from './render';
+import { PatternCanvas } from '../pattern/PatternTool';
+import { LOUD, patternContrast, PRESETS, presetSpec } from '../pattern/spec';
+import { usePattern } from '../pattern/store';
+import { LAYOUT_OPTIONS, TEMPLATES } from './templates';
+import { CHART_KINDS, type ChartKind, type ChartRow, type ChartSpec, chartIssues, exampleChart, formatValue, highlightOf, parseRows, parseValue } from './chart';
+import { type Category, GROUND_OPTIONS, type Mode, newPost, SIZE_OPTIONS, threadText, useThread } from './store';
 import { plainOf, postText, X_LIMIT, xLength } from './text';
 import { type FigureRef, groundOfPost, isSingle, type Post, riskOfPost, sizeOfPost, type Thread } from './types';
+import type { Ground } from '../model/ground';
 
 /* ---------- the switch in the top bar ---------- */
 
@@ -35,6 +41,7 @@ export function ModeSwitch() {
           { value: 'skill', label: 'Skill', title: 'The Strike design skill for AI tools' },
           { value: 'figures', label: 'Figures', title: 'Make illustrations' },
           { value: 'thread', label: 'Thread', title: 'Make posts and X threads' },
+          { value: 'patterns', label: 'Patterns', title: 'Make halftone dot patterns for posts and posters' },
         ]}
         onChange={setMode}
       />
@@ -96,6 +103,7 @@ const VisualIcon = ({ v }: { v: Visual }) => (
     {v === 'screenshot' && <rect x="17" y="5" width="14" height="10" rx="1.5" />}
     {v === 'screenshot' && <path d="M19 12.5l3-2.5 2 1.5 3-3 2.5 2" />}
     {v === 'photo' && <path d="M0.5 14l8-6 7 5 6-4 12 8" opacity={0.6} />}
+    {v === 'chart' && <path d="M19 18V12M22.5 18V8M26 18V10.5M29.5 18V5" strokeWidth={2} />}
   </svg>
 );
 
@@ -103,6 +111,7 @@ const VISUALS: { value: Visual; label: string; title: string }[] = [
   { value: 'panel', label: 'Illustration', title: 'An illustration in its own panel beside the words' },
   { value: 'corner', label: 'Corner', title: 'An illustration drawn large from a corner, behind nothing' },
   { value: 'screenshot', label: 'Screenshot', title: 'Your analytics or product screenshot, framed as it is' },
+  { value: 'chart', label: 'Chart', title: 'A chart from your numbers: a big number, bars, a line, rings, a wheel' },
   { value: 'photo', label: 'Photo', title: 'A photo filling the card, toned so the words read' },
   { value: 'none', label: 'Text only', title: 'The words and the logo alone' },
 ];
@@ -256,6 +265,7 @@ function CardView({
   /* src is a dependency too: a figure from My figures can change under the post */
   const rect = useMemo(() => (L && src ? figureRect(L, post) : null), [L, post, src]);
   const moving = live && post.animated && hasFigure(post);
+  const baseMoving = live && baseMoves(post);
   const scene = useMemo(() => (moving && src ? cardScene(src, ground, { animated: true, duration: post.duration }, facesOf(post)) : null), [moving, src, ground, post]);
   const { frames, ready } = useFrames(scene);
   const box = useRef<HTMLDivElement>(null);
@@ -269,10 +279,34 @@ function CardView({
     if (!c || !L) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let live = true;
-    /* everything loads first, then the card is drawn in one go, so it never flickers */
+    let raf = 0;
     const off = document.createElement('canvas');
     off.width = Math.round(width * dpr);
     off.height = Math.round(height * dpr);
+    if (baseMoving) {
+      /* a moving pattern or chart: the card is redrawn every frame (the figure, if any, plays over it) */
+      void cardAssets(L, post, scale * dpr).then(assets => {
+        if (!live) return;
+        c.width = off.width;
+        c.height = off.height;
+        const ctx = c.getContext('2d')!;
+        const seconds = Math.max(1, loopOfPost(post, ground));
+        const t0 = performance.now();
+        const tick = (now: number) => {
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, c.width, c.height);
+          ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
+          drawBase(ctx, L, post, assets, (((now - t0) / 1000 / seconds) % 1 + 1) % 1);
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      });
+      return () => {
+        live = false;
+        cancelAnimationFrame(raf);
+      };
+    }
+    /* everything loads first, then the card is drawn in one go, so it never flickers */
     const ctx = off.getContext('2d')!;
     ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
     void paintCard(ctx, L, post, ground, scale * dpr, { figure: !moving, isLive: () => live }).then(() => {
@@ -284,7 +318,7 @@ function CardView({
     return () => {
       live = false;
     };
-  }, [L, width, height, scale, moving, src, rect, ground, post]);
+  }, [L, width, height, scale, moving, baseMoving, src, rect, ground, post]);
 
   /* play: swap the frame's SVG in on each tick */
   useEffect(() => {
@@ -408,10 +442,10 @@ function Guide({ onDone }: { onDone: () => void }) {
       <h3>Make a post in three steps</h3>
       <ol>
         <li>
-          <strong>Write the headline.</strong> Short is strong: 3–8 words. Put *asterisks* round the phrase to show in green.
+          <strong>Write the headline,</strong> or start from a poster in the brand book with Templates. Short is strong: 3–8 words. Put *asterisks* round the phrase to show in green.
         </li>
         <li>
-          <strong>Pick a picture.</strong> An illustration, your analytics screenshot (drop or paste it in), a photo, or none. The layout, the logo and the type adjust themselves.
+          <strong>Pick a picture.</strong> An illustration, a chart from your numbers, your analytics screenshot (drop or paste it in), a photo, or none; a quiet dot pattern behind if it looks empty. The layout, the logo and the type adjust themselves.
         </li>
         <li>
           <strong>Check the suggestions, then download.</strong> They point out what would read better and stay on brand. Apply them, dismiss them, or turn them off.
@@ -429,8 +463,61 @@ function Guide({ onDone }: { onDone: () => void }) {
 
 /* ---------- the posts, down the left ---------- */
 
+/* ---------- templates ---------- */
+
+function TemplateGallery({ thread, onClose }: { thread: Thread; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+  const previews = useMemo(
+    () =>
+      TEMPLATES.map(t => {
+        const post = newPost(JSON.parse(JSON.stringify(t.post)) as Partial<Post>);
+        return { t, thread: { ...thread, kind: 'posts' as const, posts: [post] }, post };
+      }),
+    [thread],
+  );
+  return (
+    <div className="scrim" onMouseDown={e => e.target === e.currentTarget && onClose()}>
+      <div className="tp-picker tp-templates" role="dialog" aria-label="Templates" data-testid="template-gallery">
+        <div className="tp-picker-top">
+          <h2>Start from a poster in the brand book</h2>
+          <button className="btn small soft" onClick={onClose}>
+            Close
+          </button>
+        </div>
+        <div className="tp-hint tp-templates-note">Each one adds a new post with that layout. Change the words, the numbers and the picture; the layout keeps the brand’s rules.</div>
+        <div className="tp-templates-grid">
+          {previews.map(({ t, thread: th, post }) => (
+            <button
+              key={t.id}
+              className="tp-template"
+              onClick={() => {
+                useThread.getState().addFrom(t.post);
+                onClose();
+              }}
+              data-testid={`template-${t.id}`}
+            >
+              <span className="tp-template-pic">
+                <CardView thread={th} post={post} index={0} width={180} fluid />
+              </span>
+              <span className="tp-template-name">
+                {t.label} <span className="tp-faint">· {t.ref}</span>
+              </span>
+              <span className="tp-faint">{t.note}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PostList({ thread, selectedId, category }: { thread: Thread; selectedId: string; category: Category }) {
   const { select, addPost, duplicatePost, removePost, movePost, setCategory } = useThread.getState();
+  const [gallery, setGallery] = useState(false);
   const n = thread.posts.length;
   const single = thread.kind === 'posts';
   return (
@@ -448,9 +535,14 @@ function PostList({ thread, selectedId, category }: { thread: Thread; selectedId
           <span className="tp-title">
             {single ? 'Posts' : 'Thread'} <span className="tp-faint">· {n}</span>
           </span>
-          <button className="btn soft small" onClick={addPost} title="Add a post after this one" data-testid="add-post">
-            <IconPlus /> Add
-          </button>
+          <span className="tp-row-tools">
+            <button className="btn soft small" onClick={() => setGallery(true)} title="Start a post from one of the brand book's posters" data-testid="templates">
+              Templates
+            </button>
+            <button className="btn soft small" onClick={addPost} title="Add a post after this one" data-testid="add-post">
+              <IconPlus /> Add
+            </button>
+          </span>
         </div>
       </div>
       <ol className="tp-list">
@@ -504,6 +596,7 @@ function PostList({ thread, selectedId, category }: { thread: Thread; selectedId
           <IconPlus /> Add a post
         </button>
       </div>
+      {gallery && <TemplateGallery thread={thread} onClose={() => setGallery(false)} />}
     </aside>
   );
 }
@@ -621,6 +714,215 @@ function Suggestions({ post, list, onUpload }: { post: Post; list: Advice[]; onU
   );
 }
 
+/* ---------- the chart's numbers ---------- */
+
+/** One row of a chart: its label, its value (typed any way), whether it's the one in green. */
+function RowField({ row, on, onChange, onRemove, onPick }: { row: ChartRow; on: boolean; onChange: (r: ChartRow) => void; onRemove: () => void; onPick: () => void }) {
+  const [value, setValue] = useState(String(row.value));
+  useEffect(() => setValue(String(row.value)), [row.value]);
+  return (
+    <div className="tp-chart-row">
+      <button className={`tp-dot${on ? ' on' : ''}`} onClick={onPick} title={on ? 'This one is in green' : 'Show this one in green'} aria-label="Highlight this row" />
+      <input className="text" value={row.label} onChange={e => onChange({ ...row, label: e.target.value })} placeholder="Label" aria-label="Label" />
+      <input
+        className="text num"
+        value={value}
+        inputMode="decimal"
+        onChange={e => setValue(e.target.value)}
+        onBlur={() => {
+          const v = parseValue(value);
+          if (v === null) setValue(String(row.value));
+          else onChange({ ...row, value: v });
+        }}
+        onKeyDown={e => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
+        aria-label="Value"
+      />
+      <button className="btn icon small" onClick={onRemove} title="Remove this row" aria-label="Remove">
+        <IconClose />
+      </button>
+    </div>
+  );
+}
+
+function ChartEditor({ chart, onChange }: { chart: ChartSpec; onChange: (c: ChartSpec) => void }) {
+  const [paste, setPaste] = useState<string | null>(null);
+  const set = (patch: Partial<ChartSpec>) => onChange({ ...chart, ...patch });
+  const hl = highlightOf(chart);
+  const issues = chartIssues(chart);
+  const pickKind = (kind: ChartKind) => {
+    if (kind === chart.kind) return;
+    /* keep the numbers when they still make sense; else start from an example */
+    const keep = chart.rows.length >= 2 && kind !== 'number' && chart.kind !== 'number' && !((kind === 'ring') !== (chart.kind === 'ring'));
+    onChange({ ...chart, ...(keep ? {} : exampleChart(kind)), kind, highlight: null });
+  };
+  return (
+    <div className="tp-chart" data-testid="chart-editor">
+      <div className="tp-chart-kinds" role="radiogroup" aria-label="Chart">
+        {CHART_KINDS.map(k => (
+          <button key={k.value} className={`chip${chart.kind === k.value ? ' on' : ''}`} role="radio" aria-checked={chart.kind === k.value} title={k.title} onClick={() => pickKind(k.value)} data-testid={`chart-${k.value}`}>
+            {k.label}
+          </button>
+        ))}
+      </div>
+      {chart.kind === 'number' ? (
+        <>
+          <Field label="The number" hint="As you'd write it: 81%, $4.2M, 168 hours.">
+            <input className="text" value={chart.big} onChange={e => set({ big: e.target.value })} placeholder="81%" data-testid="chart-big" />
+          </Field>
+          <Field label="What it counts" hint="A few words under it.">
+            <input className="text" value={chart.caption} onChange={e => set({ caption: e.target.value })} placeholder="of the week" />
+          </Field>
+          <Toggle on={chart.pixel} onChange={pixel => set({ pixel })}>
+            Pixel type (Geist Pixel Circle)
+          </Toggle>
+        </>
+      ) : (
+        <>
+          <div className="tp-chart-rows">
+            {chart.rows.map((r, i) => (
+              <RowField
+                key={i}
+                row={r}
+                on={i === hl}
+                onPick={() => set({ highlight: i === hl ? -1 : i })}
+                onChange={row => set({ rows: chart.rows.map((x, j) => (j === i ? row : x)) })}
+                onRemove={() => set({ rows: chart.rows.filter((_, j) => j !== i), highlight: null })}
+              />
+            ))}
+          </div>
+          <div className="tp-chart-tools">
+            <button className="btn soft small" onClick={() => set({ rows: [...chart.rows, { label: '', value: 0 }] })} data-testid="chart-add">
+              <IconPlus /> Row
+            </button>
+            <button className="tp-link" onClick={() => setPaste(paste === null ? chart.rows.map(r => `${r.label}, ${r.value}`).join('\n') : null)}>
+              {paste === null ? 'Paste from a sheet' : 'Cancel'}
+            </button>
+          </div>
+          {paste !== null && (
+            <>
+              <textarea className="tp-area" rows={5} value={paste} onChange={e => setPaste(e.target.value)} placeholder={'One row per line:\nAMD, 106.2\nDELL, 551.9'} data-testid="chart-paste" />
+              <button
+                className="btn soft small"
+                onClick={() => {
+                  const rows = parseRows(paste);
+                  if (rows.length) set({ rows, highlight: null });
+                  setPaste(null);
+                }}
+              >
+                Use these rows
+              </button>
+            </>
+          )}
+          <div className="tp-chart-affix">
+            <label>
+              <span className="tp-faint">Before</span>
+              <input className="text" value={chart.prefix} onChange={e => set({ prefix: e.target.value })} placeholder="$ or IV " />
+            </label>
+            <label>
+              <span className="tp-faint">After</span>
+              <input className="text" value={chart.suffix} onChange={e => set({ suffix: e.target.value })} placeholder="% or M" />
+            </label>
+            <span className="tp-faint tp-chart-eg">{chart.rows[hl >= 0 ? hl : 0] ? formatValue(chart, chart.rows[hl >= 0 ? hl : 0]!.value) : ''}</span>
+          </div>
+          {chart.kind === 'ring' && (
+            <SliderRow label="Out of" value={chart.total} min={1} max={1000} step={1} onChange={v => set({ total: v })} title="The whole each ring is a share of: 100 for percentages" />
+          )}
+          {chart.kind !== 'ring' && chart.kind !== 'rays' && (
+            <Toggle on={chart.dots} onChange={dots => set({ dots })}>
+              Dotted marks
+            </Toggle>
+          )}
+          <Field label="Source" hint="Where the numbers come from, and when.">
+            <input className="text" value={chart.source} onChange={e => set({ source: e.target.value })} placeholder="Source: Strike, Oct 2026" />
+          </Field>
+        </>
+      )}
+      <div className="row">
+        <span className="label">Panel</span>
+        <Seg
+          value={chart.panel}
+          options={[
+            { value: 'ground', label: 'Card', title: 'The panel in the card’s own color' },
+            { value: 'green', label: 'Green', title: 'The green gradient, white marks' },
+          ]}
+          onChange={panel => set({ panel })}
+        />
+      </div>
+      {issues.length > 0 && (
+        <ul className="tp-chart-issues">
+          {issues.map(t => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* ---------- a dot pattern behind the card ---------- */
+
+function BackdropThumb({ id, ground, size, on, onPick }: { id: string; ground: Ground; size: CardSize; on: boolean; onPick: () => void }) {
+  const spec = useMemo(() => ({ ...presetSpec(id), motion: { drift: 0, glitch: 0, seconds: 8 } }), [id]);
+  const { width: W, height: H } = CARD_SIZES[size];
+  const label = PRESETS.find(p => p.id === id)?.label ?? id;
+  return (
+    <button className={`pt-preset${on ? ' on' : ''}`} onClick={onPick} title={label} data-testid={`backdrop-${id}`}>
+      <PatternCanvas spec={spec} ground={ground} W={W} H={H} width={92} map={null} preview />
+      <span>{label}</span>
+    </button>
+  );
+}
+
+function Backdrop({ thread, post }: { thread: Thread; post: Post; index: number }) {
+  const set = (patch: Partial<Post>) => useThread.getState().updatePost(post.id, patch);
+  const ground = groundOfPost(thread, post);
+  const size = sizeOfPost(thread, post);
+  const p = post.pattern;
+  const loud = p ? patternContrast(p, post.visual === 'photo' ? 'green' : ground) > LOUD : false;
+  const [which, setWhich] = useState<string | null>(null);
+  return (
+    <Section title="Backdrop">
+      <Toggle on={!!p} onChange={v => set({ pattern: v ? presetSpec(which ?? (post.visual === 'none' ? 'wave' : 'rings')) : null })}>
+        Dot pattern behind the card
+      </Toggle>
+      {p && (
+        <>
+          <div className="tp-backdrops">
+            {PRESETS.map(x => (
+              <BackdropThumb
+                key={x.id}
+                id={x.id}
+                ground={ground}
+                size={size}
+                on={which === x.id}
+                onPick={() => {
+                  setWhich(x.id);
+                  set({ pattern: presetSpec(x.id, p) });
+                }}
+              />
+            ))}
+          </div>
+          <Toggle on={post.patternClear} onChange={patternClear => set({ patternClear })}>
+            Keep the words clear
+          </Toggle>
+          <SliderRow label="Strength" value={p.opacity} min={0.1} max={1} step={0.05} places={2} onChange={v => set({ pattern: { ...p, opacity: v } })} title="How strongly the dots show" />
+          {loud && <div className="tp-warn">These dots are loud enough to compete with the headline. Lower the strength, or set the color back to Quiet in Patterns.</div>}
+          <button
+            className="tp-link"
+            onClick={() => {
+              usePattern.getState().openFor(post.id, p, post.visual === 'photo' ? 'dark' : ground, size);
+              useThread.getState().setMode('patterns');
+            }}
+            data-testid="backdrop-edit"
+          >
+            Edit the pattern in Patterns: color, motion, from an image or a figure
+          </button>
+        </>
+      )}
+    </Section>
+  );
+}
+
 function Inspector({
   thread,
   post,
@@ -727,21 +1029,6 @@ function Inspector({
                 </div>
               </div>
             )}
-            <Seg
-              value={post.animated ? 'on' : 'off'}
-              options={[
-                { value: 'off', label: 'Still' },
-                { value: 'on', label: 'Animated' },
-              ]}
-              onChange={v => set({ animated: v === 'on' })}
-              accent
-            />
-            {post.animated && (
-              <>
-                <SliderRow label="Loop" value={post.duration ?? own} min={2} max={10} step={1} places={0} unit="s" onChange={v => set({ duration: v })} title="How long one loop lasts" />
-                <div className="tp-hint">Animated posts download as MP4 or GIF. Copy image copies the still picture.</div>
-              </>
-            )}
           </>
         )}
         {(post.visual === 'screenshot' || post.visual === 'photo') && (
@@ -764,9 +1051,42 @@ function Inspector({
             )}
           </>
         )}
+        {post.visual === 'chart' && <ChartEditor chart={post.chart} onChange={chart => set({ chart })} />}
+        {canMove(post) && (
+          <>
+            <Seg
+              value={post.animated ? 'on' : 'off'}
+              options={[
+                { value: 'off', label: 'Still' },
+                { value: 'on', label: 'Animated' },
+              ]}
+              onChange={v => set({ animated: v === 'on' })}
+              accent
+            />
+            {post.animated && (
+              <>
+                <SliderRow label="Loop" value={post.duration ?? (hasFigure(post) ? own : loopOfPost(post, ground))} min={2} max={20} step={1} places={0} unit="s" onChange={v => set({ duration: v })} title="How long one loop lasts" />
+                <div className="tp-hint">{post.visual === 'chart' ? 'The chart grows in, holds, and starts again. ' : ''}Animated posts download as MP4 or GIF. Copy image copies the still picture.</div>
+              </>
+            )}
+          </>
+        )}
       </Section>
 
+      <Backdrop thread={thread} post={post} index={index} />
+
       <Section title="Layout">
+        <div className="row">
+          <span className="label">Layout</span>
+          <select className="select" value={post.layout} onChange={e => set({ layout: e.target.value as Post['layout'] })} data-testid="layout" title={LAYOUT_OPTIONS.find(o => o.value === post.layout)?.title}>
+            {LAYOUT_OPTIONS.map(o => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        {post.layout !== 'standard' && <div className="tp-hint">{LAYOUT_OPTIONS.find(o => o.value === post.layout)?.title}.{post.layout === 'hero' ? ' The number in the headline sets huge; a chart sits faintly behind it.' : post.layout === 'split' ? ' A comma or a line break in the headline marks where it splits.' : post.layout === 'card' ? ' The line below continues the headline in gray.' : ''}</div>}
         <div className="row">
           <span className="label">Size</span>
           <Seg value={size} options={SIZE_OPTIONS.map(o => ({ value: o.value, label: `${o.short}${bestSize === o.value ? ' ·' : ''}`, title: `${o.label}${bestSize === o.value ? ', best for this screenshot' : ''}` }))} onChange={v => set({ size: v === thread.size ? null : v })} />
@@ -943,7 +1263,7 @@ export function ThreadActions() {
               download(await cardPng(thread, p, i), `${fileName(thread, p, i)}.png`);
               await new Promise(r => setTimeout(r, 350));
             }
-            setNote(thread.posts.some(p => p.animated && hasFigure(p)) ? `Saved ${n} still images. For moving posts, download each MP4 from its post.` : posts ? `Saved ${n} images.` : `Saved ${n} images, numbered in thread order.`);
+            setNote(thread.posts.some(p => isMoving(p)) ? `Saved ${n} still images. For moving posts, download each MP4 from its post.` : posts ? `Saved ${n} images.` : `Saved ${n} images, numbered in thread order.`);
           } catch (e) {
             setNote(`Couldn't save the images: ${e instanceof Error ? e.message : String(e)}`);
           } finally {
@@ -989,7 +1309,7 @@ export function ThreadTool() {
   const onLayout = useCallback((L: CardLayout) => setLayout(L), []);
   const n = thread.posts.length;
   const name = fileName(thread, post, index);
-  const moving = post.animated && hasFigure(post);
+  const moving = isMoving(post);
 
   /* a picture from a file, a drop or the clipboard: a screenshot unless the post asked for a photo */
   const takeFile = useCallback(
@@ -1097,11 +1417,11 @@ export function ThreadTool() {
               onClick={saveVideo}
               disabled={busy || !moving || video === null}
               data-testid="download-mp4"
-              title={!moving ? 'Pick an illustration and turn on Animated to make a video' : video === null ? "This browser can't make videos" : 'A video of the card, looping once'}
+              title={!moving ? 'Turn on Animated (under Picture) to make a video' : video === null ? "This browser can't make videos" : 'A video of the card, looping once'}
             >
               <IconDownload /> {video === 'webm' ? 'WebM' : 'MP4'}
             </button>
-            <button className="btn soft" onClick={saveGif} disabled={busy || !moving} data-testid="download-gif" title={moving ? 'A looping GIF at half size, to stay under X’s 15 MB' : 'Pick an illustration and turn on Animated to make a GIF'}>
+            <button className="btn soft" onClick={saveGif} disabled={busy || !moving} data-testid="download-gif" title={moving ? 'A looping GIF at half size, to stay under X’s 15 MB' : 'Turn on Animated (under Picture) to make a GIF'}>
               <IconDownload /> GIF
             </button>
           </div>

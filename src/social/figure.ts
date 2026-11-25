@@ -35,6 +35,8 @@ export function cardScene(sc: Scene, ground: Ground, motion: { animated: boolean
   const fill = faces === 'ground' && !pal.gradient ? pal.ground : pal.panel;
   const json = JSON.stringify(onGround(sc, ground), (_k, v) => (typeof v === 'string' && HEX.test(v) && v.toUpperCase() === from ? fill : v));
   const out = JSON.parse(json) as Scene;
+  /* a figure drawn large from a corner sits back: its labels would compete with the headline */
+  if (faces === 'ground') out.labels = [];
   out.theme.lineWidth *= LINE_BOOST;
   for (const o of out.objects) if (o.style.lineWidth != null) o.style.lineWidth *= LINE_BOOST;
   const m = motionOf(sc);

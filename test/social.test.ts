@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CARD_SIZES, type CardSize, type CardSpec, CLEAR, fitFigure, GRID, headlineFont, headlineLeading, layoutCard, LOCKUP_RATIO, type Measure, occupied, PALETTES, RISK_LINE, type Visual } from '../src/social/layout';
+import { CARD_SIZES, type CardSize, type CardSpec, CLEAR, fitFigure, GRID, headlineFont, headlineLeading, layoutCard, LOCKUP_RATIO, type Measure, occupied, PALETTES, RISK_LINE, splitHero, splitTwo, type Visual } from '../src/social/layout';
 import { findUrls, parseHighlight, plainOf, postText, ragOf, wrap, wrapBalanced, X_LIMIT, xLength } from '../src/social/text';
 
 /* a monospaced fake: every character is half an em, plus the tracking */
@@ -125,6 +125,8 @@ describe('card layout', () => {
     sub: 'Stocks, indices, crypto and compute, on one exchange.',
     number: '1/3',
     risk: true,
+    layout: 'standard',
+    pixel: false,
     ...p,
   });
   type R = { x: number; y: number; w: number; h: number };
@@ -170,6 +172,39 @@ describe('card layout', () => {
                     expect(overlaps(grow(L.logo, L.logo.clear), L.figureClip), `${where} corner/logo`).toBe(false);
                   }
                 }
+  });
+
+  it('lays out the poster layouts with nothing overlapping and the logo clear', () => {
+    const headlines = ['Listed options are closed *81%* of the week.', 'Options on every market, *every hour.*', 'The terminal, rebuilt for options.', 'A much longer headline that has to wrap over several lines to fit in the space, 24 hours'];
+    for (const layout of ['tagline', 'hero', 'cover', 'card', 'split'] as const)
+      for (const size of SIZES)
+        for (const visual of [...VISUALS, 'chart'] as Visual[])
+          for (const headline of headlines)
+            for (const risk of [true, false])
+              for (const number of ['2/5', null])
+                for (const pixel of layout === 'hero' ? [false, true] : [false]) {
+                  const L = layoutCard(spec({ layout, size, visual, headline, risk, number, pixel, aspect: 1.6, sub: layout === 'card' ? 'rebuilt for options.' : 'One sentence under it.' }), fake);
+                  const { width: W, height: H } = CARD_SIZES[size];
+                  const where = `${layout}/${size}/${visual}/${risk}/${number}/${pixel}: ${headline}`;
+                  expect(inside(L.logo, W, H), where).toBe(true);
+                  const boxes = occupied(L);
+                  for (const b of boxes) expect(inside(b, W, H), `${where} inside`).toBe(true);
+                  for (const b of boxes) expect(overlaps(b, grow(L.logo, L.logo.clear)), `${where} clear space`).toBe(false);
+                  const words = occupied({ ...L, panel: null, frame: null, number: null, risk: null });
+                  for (const pic of [L.panel, L.card ? null : L.frame]) if (pic) for (const w of words) expect(overlaps(w, pic), `${where} words/picture`).toBe(false);
+                  const foot = occupied({ ...L, panel: null, frame: null, eyebrow: null, headline: null, sub: null, big: null });
+                  for (const a of foot) for (const w of words) expect(overlaps(a, w), `${where} foot/words`).toBe(false);
+                  if (L.figureClip) for (const w of words) expect(overlaps(w, L.figureClip), `${where} figure/words`).toBe(false);
+                  if (L.card) for (const w of [...words, grow(L.logo, 0)]) expect(inside({ x: w.x - L.card.x, y: w.y - L.card.y, w: w.w, h: w.h }, L.card.w, L.card.h), `${where} on the card`).toBe(true);
+                }
+  }, 120000);
+
+  it('splits a hero headline round its number, and a split headline at its comma', () => {
+    expect(splitHero('Listed options are closed *81%* of the week.')).toEqual({ before: 'Listed options are closed', num: '81%', after: 'of the week.' });
+    expect(splitHero('About $4.2M traded overnight')).toEqual({ before: 'About', num: '$4.2M', after: 'traded overnight' });
+    expect(splitHero('No number here')).toBeNull();
+    expect(splitTwo('Options on every market, *every hour.*')).toEqual(['Options on every market,', '*every hour.*']);
+    expect(splitTwo('One two three four')).toEqual(['One two', 'three four']);
   });
 
   it('signs off with the full lockup when it fits, the mark when asked', () => {

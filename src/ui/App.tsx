@@ -3,6 +3,7 @@ import { renderScene } from '../engine/render';
 import { KINDS, type Kind } from '../model/defaults';
 import { useStore } from '../model/store';
 import { useThread } from '../social/store';
+import { PatternActions, PatternTool } from '../pattern/PatternTool';
 import { ModeSwitch, ThreadActions, ThreadTool } from '../social/ThreadTool';
 import { GITHUB, IconGitHub, SkillPage } from '../skill/SkillPage';
 import { Canvas } from './Canvas';
@@ -108,6 +109,23 @@ export function App() {
           </a>
         </header>
         <SkillPage />
+      </div>
+    );
+
+  /* Patterns: halftone dot patterns (src/pattern) */
+  if (mode === 'patterns')
+    return (
+      <div className="app">
+        <header className="top">
+          <div className="brand">
+            <StrikeMark size={20} />
+            <span className="word">STRIKE</span>
+          </div>
+          <ModeSwitch />
+          <span className="spacer" />
+          <PatternActions />
+        </header>
+        <PatternTool />
       </div>
     );
 
