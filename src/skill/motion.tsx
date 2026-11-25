@@ -130,8 +130,8 @@ export function MotionPage({ copied, copy }: { copied: string | null; copy: Copy
         <div className="sk-compose">
           <CircleFigure move="still" view="flat" guides />
           <ul className="sk-dos">
-            <li>Centres 2r apart in a row; rows r·√3 apart (dashed), the lower two in the gaps.</li>
-            <li>Drawn like every illustration: grey lines, faces in the ground colour, one green focus in dots.</li>
+            <li>Centers 2r apart in a row; rows r·√3 apart (dashed), the lower two in the gaps.</li>
+            <li>Drawn like every illustration: gray 1 px lines, faces in the ground color, one green focus in dots.</li>
             <li>Flat explains the composition; the 2:1 view gives the same plates depth.</li>
             <li>This cluster is the rest state every move passes through.</li>
           </ul>
@@ -155,7 +155,7 @@ export function MotionPage({ copied, copy }: { copied: string | null; copy: Copy
           <div className="sk-move">
             <CircleFigure move="press" view="flat" />
             <h4>Press</h4>
-            <p>The circles squeeze to the centre and back. A click, a confirm.</p>
+            <p>The circles squeeze to the center and back. A click, a confirm.</p>
             <Timing
               parts={[
                 ['Rest', CYCLE.press - MS.pressIn - MS.pressOut],

@@ -3,13 +3,14 @@
 //
 //   node scripts/check.mjs <files or dirs> [--json] [--tokens <tokens.json>]
 //
-// Checks .html .css .svg .jsx .tsx .vue .md files for off-brand colours, fonts,
-// contrast, headings, the name, copy, the risk line and corner radii.
+// Checks .html .css .svg .jsx .tsx .vue .md files for off-brand colors, fonts,
+// contrast, headings, the name, copy (the verbal brand, US spelling), the risk
+// line and corner radii.
 // Prints file:line:col, severity, rule, the problem and a one-line fix.
 // Exit code: 1 when there are errors, 2 on bad usage, 0 otherwise.
 //
 // The brand's finished poster artwork (assets/posters/) is exempt from the
-// colour rules: it is reference art, not output to check.
+// color rules: it is reference art, not output to check.
 //
 // To silence a finding you have checked, put `strike-check-ignore` (optionally
 // followed by `: rule, rule`) in a comment on that line or the line above.
@@ -19,13 +20,13 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, extname, dirname, resolve, relative, basename } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const EMBEDDED_TOKENS = {"$description":"Strike design tokens (W3C Design Tokens format). The single source for CSS, Tailwind and Figma. Dark is the default theme.","color":{"$type":"color","ground":{"$value":"#0C0C0C","$description":"The dark background: posters, social cards, illustrations, app modules"},"web":{"ground":{"$value":"#090B0A","$description":"Website and marketing page background (about 80%)"},"section":{"$value":"#0F1110","$description":"Website alternate sections and cards (about 20%), for depth and separation"}},"ink":{"$value":"#F9F9F9","$description":"Text on ground; ground of light layouts"},"ink-2":{"$value":"#B3B3B3","$description":"Secondary text on dark (9.3:1)"},"ink-3":{"$value":"#8A8F98","$description":"Muted text and icons on dark (6.0:1)"},"green":{"$value":"#10B981","$description":"Primary action, focus, one highlight"},"deep":{"$value":"#047857","$description":"Green text or lines on light grounds (5.2:1)"},"mark-light":{"$value":"#6EE7B7","$description":"Logo gradient only"},"profit":{"$value":"#3FD4AB","$description":"Gains, buys, bids"},"loss":{"$value":"#EE5E74","$description":"Losses, sells, asks. Red means loss and nothing else"},"mint":{"$value":"#50EBA0","$description":"Poster grounds only"},"data":{"yellow":{"$value":"#FFEF3C","$description":"Charts with several series only"},"sky":{"$value":"#0788F7","$description":"Charts with several series only"},"purple":{"$value":"#976FE6","$description":"Charts with several series only"}},"dark":{"frame":{"$value":"#2E2E2E","$description":"App frame: the lighter background that shows only in the thin gaps between modules"},"surface-1":{"$value":"#161616","$description":"Raised controls on a module: inputs, tabs, secondary buttons"},"surface-2":{"$value":"#202020","$description":"Hover and selected"},"surface-3":{"$value":"#2A2A2A","$description":"Pressed; the strongest raise"},"line":{"$value":"#FFFFFF1A","$description":"Hairlines (10%)"},"line-strong":{"$value":"#FFFFFF2E","$description":"Input borders and dividers (18%)"}},"light":{"ground":{"$value":"#F9F9F9"},"surface-1":{"$value":"#FFFFFF"},"surface-2":{"$value":"#F1F1F1"},"surface-3":{"$value":"#E8E8E9"},"ink":{"$value":"#0C0C0C"},"ink-2":{"$value":"#4A4D52","$description":"8.1:1 on light ground"},"ink-3":{"$value":"#6B6F76","$description":"4.8:1 on light ground"},"line":{"$value":"#0C0C0C14"},"line-strong":{"$value":"#0C0C0C24"}}},"font":{"family":{"$type":"fontFamily","sans":{"$value":["Geist","Arial","sans-serif"]},"mono":{"$value":["Geist Mono","ui-monospace","monospace"],"$description":"Code, wallet addresses, order books only"},"display-pixel":{"$value":["Geist Pixel Circle","Geist","sans-serif"],"$description":"Big display numbers on posters only"},"wordmark":{"$value":["Ciburial"],"$description":"The STRIKE wordmark only; use the logo files"}},"weight":{"$type":"fontWeight","light":{"$value":300},"regular":{"$value":400},"medium":{"$value":500},"semibold":{"$value":600}}},"typography":{"$type":"typography","display":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"72px","lineHeight":0.95,"letterSpacing":"-0.03em"}},"h1":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"48px","lineHeight":1,"letterSpacing":"-0.03em"}},"h2":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"32px","lineHeight":1.1,"letterSpacing":"-0.02em"}},"h3":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"24px","lineHeight":1.2,"letterSpacing":"-0.015em"}},"body-l":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":400,"fontSize":"18px","lineHeight":1.5,"letterSpacing":"0"}},"body":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":400,"fontSize":"16px","lineHeight":1.5,"letterSpacing":"0"}},"small":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":400,"fontSize":"14px","lineHeight":1.45,"letterSpacing":"0"}},"label":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"12px","lineHeight":1.4,"letterSpacing":"0.02em"}}},"space":{"1":{"$value":"4px"},"2":{"$value":"8px"},"3":{"$value":"12px"},"4":{"$value":"16px"},"5":{"$value":"24px"},"6":{"$value":"32px"},"7":{"$value":"48px"},"8":{"$value":"64px"},"9":{"$value":"96px"},"10":{"$value":"128px"},"$type":"dimension","grid":{"$value":"50px","$description":"Posters, cards, illustrations"}},"radius":{"$type":"dimension","sm":{"$value":"6px","$description":"Small controls"},"md":{"$value":"8px","$description":"Buttons, inputs"},"lg":{"$value":"12px","$description":"Cards"},"pill":{"$value":"9999px"}},"size":{"$type":"dimension","control":{"$value":"40px"},"control-sm":{"$value":"32px"},"logo-mark-min":{"$value":"16px"},"logo-lockup-min-height":{"$value":"20px"}},"motion":{"duration":{"$type":"duration","fast":{"$value":"120ms"},"base":{"$value":"200ms"},"slow":{"$value":"320ms"},"gather":{"$value":"400ms","$description":"Shapes speeding into the rest cluster"},"release":{"$value":"320ms","$description":"Shapes easing out of it to the new state; hover-in"},"rest":{"$value":"280ms","$description":"Still between moves"},"loop":{"$value":"1000ms","$description":"One loop: rest + gather + release"},"press-in":{"$value":"240ms","$description":"Click: squeeze in"},"press-out":{"$value":"200ms","$description":"Click: back out"}},"ease":{"$type":"cubicBezier","standard":{"$value":[0.2,0,0,1],"$description":"Plain UI: hover, colour, panels"},"gather":{"$value":[0.55,0,0.85,0],"$description":"Ease in: shapes speed up into the moment they meet"},"release":{"$value":[0.15,1,0.6,1],"$description":"Ease out: fast away from it, then a long quiet settle"}}}}; // generated from source/tokens.json
+const EMBEDDED_TOKENS = {"$description":"Strike design tokens (W3C Design Tokens format). The single source for CSS, Tailwind and Figma. Dark is the default theme.","color":{"$type":"color","ground":{"$value":"#0C0C0C","$description":"Ground: posters, social cards, illustrations, app modules","$extensions":{"app.strikelabs":{"name":"Ground","rgbPercent":"5, 5, 5","cmyk":"0, 0, 0, 95"}}},"web":{"ground":{"$value":"#090B0A","$description":"Website and marketing page background (about 80%)"},"section":{"$value":"#0F1110","$description":"Website alternate sections and cards (about 20%), for depth and separation"}},"ink":{"$value":"#F9F9F9","$description":"White: text on ground; ground of light layouts","$extensions":{"app.strikelabs":{"name":"White","rgbPercent":"98, 98, 98","cmyk":"0, 0, 0, 2"}}},"ink-2":{"$value":"#B3B3B3","$description":"Secondary text on dark (9.3:1)"},"ink-3":{"$value":"#8A8F98","$description":"Muted text and icons on dark (6.0:1)"},"green":{"$value":"#10B981","$description":"Strike Green: primary action, focus, one highlight. Never fills a layout; no white text on it in UI","$extensions":{"app.strikelabs":{"name":"Strike Green","rgbPercent":"6, 73, 51","cmyk":"91, 0, 30, 27"}}},"deep":{"$value":"#047857","$description":"Mark Deep: green text or lines on light grounds (5.2:1)","$extensions":{"app.strikelabs":{"name":"Mark Deep","rgbPercent":"2, 47, 34","cmyk":"97, 0, 28, 53"}}},"mark-light":{"$value":"#6EE7B7","$description":"Mark Light: the light end of the logo gradient","$extensions":{"app.strikelabs":{"name":"Mark Light","rgbPercent":"43, 91, 72","cmyk":"52, 0, 21, 9"}}},"profit":{"$value":"#3FD4AB","$description":"Profit: market moves up (gains, buys, bids)","$extensions":{"app.strikelabs":{"name":"Profit","rgbPercent":"25, 83, 67","cmyk":"70, 0, 19, 17"}}},"loss":{"$value":"#EE5E74","$description":"Loss: market moves down (losses, sells, asks). Red means loss and nothing else","$extensions":{"app.strikelabs":{"name":"Loss","rgbPercent":"93, 37, 45","cmyk":"0, 61, 51, 7"}}},"mint":{"$value":"#50EBA0","$description":"Poster grounds and the light end of the poster gradient"},"data":{"yellow":{"$value":"#FFEF3C","$description":"Chart data series only","$extensions":{"app.strikelabs":{"name":"Yellow","rgbPercent":"100, 94, 24","cmyk":"3, 0, 86, 0"}}},"sky":{"$value":"#0788F7","$description":"Chart data series only","$extensions":{"app.strikelabs":{"name":"Sky","rgbPercent":"3, 53, 97","cmyk":"74, 45, 0, 0"}}},"purple":{"$value":"#976FE6","$description":"Chart data series only","$extensions":{"app.strikelabs":{"name":"Purple","rgbPercent":"59, 44, 90","cmyk":"53, 65, 0, 0"}}}},"dark":{"frame":{"$value":"#2E2E2E","$description":"App frame: the lighter background that shows only in the thin gaps between modules"},"surface-1":{"$value":"#161616","$description":"Raised controls on a module: inputs, tabs, secondary buttons"},"surface-2":{"$value":"#202020","$description":"Hover and selected"},"surface-3":{"$value":"#2A2A2A","$description":"Pressed; the strongest raise"},"line":{"$value":"#FFFFFF1A","$description":"Hairlines (10%)"},"line-strong":{"$value":"#FFFFFF2E","$description":"Input borders and dividers (18%)"}},"light":{"ground":{"$value":"#F9F9F9"},"surface-1":{"$value":"#FFFFFF"},"surface-2":{"$value":"#F1F1F1"},"surface-3":{"$value":"#E8E8E9"},"ink":{"$value":"#0C0C0C"},"ink-2":{"$value":"#4A4D52","$description":"8.1:1 on light ground"},"ink-3":{"$value":"#6B6F76","$description":"4.8:1 on light ground"},"line":{"$value":"#0C0C0C14"},"line-strong":{"$value":"#0C0C0C24"}}},"font":{"family":{"$type":"fontFamily","sans":{"$value":["Geist","Arial","sans-serif"],"$description":"Geist for everything; Arial when web fonts are unavailable"},"mono":{"$value":["Geist Mono","ui-monospace","monospace"],"$description":"Code, wallet addresses, order books only"},"display-pixel":{"$value":["Geist Pixel Circle","Geist","sans-serif"],"$description":"Large display type and numbers on posters only, where contrast is high; never body text or company documents"},"wordmark":{"$value":["Ciburial"],"$description":"The STRIKE wordmark only; use the logo files"}},"weight":{"$type":"fontWeight","light":{"$value":300},"regular":{"$value":400},"medium":{"$value":500},"semibold":{"$value":600}}},"typography":{"$type":"typography","display":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"72px","lineHeight":1,"letterSpacing":"-0.02em"}},"h1":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"48px","lineHeight":1,"letterSpacing":"-0.02em"}},"h2":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"32px","lineHeight":1.2,"letterSpacing":"-0.01em"}},"h3":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"24px","lineHeight":1.3,"letterSpacing":"0"}},"body-l":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":400,"fontSize":"18px","lineHeight":1.3,"letterSpacing":"0"}},"body":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":400,"fontSize":"16px","lineHeight":1.3,"letterSpacing":"0"}},"small":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":400,"fontSize":"14px","lineHeight":1.35,"letterSpacing":"0.01em"}},"label":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"12px","lineHeight":1.35,"letterSpacing":"0.01em"}},"$description":"Line height and tracking follow the brand book chart by size: up to 14 px 1.35 / +1%, 15-24 px 1.3 / 0, 25-44 px 1.2 / -1%, 45-79 px 1.0 / -2%, 80 px and up 0.9 / -3%","slide-h1":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"120px","lineHeight":0.9,"letterSpacing":"-0.03em"},"$description":"Slides and posters at 1920 x 1080 (brand book 2.3)"},"slide-h2":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"72px","lineHeight":1,"letterSpacing":"-0.02em"},"$description":"Slides and posters at 1920 x 1080 (brand book 2.3)"},"slide-h3":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":500,"fontSize":"42px","lineHeight":1.2,"letterSpacing":"-0.01em"},"$description":"Slides and posters at 1920 x 1080 (brand book 2.3)"},"slide-body":{"$value":{"fontFamily":"{font.family.sans}","fontWeight":400,"fontSize":"18px","lineHeight":1.3,"letterSpacing":"0"},"$description":"Slides and posters at 1920 x 1080 (brand book 2.3)"}},"space":{"1":{"$value":"4px"},"2":{"$value":"8px"},"3":{"$value":"12px"},"4":{"$value":"16px"},"5":{"$value":"24px"},"6":{"$value":"32px"},"7":{"$value":"48px"},"8":{"$value":"64px"},"9":{"$value":"96px"},"10":{"$value":"128px"},"$type":"dimension","grid":{"$value":"50px","$description":"Posters, cards, illustrations"}},"radius":{"$type":"dimension","sm":{"$value":"6px","$description":"Small controls"},"md":{"$value":"8px","$description":"Buttons, inputs"},"lg":{"$value":"12px","$description":"Cards"},"pill":{"$value":"9999px"}},"size":{"$type":"dimension","control":{"$value":"40px"},"control-sm":{"$value":"32px"},"logo-mark-min":{"$value":"16px","$description":"Flat mark on screen"},"logo-3d-min":{"$value":"32px","$description":"3D mark on screen; under it, use the flat mark"},"logo-lockup-min-height":{"$value":"20px","$description":"Lockup height"},"logo-max-share":{"$value":"33.333%","$description":"The logo is never wider than one third of the layout"}},"motion":{"duration":{"$type":"duration","fast":{"$value":"120ms"},"base":{"$value":"200ms"},"slow":{"$value":"320ms"},"gather":{"$value":"400ms","$description":"Shapes speeding into the rest cluster"},"release":{"$value":"320ms","$description":"Shapes easing out of it to the new state; hover-in"},"rest":{"$value":"280ms","$description":"Still between moves"},"loop":{"$value":"1000ms","$description":"One loop: rest + gather + release"},"press-in":{"$value":"240ms","$description":"Click: squeeze in"},"press-out":{"$value":"200ms","$description":"Click: back out"}},"ease":{"$type":"cubicBezier","standard":{"$value":[0.2,0,0,1],"$description":"Plain UI: hover, color, panels"},"gather":{"$value":[0.55,0,0.85,0],"$description":"Ease in: shapes speed up into the moment they meet"},"release":{"$value":[0.15,1,0.6,1],"$description":"Ease out: fast away from it, then a long quiet settle"}}}}; // generated from source/tokens.json
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const EXTENSIONS = ['.html', '.htm', '.css', '.svg', '.jsx', '.tsx', '.vue', '.md', '.mdx', '.mdc'];
 const SKIP_DIRS = new Set(['node_modules', '.git', '.next', '.nuxt', '.cache', '.turbo']);
 
-// Colours allowed besides tokens.json: the illustration line greys (dark and
+// Colors allowed besides tokens.json: the illustration line grays (dark and
 // light tiers) and the logo's gradient stops.
 export const EXTRA_COLOURS = {
   '#D0D6E0': 'illustration subject line',
@@ -46,7 +47,7 @@ const RADII_PX = new Set([0, 6, 8, 12, 9999]);
 const STRIKE_GREEN = '#10B981';
 const RISK_LINE = 'Options involve risk. Closed beta, invite required.';
 
-// Tailwind's default palette. A few shades equal Strike colours exactly.
+// Tailwind's default palette. A few shades equal Strike colors exactly.
 const TW_FAMILIES = 'slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose';
 const TW_COLOUR_PREFIX = 'bg|text|border(?:-[trblxyse])?|ring|ring-offset|fill|stroke|from|via|to|outline|decoration|divide|accent|caret|placeholder|shadow';
 const TW_DEFAULT_RE = new RegExp(`^(?:${TW_COLOUR_PREFIX})-(${TW_FAMILIES})-(50|100|200|300|400|500|600|700|800|900|950)(?:\\/\\d+)?$`);
@@ -69,7 +70,7 @@ export function loadTokens(explicit) {
   throw new Error('tokens.json not found next to the checker. Pass --tokens <path>.');
 }
 
-// Colour tokens as CSS variable names (same naming as the build's tokens.css):
+// Color tokens as CSS variable names (same naming as the build's tokens.css):
 // color.ink -> ink, color.data.sky -> data-sky, color.dark.surface-1 -> surface-1.
 export function paletteFrom(tokens) {
   const allowed = new Map();
@@ -93,7 +94,7 @@ export function paletteFrom(tokens) {
   return { allowed, dark, light: { ...dark, ...light } };
 }
 
-// ---------------------------------------------------------------- colour maths
+// ---------------------------------------------------------------- color maths
 
 function normHex(h) {
   h = h.trim().replace('#', '').toUpperCase();
@@ -616,6 +617,34 @@ const BANNED = [
   { re: /\bto\s+the\s+moon\b/gi, word: 'to the moon' },
 ];
 
+// Words the brand book says to avoid (0.6). "guaranteed" is a banned claim above.
+const AVOID = [
+  { re: /(?<![\w/])24\s*\/\s*7(?![\w/])/g, word: '24/7', fix: 'say "every hour" or "open 168 hours a week"' },
+  { re: /\brevolution(?:ary|ize|ise)s?\b/gi, word: 'revolutionary', fix: 'state the fact that makes it new' },
+  { re: /\bunforgettable\b/gi, word: 'unforgettable', fix: 'state a fact the reader can check' },
+  { re: /\bsafe(?:ly|st)?\b/gi, word: 'safe', fix: 'say what protects the funds, and what is still trusted' },
+];
+
+// British spellings: the brand writes US English (0.6). Mapped to the US form.
+const UK_SPELLING = {
+  colour: 'color', colours: 'colors', coloured: 'colored', colourful: 'colorful', recolour: 'recolor',
+  grey: 'gray', greys: 'grays', centre: 'center', centres: 'centers', centred: 'centered',
+  favour: 'favor', favourite: 'favorite', favourites: 'favorites', behaviour: 'behavior', honour: 'honor', humour: 'humor',
+  neighbour: 'neighbor', neighbours: 'neighbors', labour: 'labor', flavour: 'flavor',
+  organise: 'organize', organised: 'organized', organisation: 'organization', recognise: 'recognize', recognised: 'recognized',
+  realise: 'realize', realised: 'realized', prioritise: 'prioritize', summarise: 'summarize', minimise: 'minimize', maximise: 'maximize',
+  optimise: 'optimize', optimised: 'optimized', customise: 'customize', customised: 'customized', emphasise: 'emphasize',
+  analyse: 'analyze', analysed: 'analyzed', catalogue: 'catalog', programme: 'program', licence: 'license', defence: 'defense',
+  metre: 'meter', metres: 'meters', cancelled: 'canceled', labelled: 'labeled', modelling: 'modeling', travelled: 'traveled',
+};
+const UK_RE = new RegExp(`\\b(${Object.keys(UK_SPELLING).join('|')})\\b`, 'gi');
+
+const TAGLINE = 'Options on every market, every hour.';
+const TAGLINE_RE = /options\s+on\s+every\s+market,?\s+every\s+hour\.?/gi;
+
+// Rule names that were renamed, so older ignore comments still work.
+const RULE_ALIASES = { colour: 'color' };
+
 function quoted(text, idx, len) {
   const before = text.slice(0, idx);
   const after = text.slice(idx + len);
@@ -628,7 +657,7 @@ function quoted(text, idx, len) {
   return false;
 }
 
-function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd = true, markets = true } = {}) {
+function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd = true, markets = true, words = true } = {}) {
   const text = seg.text;
   const at = (idx) => seg.offset + idx;
   let m;
@@ -655,7 +684,36 @@ function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd 
     const re = /(?<![\w/.,:+-])\d+(?:[.,]\d+)*\+?\s+(?:[A-Za-z-]+\s+)?(?:markets|underlyings)\b/gi;
     while ((m = re.exec(text))) {
       if (quoted(text, m.index, m[0].length)) continue;
-      add('warn', 'market-count', at(m.index), `"${m[0]}" states a market count`, "don't state how many markets Strike lists");
+      // The brand book's own figure: "about 80 underlyings".
+      if (/^80\s+underlyings\b/i.test(m[0]) && /\b(?:about|around)\s+$/i.test(text.slice(Math.max(0, m.index - 8), m.index))) continue;
+      add('warn', 'market-count', at(m.index), `"${m[0]}" states a market count`, 'the only count is "about 80 underlyings"');
+    }
+  }
+  if (words) {
+    for (const a of AVOID) {
+      a.re.lastIndex = 0;
+      while ((m = a.re.exec(text))) {
+        if (quoted(text, m.index, m[0].length)) continue;
+        if (NEGATION.test(text.slice(Math.max(0, m.index - 30), m.index))) continue;
+        if (a.word === 'safe' && /^safe\s+returns?\b/i.test(text.slice(m.index))) continue; // a banned claim already
+        add('warn', 'avoid-word', at(m.index), `"${m[0]}" is on the brand's avoid list`, a.fix);
+      }
+    }
+    UK_RE.lastIndex = 0;
+    while ((m = UK_RE.exec(text))) {
+      const us = UK_SPELLING[m[0].toLowerCase()];
+      const fix = m[0][0] === m[0][0].toUpperCase() ? us[0].toUpperCase() + us.slice(1) : us;
+      add('warn', 'spelling', at(m.index), `"${m[0]}" is British spelling`, `write "${fix}" (US spelling)`);
+    }
+    TAGLINE_RE.lastIndex = 0;
+    while ((m = TAGLINE_RE.exec(text))) {
+      const said = m[0].replace(/\s+/g, ' ');
+      if (said === TAGLINE || said === TAGLINE.slice(0, -1) || said.toLowerCase() === said) continue;
+      add('warn', 'tagline', at(m.index), `"${said}" changes the tagline`, `write it as "${TAGLINE}"`);
+    }
+    const custody = /no key at strike can move your money/gi;
+    while ((m = custody.exec(text))) {
+      add('warn', 'custody', at(m.index), 'the custody line says "money"', 'write "No key at Strike can move your funds." and add what is still trusted');
     }
   }
   if (name && !seg.inSvg && !seg.inLogo) {
@@ -672,6 +730,7 @@ function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd 
   if (exclaim && seg.kind !== 'heading') {
     const re = /[A-Za-z0-9)\]'"’”]!+(?=[\s"'”’)\]]|$)/g;
     while ((m = re.exec(text))) {
+      if (quoted(text, m.index, 1)) continue; // a quoted example of what not to write
       add('warn', 'exclamation', at(m.index + 1), '"!" in body copy', 'use a full stop; no exclamation marks in brand copy');
     }
   }
@@ -684,6 +743,28 @@ function headingChecks(text, offset, level, add) {
     add('warn', 'heading-length', offset, `title is ${clean.length} characters`, 'title must fit 2 lines: cut it to about 8 words');
   }
   if (/!/.test(clean)) add('warn', 'heading-exclamation', offset, '"!" in a heading', 'remove it; headings never shout');
+  if (titleCase(clean)) add('warn', 'heading-case', offset, `"${clean}" is in Title Case`, 'use sentence case: capitalize only the first word and names');
+}
+
+// Names that keep their capital in a sentence-case heading.
+const PROPER = new Set('strike geist ciburial arial pantone openai anthropic figma claude chatgpt cursor codex copilot gemini perplexity windsurf jules github x ethereum bitcoin solana asia europe america monday tuesday wednesday thursday friday saturday sunday january february march april may june july august september october november december ornn tailwind green deep light'.split(' ')); // and the palette names: Strike Green, Mark Deep, Mark Light
+
+/** True when most words after the first are capitalized: "Our Tone of Voice", "Options On Every Market". */
+function titleCase(text) {
+  const all = text.replace(/[^\p{L}\p{N}\s'’-]/gu, ' ').split(/\s+/).filter(Boolean);
+  const proper = (w) => PROPER.has(w.toLowerCase().replace(/['’]s$/, ''));
+  // a name and the word after it stay capitalized: "Figma Make", "Strike Markets", "Mark Light"
+  const named = new Set(all.flatMap((w, i) => (i > 0 && proper(all[i - 1]) ? [i] : [])));
+  const words = all.slice(1);
+  const caps = (w) => {
+    const i = all.indexOf(w, 1);
+    return /^\p{Lu}/u.test(w) && /\p{Ll}/u.test(w) && !proper(w) && !named.has(i);
+  };
+  const small = words.filter((w) => /^(?:on|of|the|and|or|in|to|for|with|at|by|from|every|a|an|is|are)$/i.test(w));
+  if (small.some((w) => /^\p{Lu}/u.test(w))) return words.filter(caps).length >= 1;
+  const long = words.filter((w) => w.length >= 4 && /^\p{L}/u.test(w) && !/^\p{Lu}+$/u.test(w));
+  const capped = long.filter(caps);
+  return capped.length >= (words.length <= 2 ? 1 : 2) && capped.length / long.length >= 0.6;
 }
 
 // ---------------------------------------------------------------- the checker
@@ -709,7 +790,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
   // Logo artwork (one-ink marks use pure black and white on purpose).
   const relPath = relative(process.cwd(), resolve(file)).replace(/\\/g, '/');
   const isLogoFile = ext === '.svg' && /logo|lock-?up|wordmark|(^|[-_/])mark([-_.]|$)/i.test(relPath);
-  // Finished poster artwork is reference art: its colours are not checked.
+  // Finished poster artwork is reference art: its colors are not checked.
   const isArtwork = ext === '.svg' && /(^|\/)assets\/posters\//.test(resolve(file).replace(/\\/g, '/'));
   const cssRegions = []; // {text, offset, rootSelector}
   const extraDecls = []; // JSX style objects, with context
@@ -777,7 +858,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
     fullPage = (ext === '.html' || ext === '.htm') && !opts.embedded && /<html[\s>]|<body[\s>]/i.test(src);
   }
 
-  // CSS: fonts, radius, contrast; collect declarations for the colour scan.
+  // CSS: fonts, radius, contrast; collect declarations for the color scan.
   const allDecls = [];
   for (const region of cssRegions) {
     for (const rule of parseCss(region.text, region.offset, region.rootSelector)) {
@@ -882,7 +963,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
       if (tw) {
         const key = `${tw[1]}-${tw[2]}`;
         if (!TW_SAME_AS_STRIKE[key]) {
-          add('warn', 'colour', off, `${c} is a Tailwind default colour`, 'use the Strike preset colours (bg-ground, text-ink, text-ink-2, bg-green)');
+          add('warn', 'color', off, `${c} is a Tailwind default color`, 'use the Strike preset colors (bg-ground, text-ink, text-ink-2, bg-green)');
           continue;
         }
       }
@@ -933,7 +1014,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
     }
   }
 
-  // Colours: every hex, rgb() and hsl() in the file.
+  // Colors: every hex, rgb() and hsl() in the file.
   const scan = ['.jsx', '.tsx'].includes(ext)
     ? blankJsComments(src)
     : ext === '.css'
@@ -941,7 +1022,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
       : blankRegex(blankRegex(src, /<!--[\s\S]*?-->/g), /\/\*[\s\S]*?\*\//g);
   const cssOnly = ext === '.css';
   const colourRe = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])|\b(?:rgba?|hsla?)\([^)]*\)/g;
-  const offPalette = new Map(); // one finding per colour per file, with a count
+  const offPalette = new Map(); // one finding per color per file, with a count
   let c;
   while (!isArtwork && (c = colourRe.exec(scan))) {
     const idx = c.index;
@@ -977,12 +1058,12 @@ export function checkSource(src, file = 'input.html', opts = {}) {
       continue;
     }
     const near = nearestColour(col, palette);
-    const issue = add('warn', 'colour', idx, `${tok} is not a Strike colour`, `use a token from tokens.css; the nearest is ${near.name} ${near.hex}`);
+    const issue = add('warn', 'color', idx, `${tok} is not a Strike color`, `use a token from tokens.css; the nearest is ${near.name} ${near.hex}`);
     if (issue) offPalette.set(col.hex, { issue, tok, count: 1 });
   }
-  for (const { issue, tok, count } of offPalette.values()) if (count > 1) issue.message = `${tok} is not a Strike colour (${count} times)`;
+  for (const { issue, tok, count } of offPalette.values()) if (count > 1) issue.message = `${tok} is not a Strike color (${count} times)`;
 
-  // Named colours in CSS colour properties.
+  // Named colors in CSS color properties.
   for (const d of isArtwork ? [] : allDecls) {
     if (!COLOUR_PROPS.test(d.prop) || d.attr) continue;
     for (const w of d.value.toLowerCase().matchAll(/(?<![\w#-])([a-z]+)(?![\w(-])/g)) {
@@ -992,7 +1073,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
         if (d.prop.startsWith('--') || /light|logo/i.test(d.context ?? '')) continue;
         add('warn', 'pure-black-white', off, `${word} is pure ${word}`, word === 'white' ? 'use ink #F9F9F9' : 'use ground #0C0C0C');
       } else if (NAMED_COLOURS.has(word)) {
-        add('warn', 'colour', off, `"${word}" is not a Strike colour`, word === 'red' ? 'red is loss #EE5E74, for losses only' : 'use a token from tokens.css');
+        add('warn', 'color', off, `"${word}" is not a Strike color`, word === 'red' ? 'red is loss #EE5E74, for losses only' : 'use a token from tokens.css');
       }
     }
   }
@@ -1019,7 +1100,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
   src.split('\n').forEach((line, i) => {
     const m = /strike-check-ignore(?!-file)(?::\s*([\w\s,-]+))?/.exec(line);
     if (!m) return;
-    const rules = m[1] ? m[1].split(/[\s,]+/).filter(Boolean) : null;
+    const rules = m[1] ? m[1].split(/[\s,]+/).filter(Boolean).map((r) => RULE_ALIASES[r] ?? r) : null;
     ignores.set(i + 1, rules);
     ignores.set(i + 2, rules);
   });

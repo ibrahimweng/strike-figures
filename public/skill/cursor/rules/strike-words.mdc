@@ -1,33 +1,76 @@
 ---
-description: Strike brand, words. Copy rules, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
+description: "Strike brand, words. The verbal brand: tagline, mission, positioning, personality, tone, writing examples, words to use and avoid, mechanics, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim."
 globs:
 alwaysApply: false
 ---
 
 # Words
 
-Verbal branding is still being written. Until then, keep copy short, plain and factual.
+The verbal brand from the brand book (0.2–0.6). Use these lines as written; don't paraphrase them.
 
-## Rules
+## Positioning
+- **Tagline:** Options on every market, every hour.
+- **Mission:** Make markets run as long as the news does.
+- **Value proposition:** Strike is an options exchange that never closes. Trade options on stocks, indices, pre-IPO companies, GPU compute and crypto from one self-custodial margin account.
+- **Proof:**
+  - Open 168 hours a week, against about 32.5 for listed options.
+  - About 80 underlyings: stocks, indices, pre-IPO companies, GPU compute and crypto.
+  - No key at Strike can move your funds. What is still trusted is documented.
+
+## Narrative
+Strike is open 168 hours a week, with a daily expiry at 20:00 ET. Positions can be hedged when events happen, not when markets reopen.
+
+Markets react to news at any hour: earnings after the close, policy on a weekend, Asia overnight. Listed options trade about 32.5 hours a week. For the other 135, positions cannot be adjusted.
+
+Custody is verifiable. Strike is self-custodial: there is no operator key, every state update is proven, and the parts still trusted are documented.
+
+## Personality
+| Trait | What it means | Not |
+|---|---|---|
+| Expert | We know options markets and are there when they move. | Jargon to impress |
+| Exact | We build for precision and show the numbers. | Vague claims |
+| Candid | We state risks and trade-offs first. | Hype or fear |
+
+## Tone of voice
+1. **Lead with the fact.** One number beats one adjective. Back every claim with something the reader can check.
+2. **Keep it short and exact.** Plain words, short sentences, correct terms. Never cryptic.
+3. **Pair benefit with risk.** Name the risk in the same sentence as the benefit, or the next.
+
+## Writing examples
+Write like the left column, never like the right.
+
+| Write | Not |
+|---|---|
+| Options on every market, every hour. | "24/7 Options Trading" |
+| Open 168 hours a week. | "The trading experience you'll never forget!" |
+| No key at Strike can move your funds. What is still trusted is documented. | "Your money is 100% safe with us." |
+| Positions can be hedged when events happen, not when markets reopen. | "Hedge whenever you want, stress-free." |
+
+- **Use:** options exchange · self-custodial · margin account · underlying · listed options · expiry.
+- **Avoid:** "24/7" · "revolutionary" · "guaranteed" · "safe" · "unforgettable" · exclamation marks · emoji.
+
+## Mechanics
+- **Sentence case** for every heading, label and button. No full stop on a one-line title.
+- **US spelling:** color, center, gray, organize, favorite.
+- **Numbers** as digits, with units: 168 hours, 20:00 ET. Always state the time zone.
+- **Name:** write Strike. STRIKE in capitals is only the logo.
 - **Headings:** short; the main title is at most 2 lines.
-- **Sentences:** plain words, no hype, no exclamation marks, no emoji in brand copy.
-- **Name:** "Strike" in text, never "STRIKE".
-- **Numbers:** use numerals, and always state time zones (20:00 ET).
 - **Money:** USDC by default for deposits, collateral, settlement and fees. Ask the user when USD or USDC could be meant.
 - **Never invent a number or claim.** If you need one you don't have, write [number] and say so.
 
-## Facts you may use (strikelabs.app, Nov 2026)
+## Facts you may use (Nov 2026)
 - **Hours:** open 168 hours a week; the book never closes. Listed options trade about 32.5 hours a week (closed 81% of the week).
+- **Underlyings:** about 80. Write "about 80 underlyings"; never another count unless the user gives it.
 - **Expiries:**
   - a daily expiry at 20:00 ET (New York time, adjusted for daylight saving);
   - 8 weekly expiries (Fridays);
   - monthly expiries (third Fridays, out to 3 months).
 - **Contracts:** European style, cash-settled, multiplier 1.0, fractional contracts.
-- **What you can trade:** US and Asian stocks, indices and ETFs, pre-IPO companies (OpenAI, Anthropic), GPU compute (H100, H200, B200, A100, RTX 5090 rental rates, settled to the Ornn index) and crypto (BTC, ETH, SOL, HYPE). Never state a total number of markets unless the user gives it.
-- **Margin:** one margin account; positions across all of these net against each other.
+- **What you can trade:** US and Asian stocks, indices and ETFs, pre-IPO companies (OpenAI, Anthropic), GPU compute (H100, H200, B200, A100, RTX 5090 rental rates, settled to the Ornn index) and crypto (BTC, ETH, SOL, HYPE).
+- **Margin:** one self-custodial margin account; positions across all of these net against each other.
 - **Speed:** orders match in under a microsecond.
 - **Fees:** takers 40 bps of premium, makers 10 bps, and at settlement the winning side 50 bps of intrinsic. Fees are zero during the closed beta, and the rates can change.
-- **Custody:** "No key at Strike can move your money." The vault has no operator role and accepts new state only with a zero-knowledge proof and an attester quorum. Always pair this with what is still trusted:
+- **Custody:** "No key at Strike can move your funds." The vault has no operator role and accepts new state only with a zero-knowledge proof and an attester quorum. Always pair this with what is still trusted:
   - settlement prints;
   - prices on market orders;
   - liquidation prices;

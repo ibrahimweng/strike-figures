@@ -3,22 +3,22 @@
 :root {
   color-scheme: dark;
 
-  /* Colour */
-  --strike-ground: #0C0C0C; /* The dark background: posters, social cards, illustrations, app modules */
+  /* Color */
+  --strike-ground: #0C0C0C; /* Ground: posters, social cards, illustrations, app modules */
   --strike-web-ground: #090B0A; /* Website and marketing page background (about 80%) */
   --strike-web-section: #0F1110; /* Website alternate sections and cards (about 20%), for depth and separation */
-  --strike-ink: #F9F9F9; /* Text on ground; ground of light layouts */
+  --strike-ink: #F9F9F9; /* White: text on ground; ground of light layouts */
   --strike-ink-2: #B3B3B3; /* Secondary text on dark (9.3:1) */
   --strike-ink-3: #8A8F98; /* Muted text and icons on dark (6.0:1) */
-  --strike-green: #10B981; /* Primary action, focus, one highlight */
-  --strike-deep: #047857; /* Green text or lines on light grounds (5.2:1) */
-  --strike-mark-light: #6EE7B7; /* Logo gradient only */
-  --strike-profit: #3FD4AB; /* Gains, buys, bids */
-  --strike-loss: #EE5E74; /* Losses, sells, asks. Red means loss and nothing else */
-  --strike-mint: #50EBA0; /* Poster grounds only */
-  --strike-data-yellow: #FFEF3C; /* Charts with several series only */
-  --strike-data-sky: #0788F7; /* Charts with several series only */
-  --strike-data-purple: #976FE6; /* Charts with several series only */
+  --strike-green: #10B981; /* Strike Green: primary action, focus, one highlight. Never fills a layout; no white text on it in UI */
+  --strike-deep: #047857; /* Mark Deep: green text or lines on light grounds (5.2:1) */
+  --strike-mark-light: #6EE7B7; /* Mark Light: the light end of the logo gradient */
+  --strike-profit: #3FD4AB; /* Profit: market moves up (gains, buys, bids) */
+  --strike-loss: #EE5E74; /* Loss: market moves down (losses, sells, asks). Red means loss and nothing else */
+  --strike-mint: #50EBA0; /* Poster grounds and the light end of the poster gradient */
+  --strike-data-yellow: #FFEF3C; /* Chart data series only */
+  --strike-data-sky: #0788F7; /* Chart data series only */
+  --strike-data-purple: #976FE6; /* Chart data series only */
   --strike-frame: #2E2E2E; /* App frame: the lighter background that shows only in the thin gaps between modules */
   --strike-surface-1: #161616; /* Raised controls on a module: inputs, tabs, secondary buttons */
   --strike-surface-2: #202020; /* Hover and selected */
@@ -36,46 +36,62 @@
   --strike-surface-3-rgb: 42 42 42;
 
   /* Type */
-  --strike-font-sans: Geist, Arial, sans-serif;
+  --strike-font-sans: Geist, Arial, sans-serif; /* Geist for everything; Arial when web fonts are unavailable */
   --strike-font-mono: "Geist Mono", ui-monospace, monospace; /* Code, wallet addresses, order books only */
-  --strike-font-display-pixel: "Geist Pixel Circle", Geist, sans-serif; /* Big display numbers on posters only */
+  --strike-font-display-pixel: "Geist Pixel Circle", Geist, sans-serif; /* Large display type and numbers on posters only, where contrast is high; never body text or company documents */
   --strike-font-wordmark: Ciburial; /* The STRIKE wordmark only; use the logo files */
   --strike-weight-light: 300;
   --strike-weight-regular: 400;
   --strike-weight-medium: 500;
   --strike-weight-semibold: 600;
   --strike-text-display-size: 72px;
-  --strike-text-display-line-height: 0.95;
-  --strike-text-display-tracking: -0.03em;
+  --strike-text-display-line-height: 1;
+  --strike-text-display-tracking: -0.02em;
   --strike-text-display-weight: 500;
   --strike-text-h1-size: 48px;
   --strike-text-h1-line-height: 1;
-  --strike-text-h1-tracking: -0.03em;
+  --strike-text-h1-tracking: -0.02em;
   --strike-text-h1-weight: 500;
   --strike-text-h2-size: 32px;
-  --strike-text-h2-line-height: 1.1;
-  --strike-text-h2-tracking: -0.02em;
+  --strike-text-h2-line-height: 1.2;
+  --strike-text-h2-tracking: -0.01em;
   --strike-text-h2-weight: 500;
   --strike-text-h3-size: 24px;
-  --strike-text-h3-line-height: 1.2;
-  --strike-text-h3-tracking: -0.015em;
+  --strike-text-h3-line-height: 1.3;
+  --strike-text-h3-tracking: 0;
   --strike-text-h3-weight: 500;
   --strike-text-body-l-size: 18px;
-  --strike-text-body-l-line-height: 1.5;
+  --strike-text-body-l-line-height: 1.3;
   --strike-text-body-l-tracking: 0;
   --strike-text-body-l-weight: 400;
   --strike-text-body-size: 16px;
-  --strike-text-body-line-height: 1.5;
+  --strike-text-body-line-height: 1.3;
   --strike-text-body-tracking: 0;
   --strike-text-body-weight: 400;
   --strike-text-small-size: 14px;
-  --strike-text-small-line-height: 1.45;
-  --strike-text-small-tracking: 0;
+  --strike-text-small-line-height: 1.35;
+  --strike-text-small-tracking: 0.01em;
   --strike-text-small-weight: 400;
   --strike-text-label-size: 12px;
-  --strike-text-label-line-height: 1.4;
-  --strike-text-label-tracking: 0.02em;
+  --strike-text-label-line-height: 1.35;
+  --strike-text-label-tracking: 0.01em;
   --strike-text-label-weight: 500;
+  --strike-text-slide-h1-size: 120px;
+  --strike-text-slide-h1-line-height: 0.9;
+  --strike-text-slide-h1-tracking: -0.03em;
+  --strike-text-slide-h1-weight: 500;
+  --strike-text-slide-h2-size: 72px;
+  --strike-text-slide-h2-line-height: 1;
+  --strike-text-slide-h2-tracking: -0.02em;
+  --strike-text-slide-h2-weight: 500;
+  --strike-text-slide-h3-size: 42px;
+  --strike-text-slide-h3-line-height: 1.2;
+  --strike-text-slide-h3-tracking: -0.01em;
+  --strike-text-slide-h3-weight: 500;
+  --strike-text-slide-body-size: 18px;
+  --strike-text-slide-body-line-height: 1.3;
+  --strike-text-slide-body-tracking: 0;
+  --strike-text-slide-body-weight: 400;
 
   /* Space: the 4 px scale; posters, cards and illustrations use the 50 px grid */
   --strike-space-1: 4px;
@@ -100,7 +116,9 @@
   --strike-size-control: 40px;
   --strike-size-control-sm: 32px;
   --strike-size-logo-mark-min: 16px;
+  --strike-size-logo-3d-min: 32px;
   --strike-size-logo-lockup-min-height: 20px;
+  --strike-size-logo-max-share: 33.333%;
 
   /* Motion */
   --strike-duration-fast: 120ms;
@@ -207,6 +225,38 @@
   line-height: var(--strike-text-label-line-height);
   letter-spacing: var(--strike-text-label-tracking);
   font-weight: var(--strike-text-label-weight);
+  font-kerning: normal;
+}
+.strike-slide-h1 {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-slide-h1-size);
+  line-height: var(--strike-text-slide-h1-line-height);
+  letter-spacing: var(--strike-text-slide-h1-tracking);
+  font-weight: var(--strike-text-slide-h1-weight);
+  font-kerning: normal;
+}
+.strike-slide-h2 {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-slide-h2-size);
+  line-height: var(--strike-text-slide-h2-line-height);
+  letter-spacing: var(--strike-text-slide-h2-tracking);
+  font-weight: var(--strike-text-slide-h2-weight);
+  font-kerning: normal;
+}
+.strike-slide-h3 {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-slide-h3-size);
+  line-height: var(--strike-text-slide-h3-line-height);
+  letter-spacing: var(--strike-text-slide-h3-tracking);
+  font-weight: var(--strike-text-slide-h3-weight);
+  font-kerning: normal;
+}
+.strike-slide-body {
+  font-family: var(--strike-font-sans);
+  font-size: var(--strike-text-slide-body-size);
+  line-height: var(--strike-text-slide-body-line-height);
+  letter-spacing: var(--strike-text-slide-body-tracking);
+  font-weight: var(--strike-text-slide-body-weight);
   font-kerning: normal;
 }
 .strike-tabular {

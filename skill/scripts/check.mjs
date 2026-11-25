@@ -3,13 +3,14 @@
 //
 //   node scripts/check.mjs <files or dirs> [--json] [--tokens <tokens.json>]
 //
-// Checks .html .css .svg .jsx .tsx .vue .md files for off-brand colours, fonts,
-// contrast, headings, the name, copy, the risk line and corner radii.
+// Checks .html .css .svg .jsx .tsx .vue .md files for off-brand colors, fonts,
+// contrast, headings, the name, copy (the verbal brand, US spelling), the risk
+// line and corner radii.
 // Prints file:line:col, severity, rule, the problem and a one-line fix.
 // Exit code: 1 when there are errors, 2 on bad usage, 0 otherwise.
 //
 // The brand's finished poster artwork (assets/posters/) is exempt from the
-// colour rules: it is reference art, not output to check.
+// color rules: it is reference art, not output to check.
 //
 // To silence a finding you have checked, put `strike-check-ignore` (optionally
 // followed by `: rule, rule`) in a comment on that line or the line above.
@@ -25,7 +26,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 export const EXTENSIONS = ['.html', '.htm', '.css', '.svg', '.jsx', '.tsx', '.vue', '.md', '.mdx', '.mdc'];
 const SKIP_DIRS = new Set(['node_modules', '.git', '.next', '.nuxt', '.cache', '.turbo']);
 
-// Colours allowed besides tokens.json: the illustration line greys (dark and
+// Colors allowed besides tokens.json: the illustration line grays (dark and
 // light tiers) and the logo's gradient stops.
 export const EXTRA_COLOURS = {
   '#D0D6E0': 'illustration subject line',
@@ -46,7 +47,7 @@ const RADII_PX = new Set([0, 6, 8, 12, 9999]);
 const STRIKE_GREEN = '#10B981';
 const RISK_LINE = 'Options involve risk. Closed beta, invite required.';
 
-// Tailwind's default palette. A few shades equal Strike colours exactly.
+// Tailwind's default palette. A few shades equal Strike colors exactly.
 const TW_FAMILIES = 'slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose';
 const TW_COLOUR_PREFIX = 'bg|text|border(?:-[trblxyse])?|ring|ring-offset|fill|stroke|from|via|to|outline|decoration|divide|accent|caret|placeholder|shadow';
 const TW_DEFAULT_RE = new RegExp(`^(?:${TW_COLOUR_PREFIX})-(${TW_FAMILIES})-(50|100|200|300|400|500|600|700|800|900|950)(?:\\/\\d+)?$`);
@@ -69,7 +70,7 @@ export function loadTokens(explicit) {
   throw new Error('tokens.json not found next to the checker. Pass --tokens <path>.');
 }
 
-// Colour tokens as CSS variable names (same naming as the build's tokens.css):
+// Color tokens as CSS variable names (same naming as the build's tokens.css):
 // color.ink -> ink, color.data.sky -> data-sky, color.dark.surface-1 -> surface-1.
 export function paletteFrom(tokens) {
   const allowed = new Map();
@@ -93,7 +94,7 @@ export function paletteFrom(tokens) {
   return { allowed, dark, light: { ...dark, ...light } };
 }
 
-// ---------------------------------------------------------------- colour maths
+// ---------------------------------------------------------------- color maths
 
 function normHex(h) {
   h = h.trim().replace('#', '').toUpperCase();
@@ -616,6 +617,34 @@ const BANNED = [
   { re: /\bto\s+the\s+moon\b/gi, word: 'to the moon' },
 ];
 
+// Words the brand book says to avoid (0.6). "guaranteed" is a banned claim above.
+const AVOID = [
+  { re: /(?<![\w/])24\s*\/\s*7(?![\w/])/g, word: '24/7', fix: 'say "every hour" or "open 168 hours a week"' },
+  { re: /\brevolution(?:ary|ize|ise)s?\b/gi, word: 'revolutionary', fix: 'state the fact that makes it new' },
+  { re: /\bunforgettable\b/gi, word: 'unforgettable', fix: 'state a fact the reader can check' },
+  { re: /\bsafe(?:ly|st)?\b/gi, word: 'safe', fix: 'say what protects the funds, and what is still trusted' },
+];
+
+// British spellings: the brand writes US English (0.6). Mapped to the US form.
+const UK_SPELLING = {
+  colour: 'color', colours: 'colors', coloured: 'colored', colourful: 'colorful', recolour: 'recolor',
+  grey: 'gray', greys: 'grays', centre: 'center', centres: 'centers', centred: 'centered',
+  favour: 'favor', favourite: 'favorite', favourites: 'favorites', behaviour: 'behavior', honour: 'honor', humour: 'humor',
+  neighbour: 'neighbor', neighbours: 'neighbors', labour: 'labor', flavour: 'flavor',
+  organise: 'organize', organised: 'organized', organisation: 'organization', recognise: 'recognize', recognised: 'recognized',
+  realise: 'realize', realised: 'realized', prioritise: 'prioritize', summarise: 'summarize', minimise: 'minimize', maximise: 'maximize',
+  optimise: 'optimize', optimised: 'optimized', customise: 'customize', customised: 'customized', emphasise: 'emphasize',
+  analyse: 'analyze', analysed: 'analyzed', catalogue: 'catalog', programme: 'program', licence: 'license', defence: 'defense',
+  metre: 'meter', metres: 'meters', cancelled: 'canceled', labelled: 'labeled', modelling: 'modeling', travelled: 'traveled',
+};
+const UK_RE = new RegExp(`\\b(${Object.keys(UK_SPELLING).join('|')})\\b`, 'gi');
+
+const TAGLINE = 'Options on every market, every hour.';
+const TAGLINE_RE = /options\s+on\s+every\s+market,?\s+every\s+hour\.?/gi;
+
+// Rule names that were renamed, so older ignore comments still work.
+const RULE_ALIASES = { colour: 'color' };
+
 function quoted(text, idx, len) {
   const before = text.slice(0, idx);
   const after = text.slice(idx + len);
@@ -628,7 +657,7 @@ function quoted(text, idx, len) {
   return false;
 }
 
-function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd = true, markets = true } = {}) {
+function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd = true, markets = true, words = true } = {}) {
   const text = seg.text;
   const at = (idx) => seg.offset + idx;
   let m;
@@ -655,7 +684,36 @@ function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd 
     const re = /(?<![\w/.,:+-])\d+(?:[.,]\d+)*\+?\s+(?:[A-Za-z-]+\s+)?(?:markets|underlyings)\b/gi;
     while ((m = re.exec(text))) {
       if (quoted(text, m.index, m[0].length)) continue;
-      add('warn', 'market-count', at(m.index), `"${m[0]}" states a market count`, "don't state how many markets Strike lists");
+      // The brand book's own figure: "about 80 underlyings".
+      if (/^80\s+underlyings\b/i.test(m[0]) && /\b(?:about|around)\s+$/i.test(text.slice(Math.max(0, m.index - 8), m.index))) continue;
+      add('warn', 'market-count', at(m.index), `"${m[0]}" states a market count`, 'the only count is "about 80 underlyings"');
+    }
+  }
+  if (words) {
+    for (const a of AVOID) {
+      a.re.lastIndex = 0;
+      while ((m = a.re.exec(text))) {
+        if (quoted(text, m.index, m[0].length)) continue;
+        if (NEGATION.test(text.slice(Math.max(0, m.index - 30), m.index))) continue;
+        if (a.word === 'safe' && /^safe\s+returns?\b/i.test(text.slice(m.index))) continue; // a banned claim already
+        add('warn', 'avoid-word', at(m.index), `"${m[0]}" is on the brand's avoid list`, a.fix);
+      }
+    }
+    UK_RE.lastIndex = 0;
+    while ((m = UK_RE.exec(text))) {
+      const us = UK_SPELLING[m[0].toLowerCase()];
+      const fix = m[0][0] === m[0][0].toUpperCase() ? us[0].toUpperCase() + us.slice(1) : us;
+      add('warn', 'spelling', at(m.index), `"${m[0]}" is British spelling`, `write "${fix}" (US spelling)`);
+    }
+    TAGLINE_RE.lastIndex = 0;
+    while ((m = TAGLINE_RE.exec(text))) {
+      const said = m[0].replace(/\s+/g, ' ');
+      if (said === TAGLINE || said === TAGLINE.slice(0, -1) || said.toLowerCase() === said) continue;
+      add('warn', 'tagline', at(m.index), `"${said}" changes the tagline`, `write it as "${TAGLINE}"`);
+    }
+    const custody = /no key at strike can move your money/gi;
+    while ((m = custody.exec(text))) {
+      add('warn', 'custody', at(m.index), 'the custody line says "money"', 'write "No key at Strike can move your funds." and add what is still trusted');
     }
   }
   if (name && !seg.inSvg && !seg.inLogo) {
@@ -672,6 +730,7 @@ function copyChecks(seg, add, { name = true, exclaim = true, banned = true, usd 
   if (exclaim && seg.kind !== 'heading') {
     const re = /[A-Za-z0-9)\]'"’”]!+(?=[\s"'”’)\]]|$)/g;
     while ((m = re.exec(text))) {
+      if (quoted(text, m.index, 1)) continue; // a quoted example of what not to write
       add('warn', 'exclamation', at(m.index + 1), '"!" in body copy', 'use a full stop; no exclamation marks in brand copy');
     }
   }
@@ -684,6 +743,28 @@ function headingChecks(text, offset, level, add) {
     add('warn', 'heading-length', offset, `title is ${clean.length} characters`, 'title must fit 2 lines: cut it to about 8 words');
   }
   if (/!/.test(clean)) add('warn', 'heading-exclamation', offset, '"!" in a heading', 'remove it; headings never shout');
+  if (titleCase(clean)) add('warn', 'heading-case', offset, `"${clean}" is in Title Case`, 'use sentence case: capitalize only the first word and names');
+}
+
+// Names that keep their capital in a sentence-case heading.
+const PROPER = new Set('strike geist ciburial arial pantone openai anthropic figma claude chatgpt cursor codex copilot gemini perplexity windsurf jules github x ethereum bitcoin solana asia europe america monday tuesday wednesday thursday friday saturday sunday january february march april may june july august september october november december ornn tailwind green deep light'.split(' ')); // and the palette names: Strike Green, Mark Deep, Mark Light
+
+/** True when most words after the first are capitalized: "Our Tone of Voice", "Options On Every Market". */
+function titleCase(text) {
+  const all = text.replace(/[^\p{L}\p{N}\s'’-]/gu, ' ').split(/\s+/).filter(Boolean);
+  const proper = (w) => PROPER.has(w.toLowerCase().replace(/['’]s$/, ''));
+  // a name and the word after it stay capitalized: "Figma Make", "Strike Markets", "Mark Light"
+  const named = new Set(all.flatMap((w, i) => (i > 0 && proper(all[i - 1]) ? [i] : [])));
+  const words = all.slice(1);
+  const caps = (w) => {
+    const i = all.indexOf(w, 1);
+    return /^\p{Lu}/u.test(w) && /\p{Ll}/u.test(w) && !proper(w) && !named.has(i);
+  };
+  const small = words.filter((w) => /^(?:on|of|the|and|or|in|to|for|with|at|by|from|every|a|an|is|are)$/i.test(w));
+  if (small.some((w) => /^\p{Lu}/u.test(w))) return words.filter(caps).length >= 1;
+  const long = words.filter((w) => w.length >= 4 && /^\p{L}/u.test(w) && !/^\p{Lu}+$/u.test(w));
+  const capped = long.filter(caps);
+  return capped.length >= (words.length <= 2 ? 1 : 2) && capped.length / long.length >= 0.6;
 }
 
 // ---------------------------------------------------------------- the checker
@@ -709,7 +790,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
   // Logo artwork (one-ink marks use pure black and white on purpose).
   const relPath = relative(process.cwd(), resolve(file)).replace(/\\/g, '/');
   const isLogoFile = ext === '.svg' && /logo|lock-?up|wordmark|(^|[-_/])mark([-_.]|$)/i.test(relPath);
-  // Finished poster artwork is reference art: its colours are not checked.
+  // Finished poster artwork is reference art: its colors are not checked.
   const isArtwork = ext === '.svg' && /(^|\/)assets\/posters\//.test(resolve(file).replace(/\\/g, '/'));
   const cssRegions = []; // {text, offset, rootSelector}
   const extraDecls = []; // JSX style objects, with context
@@ -777,7 +858,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
     fullPage = (ext === '.html' || ext === '.htm') && !opts.embedded && /<html[\s>]|<body[\s>]/i.test(src);
   }
 
-  // CSS: fonts, radius, contrast; collect declarations for the colour scan.
+  // CSS: fonts, radius, contrast; collect declarations for the color scan.
   const allDecls = [];
   for (const region of cssRegions) {
     for (const rule of parseCss(region.text, region.offset, region.rootSelector)) {
@@ -882,7 +963,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
       if (tw) {
         const key = `${tw[1]}-${tw[2]}`;
         if (!TW_SAME_AS_STRIKE[key]) {
-          add('warn', 'colour', off, `${c} is a Tailwind default colour`, 'use the Strike preset colours (bg-ground, text-ink, text-ink-2, bg-green)');
+          add('warn', 'color', off, `${c} is a Tailwind default color`, 'use the Strike preset colors (bg-ground, text-ink, text-ink-2, bg-green)');
           continue;
         }
       }
@@ -933,7 +1014,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
     }
   }
 
-  // Colours: every hex, rgb() and hsl() in the file.
+  // Colors: every hex, rgb() and hsl() in the file.
   const scan = ['.jsx', '.tsx'].includes(ext)
     ? blankJsComments(src)
     : ext === '.css'
@@ -941,7 +1022,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
       : blankRegex(blankRegex(src, /<!--[\s\S]*?-->/g), /\/\*[\s\S]*?\*\//g);
   const cssOnly = ext === '.css';
   const colourRe = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])|\b(?:rgba?|hsla?)\([^)]*\)/g;
-  const offPalette = new Map(); // one finding per colour per file, with a count
+  const offPalette = new Map(); // one finding per color per file, with a count
   let c;
   while (!isArtwork && (c = colourRe.exec(scan))) {
     const idx = c.index;
@@ -977,12 +1058,12 @@ export function checkSource(src, file = 'input.html', opts = {}) {
       continue;
     }
     const near = nearestColour(col, palette);
-    const issue = add('warn', 'colour', idx, `${tok} is not a Strike colour`, `use a token from tokens.css; the nearest is ${near.name} ${near.hex}`);
+    const issue = add('warn', 'color', idx, `${tok} is not a Strike color`, `use a token from tokens.css; the nearest is ${near.name} ${near.hex}`);
     if (issue) offPalette.set(col.hex, { issue, tok, count: 1 });
   }
-  for (const { issue, tok, count } of offPalette.values()) if (count > 1) issue.message = `${tok} is not a Strike colour (${count} times)`;
+  for (const { issue, tok, count } of offPalette.values()) if (count > 1) issue.message = `${tok} is not a Strike color (${count} times)`;
 
-  // Named colours in CSS colour properties.
+  // Named colors in CSS color properties.
   for (const d of isArtwork ? [] : allDecls) {
     if (!COLOUR_PROPS.test(d.prop) || d.attr) continue;
     for (const w of d.value.toLowerCase().matchAll(/(?<![\w#-])([a-z]+)(?![\w(-])/g)) {
@@ -992,7 +1073,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
         if (d.prop.startsWith('--') || /light|logo/i.test(d.context ?? '')) continue;
         add('warn', 'pure-black-white', off, `${word} is pure ${word}`, word === 'white' ? 'use ink #F9F9F9' : 'use ground #0C0C0C');
       } else if (NAMED_COLOURS.has(word)) {
-        add('warn', 'colour', off, `"${word}" is not a Strike colour`, word === 'red' ? 'red is loss #EE5E74, for losses only' : 'use a token from tokens.css');
+        add('warn', 'color', off, `"${word}" is not a Strike color`, word === 'red' ? 'red is loss #EE5E74, for losses only' : 'use a token from tokens.css');
       }
     }
   }
@@ -1019,7 +1100,7 @@ export function checkSource(src, file = 'input.html', opts = {}) {
   src.split('\n').forEach((line, i) => {
     const m = /strike-check-ignore(?!-file)(?::\s*([\w\s,-]+))?/.exec(line);
     if (!m) return;
-    const rules = m[1] ? m[1].split(/[\s,]+/).filter(Boolean) : null;
+    const rules = m[1] ? m[1].split(/[\s,]+/).filter(Boolean).map((r) => RULE_ALIASES[r] ?? r) : null;
     ignores.set(i + 1, rules);
     ignores.set(i + 2, rules);
   });

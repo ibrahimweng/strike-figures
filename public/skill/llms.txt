@@ -2,12 +2,12 @@
 
 > Strike's brand and design rules for AI tools: the core rules, the detailed rules, design tokens, logo files and fonts, packaged for Claude, ChatGPT, Cursor, AGENTS.md tools, GitHub Copilot, Gemini, Perplexity and Figma.
 
-Strike is the options exchange that never closes. To make anything for Strike, read STRIKE-DESIGN.md and follow it. core.md is the short version (7,569 characters). All links here are relative to this file.
+Strike is the options exchange that never closes. To make anything for Strike, read STRIKE-DESIGN.md and follow it. core.md is the short version (7,502 characters). All links here are relative to this file.
 
 ## Start here
 - [STRIKE-DESIGN.md](STRIKE-DESIGN.md): every rule, the facts you may use and the token values, in one file
 - [core.md](core.md): the core rules only
-- [manifest.json](manifest.json): the targets, downloads, logos, colours and fonts, as JSON
+- [manifest.json](manifest.json): the targets, downloads, logos, colors and fonts, as JSON
 
 ## Claude
 - [claude/README.md](claude/README.md): How to install the Claude files
@@ -15,18 +15,18 @@ Strike is the options exchange that never closes. To make anything for Strike, r
 - [claude/strike-design/assets/README.md](claude/strike-design/assets/README.md): How to install the Claude files
 - [claude/strike-design/assets/fonts/fonts.css](claude/strike-design/assets/fonts/fonts.css): @font-face rules for the brand fonts
 - [claude/strike-design/references/checklist.md](claude/strike-design/references/checklist.md): The checks to run before handing work over.
-- [claude/strike-design/references/colour.md](claude/strike-design/references/colour.md): Palette with hex values, light mode, how much green, gradients, profit and loss, measured contrast pairs. Read before choosing or checking any colour.
-- [claude/strike-design/references/data.md](claude/strike-design/references/data.md): Charts and infographics: number first, chart types, colours, labels, axes, sources. Read for any chart or data graphic.
-- [claude/strike-design/references/formats.md](claude/strike-design/references/formats.md): Sizes and layouts for X posts and threads, posters, slides, documents and email. Read when making one of these.
-- [claude/strike-design/references/illustration-motion.md](claude/strike-design/references/illustration-motion.md): Line illustration rules (isometric or flat, line greys, dashes, labels) and motion timing. Read for illustrations and animation.
+- [claude/strike-design/references/color.md](claude/strike-design/references/color.md): Palette with hex, RGB and CMYK values, light mode, how much green, text on green, gradients, profit and loss, measured contrast pairs. Read before choosing or checking any color.
+- [claude/strike-design/references/data.md](claude/strike-design/references/data.md): Charts and infographics: number first, chart types, colors, labels, axes, sources. Read for any chart or data graphic.
+- [claude/strike-design/references/formats.md](claude/strike-design/references/formats.md): Sizes and layouts for X posts and threads, posters, slides, documents, merch and email. Read when making one of these.
+- [claude/strike-design/references/illustration-motion.md](claude/strike-design/references/illustration-motion.md): Line illustration rules (isometric or flat, line grays, 1 px lines, fills, dashes, labels) and motion timing. Read for illustrations and animation.
 - [claude/strike-design/references/layout-ui.md](claude/strike-design/references/layout-ui.md): Grid, margins, spacing, surfaces and component specs (buttons, inputs, cards, tables, modals, states, icons). Read for any UI or layout.
-- [claude/strike-design/references/logo.md](claude/strike-design/references/logo.md): Which logo file for which ground, minimum sizes, clear space, misuse, and sub-brand lockups. Read whenever the logo appears.
+- [claude/strike-design/references/logo.md](claude/strike-design/references/logo.md): 3D for screens, flat for print, which file for which ground, minimum and maximum sizes, clear space, misuse, and sub-brand lockups. Read whenever the logo appears.
 - [claude/strike-design/references/tailwind.preset.cjs](claude/strike-design/references/tailwind.preset.cjs): Tailwind v3 preset
 - [claude/strike-design/references/theme.css](claude/strike-design/references/theme.css): Tailwind v4 theme
 - [claude/strike-design/references/tokens.css](claude/strike-design/references/tokens.css): CSS variables, dark by default and light under [data-theme="light"], with type classes
 - [claude/strike-design/references/tokens.json](claude/strike-design/references/tokens.json): Design tokens in W3C Design Tokens format
-- [claude/strike-design/references/type.md](claude/strike-design/references/type.md): Fonts, heading rules, the type scale, numbers and line length. Read before setting any text.
-- [claude/strike-design/references/words.md](claude/strike-design/references/words.md): Copy rules, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
+- [claude/strike-design/references/type.md](claude/strike-design/references/type.md): Fonts, line height and tracking by size (screen and print), the type scales for web and slides, headings, numbers. Read before setting any text.
+- [claude/strike-design/references/words.md](claude/strike-design/references/words.md): The verbal brand: tagline, mission, positioning, personality, tone, writing examples, words to use and avoid, mechanics, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
 - [claude/strike-design/scripts/check.mjs](claude/strike-design/scripts/check.mjs): Brand checker: node check.mjs <files>
 - [claude/strike-design/scripts/lockup.mjs](claude/strike-design/scripts/lockup.mjs): Sub-brand lockup generator
 - [claude/strike-design.zip](claude/strike-design.zip): Everything for Claude, zipped
@@ -44,15 +44,15 @@ Strike is the options exchange that never closes. To make anything for Strike, r
 ## Cursor
 - [cursor/README.md](cursor/README.md): How to install the Cursor files
 - [cursor/rules/strike-checklist.mdc](cursor/rules/strike-checklist.mdc): The checks to run before handing work over.
-- [cursor/rules/strike-colour.mdc](cursor/rules/strike-colour.mdc): Palette with hex values, light mode, how much green, gradients, profit and loss, measured contrast pairs. Read before choosing or checking any colour.
-- [cursor/rules/strike-data.mdc](cursor/rules/strike-data.mdc): Charts and infographics: number first, chart types, colours, labels, axes, sources. Read for any chart or data graphic.
+- [cursor/rules/strike-color.mdc](cursor/rules/strike-color.mdc): Palette with hex, RGB and CMYK values, light mode, how much green, text on green, gradients, profit and loss, measured contrast pairs. Read before choosing or checking any color.
+- [cursor/rules/strike-data.mdc](cursor/rules/strike-data.mdc): Charts and infographics: number first, chart types, colors, labels, axes, sources. Read for any chart or data graphic.
 - [cursor/rules/strike-design.mdc](cursor/rules/strike-design.mdc): Cursor rule that always applies: the core rules
-- [cursor/rules/strike-formats.mdc](cursor/rules/strike-formats.mdc): Sizes and layouts for X posts and threads, posters, slides, documents and email. Read when making one of these.
-- [cursor/rules/strike-illustration-motion.mdc](cursor/rules/strike-illustration-motion.mdc): Line illustration rules (isometric or flat, line greys, dashes, labels) and motion timing. Read for illustrations and animation.
+- [cursor/rules/strike-formats.mdc](cursor/rules/strike-formats.mdc): Sizes and layouts for X posts and threads, posters, slides, documents, merch and email. Read when making one of these.
+- [cursor/rules/strike-illustration-motion.mdc](cursor/rules/strike-illustration-motion.mdc): Line illustration rules (isometric or flat, line grays, 1 px lines, fills, dashes, labels) and motion timing. Read for illustrations and animation.
 - [cursor/rules/strike-layout-ui.mdc](cursor/rules/strike-layout-ui.mdc): Grid, margins, spacing, surfaces and component specs (buttons, inputs, cards, tables, modals, states, icons). Read for any UI or layout.
-- [cursor/rules/strike-logo.mdc](cursor/rules/strike-logo.mdc): Which logo file for which ground, minimum sizes, clear space, misuse, and sub-brand lockups. Read whenever the logo appears.
-- [cursor/rules/strike-type.mdc](cursor/rules/strike-type.mdc): Fonts, heading rules, the type scale, numbers and line length. Read before setting any text.
-- [cursor/rules/strike-words.mdc](cursor/rules/strike-words.mdc): Copy rules, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
+- [cursor/rules/strike-logo.mdc](cursor/rules/strike-logo.mdc): 3D for screens, flat for print, which file for which ground, minimum and maximum sizes, clear space, misuse, and sub-brand lockups. Read whenever the logo appears.
+- [cursor/rules/strike-type.mdc](cursor/rules/strike-type.mdc): Fonts, line height and tracking by size (screen and print), the type scales for web and slides, headings, numbers. Read before setting any text.
+- [cursor/rules/strike-words.mdc](cursor/rules/strike-words.mdc): The verbal brand: tagline, mission, positioning, personality, tone, writing examples, words to use and avoid, mechanics, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
 - [cursor/strike-design-cursor.zip](cursor/strike-design-cursor.zip): Everything for Cursor, zipped
 
 ## Codex and other AGENTS.md tools
@@ -61,14 +61,14 @@ Strike is the options exchange that never closes. To make anything for Strike, r
 - [agents/strike-design/assets/README.md](agents/strike-design/assets/README.md): How to install the Codex and other AGENTS.md tools files
 - [agents/strike-design/assets/fonts/fonts.css](agents/strike-design/assets/fonts/fonts.css): @font-face rules for the brand fonts
 - [agents/strike-design/rules/checklist.md](agents/strike-design/rules/checklist.md): The checks to run before handing work over.
-- [agents/strike-design/rules/colour.md](agents/strike-design/rules/colour.md): Palette with hex values, light mode, how much green, gradients, profit and loss, measured contrast pairs. Read before choosing or checking any colour.
-- [agents/strike-design/rules/data.md](agents/strike-design/rules/data.md): Charts and infographics: number first, chart types, colours, labels, axes, sources. Read for any chart or data graphic.
-- [agents/strike-design/rules/formats.md](agents/strike-design/rules/formats.md): Sizes and layouts for X posts and threads, posters, slides, documents and email. Read when making one of these.
-- [agents/strike-design/rules/illustration-motion.md](agents/strike-design/rules/illustration-motion.md): Line illustration rules (isometric or flat, line greys, dashes, labels) and motion timing. Read for illustrations and animation.
+- [agents/strike-design/rules/color.md](agents/strike-design/rules/color.md): Palette with hex, RGB and CMYK values, light mode, how much green, text on green, gradients, profit and loss, measured contrast pairs. Read before choosing or checking any color.
+- [agents/strike-design/rules/data.md](agents/strike-design/rules/data.md): Charts and infographics: number first, chart types, colors, labels, axes, sources. Read for any chart or data graphic.
+- [agents/strike-design/rules/formats.md](agents/strike-design/rules/formats.md): Sizes and layouts for X posts and threads, posters, slides, documents, merch and email. Read when making one of these.
+- [agents/strike-design/rules/illustration-motion.md](agents/strike-design/rules/illustration-motion.md): Line illustration rules (isometric or flat, line grays, 1 px lines, fills, dashes, labels) and motion timing. Read for illustrations and animation.
 - [agents/strike-design/rules/layout-ui.md](agents/strike-design/rules/layout-ui.md): Grid, margins, spacing, surfaces and component specs (buttons, inputs, cards, tables, modals, states, icons). Read for any UI or layout.
-- [agents/strike-design/rules/logo.md](agents/strike-design/rules/logo.md): Which logo file for which ground, minimum sizes, clear space, misuse, and sub-brand lockups. Read whenever the logo appears.
-- [agents/strike-design/rules/type.md](agents/strike-design/rules/type.md): Fonts, heading rules, the type scale, numbers and line length. Read before setting any text.
-- [agents/strike-design/rules/words.md](agents/strike-design/rules/words.md): Copy rules, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
+- [agents/strike-design/rules/logo.md](agents/strike-design/rules/logo.md): 3D for screens, flat for print, which file for which ground, minimum and maximum sizes, clear space, misuse, and sub-brand lockups. Read whenever the logo appears.
+- [agents/strike-design/rules/type.md](agents/strike-design/rules/type.md): Fonts, line height and tracking by size (screen and print), the type scales for web and slides, headings, numbers. Read before setting any text.
+- [agents/strike-design/rules/words.md](agents/strike-design/rules/words.md): The verbal brand: tagline, mission, positioning, personality, tone, writing examples, words to use and avoid, mechanics, the facts you may use, custody wording, the risk line and legal limits. Read for any headline, copy or claim.
 - [agents/strike-design/scripts/check.mjs](agents/strike-design/scripts/check.mjs): Brand checker: node check.mjs <files>
 - [agents/strike-design/scripts/lockup.mjs](agents/strike-design/scripts/lockup.mjs): Sub-brand lockup generator
 - [agents/strike-design/tokens/tailwind.preset.cjs](agents/strike-design/tokens/tailwind.preset.cjs): Tailwind v3 preset
@@ -123,88 +123,88 @@ Strike is the options exchange that never closes. To make anything for Strike, r
 - [tokens/tokens.json](tokens/tokens.json): Design tokens in W3C Design Tokens format
 
 ## Optional
-- [agents/strike-design/assets/fonts/ciburial/OFL.txt](agents/strike-design/assets/fonts/ciburial/OFL.txt): Font licence (SIL Open Font License)
-- [agents/strike-design/assets/fonts/geist/OFL.txt](agents/strike-design/assets/fonts/geist/OFL.txt): Font licence (SIL Open Font License)
-- [agents/strike-design/assets/fonts/geist-mono/OFL.txt](agents/strike-design/assets/fonts/geist-mono/OFL.txt): Font licence (SIL Open Font License)
-- [agents/strike-design/assets/fonts/geist-pixel/OFL.txt](agents/strike-design/assets/fonts/geist-pixel/OFL.txt): Font licence (SIL Open Font License)
-- [agents/strike-design/assets/logo/strike-lockup-3d-black.svg](agents/strike-design/assets/logo/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light grey)
+- [agents/strike-design/assets/fonts/ciburial/OFL.txt](agents/strike-design/assets/fonts/ciburial/OFL.txt): Font license (SIL Open Font License)
+- [agents/strike-design/assets/fonts/geist/OFL.txt](agents/strike-design/assets/fonts/geist/OFL.txt): Font license (SIL Open Font License)
+- [agents/strike-design/assets/fonts/geist-mono/OFL.txt](agents/strike-design/assets/fonts/geist-mono/OFL.txt): Font license (SIL Open Font License)
+- [agents/strike-design/assets/fonts/geist-pixel/OFL.txt](agents/strike-design/assets/fonts/geist-pixel/OFL.txt): Font license (SIL Open Font License)
+- [agents/strike-design/assets/logo/strike-lockup-3d-black.svg](agents/strike-design/assets/logo/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light gray) and mint, on screen
 - [agents/strike-design/assets/logo/strike-lockup-3d-green.svg](agents/strike-design/assets/logo/strike-lockup-3d-green.svg): Logo: Lockup, 3D green. Dark (ground #0C0C0C, product UI)
 - [agents/strike-design/assets/logo/strike-lockup-3d-white.svg](agents/strike-design/assets/logo/strike-lockup-3d-white.svg): Logo: Lockup, 3D white. Photo, soft
-- [agents/strike-design/assets/logo/strike-lockup-flat-black.svg](agents/strike-design/assets/logo/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, very bright grounds
-- [agents/strike-design/assets/logo/strike-lockup-flat-white.svg](agents/strike-design/assets/logo/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters
-- [agents/strike-design/assets/logo/strike-mark-3d-black.svg](agents/strike-design/assets/logo/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light grey)
+- [agents/strike-design/assets/logo/strike-lockup-flat-black.svg](agents/strike-design/assets/logo/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [agents/strike-design/assets/logo/strike-lockup-flat-white.svg](agents/strike-design/assets/logo/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters; print and merch on dark
+- [agents/strike-design/assets/logo/strike-mark-3d-black.svg](agents/strike-design/assets/logo/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light gray) and mint, on screen
 - [agents/strike-design/assets/logo/strike-mark-3d-green.svg](agents/strike-design/assets/logo/strike-mark-3d-green.svg): Logo: Mark, 3D green. Dark (ground #0C0C0C, product UI)
 - [agents/strike-design/assets/logo/strike-mark-3d-white.svg](agents/strike-design/assets/logo/strike-mark-3d-white.svg): Logo: Mark, 3D white. Photo, soft
 - [agents/strike-design/assets/logo/strike-mark-disc.svg](agents/strike-design/assets/logo/strike-mark-disc.svg): Logo: Mark, disc. Round avatars, favicons
-- [agents/strike-design/assets/logo/strike-mark-flat-black.svg](agents/strike-design/assets/logo/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, very bright grounds
-- [agents/strike-design/assets/logo/strike-mark-flat-white.svg](agents/strike-design/assets/logo/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters
+- [agents/strike-design/assets/logo/strike-mark-flat-black.svg](agents/strike-design/assets/logo/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [agents/strike-design/assets/logo/strike-mark-flat-white.svg](agents/strike-design/assets/logo/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters; print and merch on dark
 - [agents/strike-design/assets/logo/strike-mark-tile.svg](agents/strike-design/assets/logo/strike-mark-tile.svg): Logo: Mark, tile. Avatars, app icons
 - [agents/strike-design/assets/logo/strike-wordmark-black.svg](agents/strike-design/assets/logo/strike-wordmark-black.svg): Logo: Wordmark, black. Only where the mark already appears nearby
 - [agents/strike-design/assets/logo/strike-wordmark-white.svg](agents/strike-design/assets/logo/strike-wordmark-white.svg): Logo: Wordmark, white. Only where the mark already appears nearby
-- [claude/strike-design/assets/fonts/ciburial/OFL.txt](claude/strike-design/assets/fonts/ciburial/OFL.txt): Font licence (SIL Open Font License)
-- [claude/strike-design/assets/fonts/geist/OFL.txt](claude/strike-design/assets/fonts/geist/OFL.txt): Font licence (SIL Open Font License)
-- [claude/strike-design/assets/fonts/geist-mono/OFL.txt](claude/strike-design/assets/fonts/geist-mono/OFL.txt): Font licence (SIL Open Font License)
-- [claude/strike-design/assets/fonts/geist-pixel/OFL.txt](claude/strike-design/assets/fonts/geist-pixel/OFL.txt): Font licence (SIL Open Font License)
-- [claude/strike-design/assets/logo/strike-lockup-3d-black.svg](claude/strike-design/assets/logo/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light grey)
+- [claude/strike-design/assets/fonts/ciburial/OFL.txt](claude/strike-design/assets/fonts/ciburial/OFL.txt): Font license (SIL Open Font License)
+- [claude/strike-design/assets/fonts/geist/OFL.txt](claude/strike-design/assets/fonts/geist/OFL.txt): Font license (SIL Open Font License)
+- [claude/strike-design/assets/fonts/geist-mono/OFL.txt](claude/strike-design/assets/fonts/geist-mono/OFL.txt): Font license (SIL Open Font License)
+- [claude/strike-design/assets/fonts/geist-pixel/OFL.txt](claude/strike-design/assets/fonts/geist-pixel/OFL.txt): Font license (SIL Open Font License)
+- [claude/strike-design/assets/logo/strike-lockup-3d-black.svg](claude/strike-design/assets/logo/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light gray) and mint, on screen
 - [claude/strike-design/assets/logo/strike-lockup-3d-green.svg](claude/strike-design/assets/logo/strike-lockup-3d-green.svg): Logo: Lockup, 3D green. Dark (ground #0C0C0C, product UI)
 - [claude/strike-design/assets/logo/strike-lockup-3d-white.svg](claude/strike-design/assets/logo/strike-lockup-3d-white.svg): Logo: Lockup, 3D white. Photo, soft
-- [claude/strike-design/assets/logo/strike-lockup-flat-black.svg](claude/strike-design/assets/logo/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, very bright grounds
-- [claude/strike-design/assets/logo/strike-lockup-flat-white.svg](claude/strike-design/assets/logo/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters
-- [claude/strike-design/assets/logo/strike-mark-3d-black.svg](claude/strike-design/assets/logo/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light grey)
+- [claude/strike-design/assets/logo/strike-lockup-flat-black.svg](claude/strike-design/assets/logo/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [claude/strike-design/assets/logo/strike-lockup-flat-white.svg](claude/strike-design/assets/logo/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters; print and merch on dark
+- [claude/strike-design/assets/logo/strike-mark-3d-black.svg](claude/strike-design/assets/logo/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light gray) and mint, on screen
 - [claude/strike-design/assets/logo/strike-mark-3d-green.svg](claude/strike-design/assets/logo/strike-mark-3d-green.svg): Logo: Mark, 3D green. Dark (ground #0C0C0C, product UI)
 - [claude/strike-design/assets/logo/strike-mark-3d-white.svg](claude/strike-design/assets/logo/strike-mark-3d-white.svg): Logo: Mark, 3D white. Photo, soft
 - [claude/strike-design/assets/logo/strike-mark-disc.svg](claude/strike-design/assets/logo/strike-mark-disc.svg): Logo: Mark, disc. Round avatars, favicons
-- [claude/strike-design/assets/logo/strike-mark-flat-black.svg](claude/strike-design/assets/logo/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, very bright grounds
-- [claude/strike-design/assets/logo/strike-mark-flat-white.svg](claude/strike-design/assets/logo/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters
+- [claude/strike-design/assets/logo/strike-mark-flat-black.svg](claude/strike-design/assets/logo/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [claude/strike-design/assets/logo/strike-mark-flat-white.svg](claude/strike-design/assets/logo/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters; print and merch on dark
 - [claude/strike-design/assets/logo/strike-mark-tile.svg](claude/strike-design/assets/logo/strike-mark-tile.svg): Logo: Mark, tile. Avatars, app icons
 - [claude/strike-design/assets/logo/strike-wordmark-black.svg](claude/strike-design/assets/logo/strike-wordmark-black.svg): Logo: Wordmark, black. Only where the mark already appears nearby
 - [claude/strike-design/assets/logo/strike-wordmark-white.svg](claude/strike-design/assets/logo/strike-wordmark-white.svg): Logo: Wordmark, white. Only where the mark already appears nearby
-- [figma/logos/strike-lockup-3d-black.svg](figma/logos/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light grey)
+- [figma/logos/strike-lockup-3d-black.svg](figma/logos/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light gray) and mint, on screen
 - [figma/logos/strike-lockup-3d-green.svg](figma/logos/strike-lockup-3d-green.svg): Logo: Lockup, 3D green. Dark (ground #0C0C0C, product UI)
 - [figma/logos/strike-lockup-3d-white.svg](figma/logos/strike-lockup-3d-white.svg): Logo: Lockup, 3D white. Photo, soft
-- [figma/logos/strike-lockup-flat-black.svg](figma/logos/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, very bright grounds
-- [figma/logos/strike-lockup-flat-white.svg](figma/logos/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters
-- [figma/logos/strike-mark-3d-black.svg](figma/logos/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light grey)
+- [figma/logos/strike-lockup-flat-black.svg](figma/logos/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [figma/logos/strike-lockup-flat-white.svg](figma/logos/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters; print and merch on dark
+- [figma/logos/strike-mark-3d-black.svg](figma/logos/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light gray) and mint, on screen
 - [figma/logos/strike-mark-3d-green.svg](figma/logos/strike-mark-3d-green.svg): Logo: Mark, 3D green. Dark (ground #0C0C0C, product UI)
 - [figma/logos/strike-mark-3d-white.svg](figma/logos/strike-mark-3d-white.svg): Logo: Mark, 3D white. Photo, soft
 - [figma/logos/strike-mark-disc.svg](figma/logos/strike-mark-disc.svg): Logo: Mark, disc. Round avatars, favicons
-- [figma/logos/strike-mark-flat-black.svg](figma/logos/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, very bright grounds
-- [figma/logos/strike-mark-flat-white.svg](figma/logos/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters
+- [figma/logos/strike-mark-flat-black.svg](figma/logos/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [figma/logos/strike-mark-flat-white.svg](figma/logos/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters; print and merch on dark
 - [figma/logos/strike-mark-tile.svg](figma/logos/strike-mark-tile.svg): Logo: Mark, tile. Avatars, app icons
 - [figma/logos/strike-wordmark-black.svg](figma/logos/strike-wordmark-black.svg): Logo: Wordmark, black. Only where the mark already appears nearby
 - [figma/logos/strike-wordmark-white.svg](figma/logos/strike-wordmark-white.svg): Logo: Wordmark, white. Only where the mark already appears nearby
-- [gemini/knowledge/logos/strike-lockup-3d-black.svg](gemini/knowledge/logos/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light grey)
+- [gemini/knowledge/logos/strike-lockup-3d-black.svg](gemini/knowledge/logos/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light gray) and mint, on screen
 - [gemini/knowledge/logos/strike-lockup-3d-green.svg](gemini/knowledge/logos/strike-lockup-3d-green.svg): Logo: Lockup, 3D green. Dark (ground #0C0C0C, product UI)
 - [gemini/knowledge/logos/strike-lockup-3d-white.svg](gemini/knowledge/logos/strike-lockup-3d-white.svg): Logo: Lockup, 3D white. Photo, soft
-- [gemini/knowledge/logos/strike-lockup-flat-black.svg](gemini/knowledge/logos/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, very bright grounds
-- [gemini/knowledge/logos/strike-lockup-flat-white.svg](gemini/knowledge/logos/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters
-- [gemini/knowledge/logos/strike-mark-3d-black.svg](gemini/knowledge/logos/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light grey)
+- [gemini/knowledge/logos/strike-lockup-flat-black.svg](gemini/knowledge/logos/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [gemini/knowledge/logos/strike-lockup-flat-white.svg](gemini/knowledge/logos/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters; print and merch on dark
+- [gemini/knowledge/logos/strike-mark-3d-black.svg](gemini/knowledge/logos/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light gray) and mint, on screen
 - [gemini/knowledge/logos/strike-mark-3d-green.svg](gemini/knowledge/logos/strike-mark-3d-green.svg): Logo: Mark, 3D green. Dark (ground #0C0C0C, product UI)
 - [gemini/knowledge/logos/strike-mark-3d-white.svg](gemini/knowledge/logos/strike-mark-3d-white.svg): Logo: Mark, 3D white. Photo, soft
 - [gemini/knowledge/logos/strike-mark-disc.svg](gemini/knowledge/logos/strike-mark-disc.svg): Logo: Mark, disc. Round avatars, favicons
-- [gemini/knowledge/logos/strike-mark-flat-black.svg](gemini/knowledge/logos/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, very bright grounds
-- [gemini/knowledge/logos/strike-mark-flat-white.svg](gemini/knowledge/logos/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters
+- [gemini/knowledge/logos/strike-mark-flat-black.svg](gemini/knowledge/logos/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [gemini/knowledge/logos/strike-mark-flat-white.svg](gemini/knowledge/logos/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters; print and merch on dark
 - [gemini/knowledge/logos/strike-mark-tile.svg](gemini/knowledge/logos/strike-mark-tile.svg): Logo: Mark, tile. Avatars, app icons
 - [gemini/knowledge/logos/strike-wordmark-black.svg](gemini/knowledge/logos/strike-wordmark-black.svg): Logo: Wordmark, black. Only where the mark already appears nearby
 - [gemini/knowledge/logos/strike-wordmark-white.svg](gemini/knowledge/logos/strike-wordmark-white.svg): Logo: Wordmark, white. Only where the mark already appears nearby
-- [perplexity/knowledge/logos/strike-lockup-3d-black.svg](perplexity/knowledge/logos/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light grey)
+- [perplexity/knowledge/logos/strike-lockup-3d-black.svg](perplexity/knowledge/logos/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light gray) and mint, on screen
 - [perplexity/knowledge/logos/strike-lockup-3d-green.svg](perplexity/knowledge/logos/strike-lockup-3d-green.svg): Logo: Lockup, 3D green. Dark (ground #0C0C0C, product UI)
 - [perplexity/knowledge/logos/strike-lockup-3d-white.svg](perplexity/knowledge/logos/strike-lockup-3d-white.svg): Logo: Lockup, 3D white. Photo, soft
-- [perplexity/knowledge/logos/strike-lockup-flat-black.svg](perplexity/knowledge/logos/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, very bright grounds
-- [perplexity/knowledge/logos/strike-lockup-flat-white.svg](perplexity/knowledge/logos/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters
-- [perplexity/knowledge/logos/strike-mark-3d-black.svg](perplexity/knowledge/logos/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light grey)
+- [perplexity/knowledge/logos/strike-lockup-flat-black.svg](perplexity/knowledge/logos/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [perplexity/knowledge/logos/strike-lockup-flat-white.svg](perplexity/knowledge/logos/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters; print and merch on dark
+- [perplexity/knowledge/logos/strike-mark-3d-black.svg](perplexity/knowledge/logos/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light gray) and mint, on screen
 - [perplexity/knowledge/logos/strike-mark-3d-green.svg](perplexity/knowledge/logos/strike-mark-3d-green.svg): Logo: Mark, 3D green. Dark (ground #0C0C0C, product UI)
 - [perplexity/knowledge/logos/strike-mark-3d-white.svg](perplexity/knowledge/logos/strike-mark-3d-white.svg): Logo: Mark, 3D white. Photo, soft
 - [perplexity/knowledge/logos/strike-mark-disc.svg](perplexity/knowledge/logos/strike-mark-disc.svg): Logo: Mark, disc. Round avatars, favicons
-- [perplexity/knowledge/logos/strike-mark-flat-black.svg](perplexity/knowledge/logos/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, very bright grounds
-- [perplexity/knowledge/logos/strike-mark-flat-white.svg](perplexity/knowledge/logos/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters
+- [perplexity/knowledge/logos/strike-mark-flat-black.svg](perplexity/knowledge/logos/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [perplexity/knowledge/logos/strike-mark-flat-white.svg](perplexity/knowledge/logos/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters; print and merch on dark
 - [perplexity/knowledge/logos/strike-mark-tile.svg](perplexity/knowledge/logos/strike-mark-tile.svg): Logo: Mark, tile. Avatars, app icons
 - [perplexity/knowledge/logos/strike-wordmark-black.svg](perplexity/knowledge/logos/strike-wordmark-black.svg): Logo: Wordmark, black. Only where the mark already appears nearby
 - [perplexity/knowledge/logos/strike-wordmark-white.svg](perplexity/knowledge/logos/strike-wordmark-white.svg): Logo: Wordmark, white. Only where the mark already appears nearby
 - [portable/fonts/ciburial/LCT-Ciburial-Regular.otf](portable/fonts/ciburial/LCT-Ciburial-Regular.otf): Font file: LCT Ciburial Regular
 - [portable/fonts/ciburial/LCT-Ciburial-Regular.ttf](portable/fonts/ciburial/LCT-Ciburial-Regular.ttf): Font file: LCT Ciburial Regular
 - [portable/fonts/ciburial/LCT-Ciburial-Regular.woff2](portable/fonts/ciburial/LCT-Ciburial-Regular.woff2): Font file: LCT Ciburial Regular
-- [portable/fonts/ciburial/OFL.txt](portable/fonts/ciburial/OFL.txt): Font licence (SIL Open Font License)
+- [portable/fonts/ciburial/OFL.txt](portable/fonts/ciburial/OFL.txt): Font license (SIL Open Font License)
 - [portable/fonts/geist/Geist-Bold.ttf](portable/fonts/geist/Geist-Bold.ttf): Font file: Geist Bold
 - [portable/fonts/geist/Geist-Bold.woff2](portable/fonts/geist/Geist-Bold.woff2): Font file: Geist Bold
 - [portable/fonts/geist/Geist-Light.ttf](portable/fonts/geist/Geist-Light.ttf): Font file: Geist Light
@@ -216,37 +216,37 @@ Strike is the options exchange that never closes. To make anything for Strike, r
 - [portable/fonts/geist/Geist-SemiBold.ttf](portable/fonts/geist/Geist-SemiBold.ttf): Font file: Geist SemiBold
 - [portable/fonts/geist/Geist-SemiBold.woff2](portable/fonts/geist/Geist-SemiBold.woff2): Font file: Geist SemiBold
 - [portable/fonts/geist/Geist-Variable.woff2](portable/fonts/geist/Geist-Variable.woff2): Font file: Geist Variable
-- [portable/fonts/geist/OFL.txt](portable/fonts/geist/OFL.txt): Font licence (SIL Open Font License)
+- [portable/fonts/geist/OFL.txt](portable/fonts/geist/OFL.txt): Font license (SIL Open Font License)
 - [portable/fonts/geist-mono/GeistMono-Medium.ttf](portable/fonts/geist-mono/GeistMono-Medium.ttf): Font file: GeistMono Medium
 - [portable/fonts/geist-mono/GeistMono-Medium.woff2](portable/fonts/geist-mono/GeistMono-Medium.woff2): Font file: GeistMono Medium
 - [portable/fonts/geist-mono/GeistMono-Regular.ttf](portable/fonts/geist-mono/GeistMono-Regular.ttf): Font file: GeistMono Regular
 - [portable/fonts/geist-mono/GeistMono-Regular.woff2](portable/fonts/geist-mono/GeistMono-Regular.woff2): Font file: GeistMono Regular
-- [portable/fonts/geist-mono/OFL.txt](portable/fonts/geist-mono/OFL.txt): Font licence (SIL Open Font License)
+- [portable/fonts/geist-mono/OFL.txt](portable/fonts/geist-mono/OFL.txt): Font license (SIL Open Font License)
 - [portable/fonts/geist-pixel/GeistPixel-Circle.ttf](portable/fonts/geist-pixel/GeistPixel-Circle.ttf): Font file: GeistPixel Circle
 - [portable/fonts/geist-pixel/GeistPixel-Circle.woff2](portable/fonts/geist-pixel/GeistPixel-Circle.woff2): Font file: GeistPixel Circle
-- [portable/fonts/geist-pixel/OFL.txt](portable/fonts/geist-pixel/OFL.txt): Font licence (SIL Open Font License)
-- [portable/logo/strike-lockup-3d-black.png](portable/logo/strike-lockup-3d-black.png): Logo: Lockup, 3D black (PNG render). Light (white, light grey)
-- [portable/logo/strike-lockup-3d-black.svg](portable/logo/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light grey)
+- [portable/fonts/geist-pixel/OFL.txt](portable/fonts/geist-pixel/OFL.txt): Font license (SIL Open Font License)
+- [portable/logo/strike-lockup-3d-black.png](portable/logo/strike-lockup-3d-black.png): Logo: Lockup, 3D black (PNG render). Light (white, light gray) and mint, on screen
+- [portable/logo/strike-lockup-3d-black.svg](portable/logo/strike-lockup-3d-black.svg): Logo: Lockup, 3D black. Light (white, light gray) and mint, on screen
 - [portable/logo/strike-lockup-3d-green.png](portable/logo/strike-lockup-3d-green.png): Logo: Lockup, 3D green (PNG render). Dark (ground #0C0C0C, product UI)
 - [portable/logo/strike-lockup-3d-green.svg](portable/logo/strike-lockup-3d-green.svg): Logo: Lockup, 3D green. Dark (ground #0C0C0C, product UI)
 - [portable/logo/strike-lockup-3d-white.png](portable/logo/strike-lockup-3d-white.png): Logo: Lockup, 3D white (PNG render). Photo, soft
 - [portable/logo/strike-lockup-3d-white.svg](portable/logo/strike-lockup-3d-white.svg): Logo: Lockup, 3D white. Photo, soft
-- [portable/logo/strike-lockup-flat-black.png](portable/logo/strike-lockup-flat-black.png): Logo: Lockup, flat black (PNG render). Mint, very bright grounds
-- [portable/logo/strike-lockup-flat-black.svg](portable/logo/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, very bright grounds
-- [portable/logo/strike-lockup-flat-white.png](portable/logo/strike-lockup-flat-white.png): Logo: Lockup, flat white (PNG render). Photo, busy or noisy; green posters
-- [portable/logo/strike-lockup-flat-white.svg](portable/logo/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters
-- [portable/logo/strike-mark-3d-black.png](portable/logo/strike-mark-3d-black.png): Logo: Mark, 3D black (PNG render). Light (white, light grey)
-- [portable/logo/strike-mark-3d-black.svg](portable/logo/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light grey)
+- [portable/logo/strike-lockup-flat-black.png](portable/logo/strike-lockup-flat-black.png): Logo: Lockup, flat black (PNG render). Mint, bright or light grounds in print and merch; on screen under 32 px
+- [portable/logo/strike-lockup-flat-black.svg](portable/logo/strike-lockup-flat-black.svg): Logo: Lockup, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [portable/logo/strike-lockup-flat-white.png](portable/logo/strike-lockup-flat-white.png): Logo: Lockup, flat white (PNG render). Photo, busy or noisy; green posters; print and merch on dark
+- [portable/logo/strike-lockup-flat-white.svg](portable/logo/strike-lockup-flat-white.svg): Logo: Lockup, flat white. Photo, busy or noisy; green posters; print and merch on dark
+- [portable/logo/strike-mark-3d-black.png](portable/logo/strike-mark-3d-black.png): Logo: Mark, 3D black (PNG render). Light (white, light gray) and mint, on screen
+- [portable/logo/strike-mark-3d-black.svg](portable/logo/strike-mark-3d-black.svg): Logo: Mark, 3D black. Light (white, light gray) and mint, on screen
 - [portable/logo/strike-mark-3d-green.png](portable/logo/strike-mark-3d-green.png): Logo: Mark, 3D green (PNG render). Dark (ground #0C0C0C, product UI)
 - [portable/logo/strike-mark-3d-green.svg](portable/logo/strike-mark-3d-green.svg): Logo: Mark, 3D green. Dark (ground #0C0C0C, product UI)
 - [portable/logo/strike-mark-3d-white.png](portable/logo/strike-mark-3d-white.png): Logo: Mark, 3D white (PNG render). Photo, soft
 - [portable/logo/strike-mark-3d-white.svg](portable/logo/strike-mark-3d-white.svg): Logo: Mark, 3D white. Photo, soft
 - [portable/logo/strike-mark-disc.png](portable/logo/strike-mark-disc.png): Logo: Mark, disc (PNG render). Round avatars, favicons
 - [portable/logo/strike-mark-disc.svg](portable/logo/strike-mark-disc.svg): Logo: Mark, disc. Round avatars, favicons
-- [portable/logo/strike-mark-flat-black.png](portable/logo/strike-mark-flat-black.png): Logo: Mark, flat black (PNG render). Mint, very bright grounds
-- [portable/logo/strike-mark-flat-black.svg](portable/logo/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, very bright grounds
-- [portable/logo/strike-mark-flat-white.png](portable/logo/strike-mark-flat-white.png): Logo: Mark, flat white (PNG render). Photo, busy or noisy; green posters
-- [portable/logo/strike-mark-flat-white.svg](portable/logo/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters
+- [portable/logo/strike-mark-flat-black.png](portable/logo/strike-mark-flat-black.png): Logo: Mark, flat black (PNG render). Mint, bright or light grounds in print and merch; on screen under 32 px
+- [portable/logo/strike-mark-flat-black.svg](portable/logo/strike-mark-flat-black.svg): Logo: Mark, flat black. Mint, bright or light grounds in print and merch; on screen under 32 px
+- [portable/logo/strike-mark-flat-white.png](portable/logo/strike-mark-flat-white.png): Logo: Mark, flat white (PNG render). Photo, busy or noisy; green posters; print and merch on dark
+- [portable/logo/strike-mark-flat-white.svg](portable/logo/strike-mark-flat-white.svg): Logo: Mark, flat white. Photo, busy or noisy; green posters; print and merch on dark
 - [portable/logo/strike-mark-tile.png](portable/logo/strike-mark-tile.png): Logo: Mark, tile (PNG render). Avatars, app icons
 - [portable/logo/strike-mark-tile.svg](portable/logo/strike-mark-tile.svg): Logo: Mark, tile. Avatars, app icons
 - [portable/logo/strike-og.png](portable/logo/strike-og.png): Logo: Link preview. Link previews, 1200 × 630

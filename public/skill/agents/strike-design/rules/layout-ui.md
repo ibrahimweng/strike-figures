@@ -30,7 +30,7 @@
 | Toast | #202020, 8 px radius, one line, 4 s |
 | Modal | #0C0C0C with a 1 px line at 18%, 12 px radius, max 480 px wide, ground at 70% behind |
 
-- **States:** default, hover (one step lighter), active, focus (green ring), disabled (40% opacity), loading (no layout shift), error (loss colour plus a line saying what happened and what to do).
+- **States:** default, hover (one step lighter), active, focus (green ring), disabled (40% opacity), loading (no layout shift), error (loss color plus a line saying what happened and what to do).
 - **Icons:** 24 px grid, 2 px stroke, round ends and corners, outline style; ink-2 by default.
 - **Trading data:**
   - profit #3FD4AB, loss #EE5E74, always with a sign or an arrow;
@@ -38,7 +38,7 @@
   - time zones always shown (20:00 ET).
 - **Empty, loading and error states** are designed, not left blank.
 - **Accessibility:**
-  - contrast per strike-design/rules/colour.md;
+  - contrast per strike-design/rules/color.md;
   - focus is always visible;
   - targets at least 32 px;
-  - honour reduced motion.
+  - honor reduced motion.

@@ -197,7 +197,7 @@ test('zips are valid and match the loose files', () => {
   const cursor = unzip(readFileSync(join(out, 'cursor/strike-design-cursor.zip')));
   assert.ok(cursor['.cursor/rules/strike-design.mdc'] && cursor['strike-design/tokens/tokens.css'] && cursor['strike-design/scripts/check.mjs']);
   const copilot = unzip(readFileSync(join(out, 'copilot/strike-design-copilot.zip')));
-  assert.ok(copilot['.github/copilot-instructions.md'] && copilot['strike-design/rules/colour.md']);
+  assert.ok(copilot['.github/copilot-instructions.md'] && copilot['strike-design/rules/color.md']);
   const agents = unzip(readFileSync(join(out, 'agents/strike-design-agents.zip')));
   assert.ok(agents['AGENTS.md'] && agents['strike-design/assets/logo/strike-mark-tile.svg']);
   const gpt = unzip(readFileSync(join(out, 'chatgpt/strike-design-chatgpt.zip')));
@@ -296,7 +296,7 @@ test('tokens: CSS, Tailwind v3 and v4 carry the same values', () => {
   assert.equal(preset.theme.colors.green, '#10B981');
   assert.match(preset.theme.colors.ground, /^rgb\(var\(--strike-ground-rgb, 12 12 12\) \/ <alpha-value>\)$/);
   assert.deepEqual(preset.theme.fontFamily.sans, ['Geist', 'Arial', 'sans-serif']);
-  assert.deepEqual(preset.theme.fontSize.h1, ['48px', { lineHeight: '1', letterSpacing: '-0.03em', fontWeight: '500' }]);
+  assert.deepEqual(preset.theme.fontSize.h1, ['48px', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '500' }]);
   assert.equal(preset.theme.borderRadius.md, '8px');
   assert.equal(preset.theme.spacing[4], '16px');
   assert.equal(preset.theme.spacing[6], '24px');

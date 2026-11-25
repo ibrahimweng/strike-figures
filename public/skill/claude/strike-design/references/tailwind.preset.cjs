@@ -1,7 +1,7 @@
 // Strike preset for Tailwind CSS v3. Generated from source/tokens.json; don't edit.
 // tailwind.config.js: module.exports = { presets: [require('./tailwind.preset.cjs')], content: [...] }
 // Load tokens.css too, so data-theme="light" switches ground, surfaces, ink and lines.
-// It replaces Tailwind's colours, fonts, sizes, radii and spacing, so off-brand classes don't exist.
+// It replaces Tailwind's colors, fonts, sizes, radii and spacing, so off-brand classes don't exist.
 // Spacing keeps Tailwind's numbers (p-4 is 16px) but only the steps on the Strike scale.
 module.exports = {
   "theme": {
@@ -52,8 +52,8 @@ module.exports = {
       "display": [
         "72px",
         {
-          "lineHeight": "0.95",
-          "letterSpacing": "-0.03em",
+          "lineHeight": "1",
+          "letterSpacing": "-0.02em",
           "fontWeight": "500"
         }
       ],
@@ -61,30 +61,30 @@ module.exports = {
         "48px",
         {
           "lineHeight": "1",
-          "letterSpacing": "-0.03em",
+          "letterSpacing": "-0.02em",
           "fontWeight": "500"
         }
       ],
       "h2": [
         "32px",
         {
-          "lineHeight": "1.1",
-          "letterSpacing": "-0.02em",
+          "lineHeight": "1.2",
+          "letterSpacing": "-0.01em",
           "fontWeight": "500"
         }
       ],
       "h3": [
         "24px",
         {
-          "lineHeight": "1.2",
-          "letterSpacing": "-0.015em",
+          "lineHeight": "1.3",
+          "letterSpacing": "0",
           "fontWeight": "500"
         }
       ],
       "body-l": [
         "18px",
         {
-          "lineHeight": "1.5",
+          "lineHeight": "1.3",
           "letterSpacing": "0",
           "fontWeight": "400"
         }
@@ -92,7 +92,7 @@ module.exports = {
       "body": [
         "16px",
         {
-          "lineHeight": "1.5",
+          "lineHeight": "1.3",
           "letterSpacing": "0",
           "fontWeight": "400"
         }
@@ -100,17 +100,49 @@ module.exports = {
       "small": [
         "14px",
         {
-          "lineHeight": "1.45",
-          "letterSpacing": "0",
+          "lineHeight": "1.35",
+          "letterSpacing": "0.01em",
           "fontWeight": "400"
         }
       ],
       "label": [
         "12px",
         {
-          "lineHeight": "1.4",
-          "letterSpacing": "0.02em",
+          "lineHeight": "1.35",
+          "letterSpacing": "0.01em",
           "fontWeight": "500"
+        }
+      ],
+      "slide-h1": [
+        "120px",
+        {
+          "lineHeight": "0.9",
+          "letterSpacing": "-0.03em",
+          "fontWeight": "500"
+        }
+      ],
+      "slide-h2": [
+        "72px",
+        {
+          "lineHeight": "1",
+          "letterSpacing": "-0.02em",
+          "fontWeight": "500"
+        }
+      ],
+      "slide-h3": [
+        "42px",
+        {
+          "lineHeight": "1.2",
+          "letterSpacing": "-0.01em",
+          "fontWeight": "500"
+        }
+      ],
+      "slide-body": [
+        "18px",
+        {
+          "lineHeight": "1.3",
+          "letterSpacing": "0",
+          "fontWeight": "400"
         }
       ]
     },

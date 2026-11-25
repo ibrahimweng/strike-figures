@@ -1,5 +1,7 @@
 # Strike design skill: brand spec, draft 0.3
 
+> **Superseded in part by the final brand book (50 pages, 25 Nov 2026).** The rules the skill ships are in `source/`; where this draft differs, `source/` wins. Decisions D19–D30 below record what changed.
+
 ## Decisions so far
 | # | Decision | Date |
 |---|---|---|
@@ -21,6 +23,18 @@
 | D16 | On photos the logo is always white: flat white on busy or noisy images, 3D white on soft images. | 20 Nov 2026 |
 | D17 | Four colour versions, chosen by contrast and hierarchy: 3D black on light, 3D green with white type on dark, flat black on mint, flat white on photos. | 20 Nov 2026 |
 | D18 | The brand is calm and subtle. Designs show restraint, and the skill's own replies are direct, without over-explaining. | 20 Nov 2026 |
+| D19 | Verbal branding is written (replaces D11): tagline "Options on every market, every hour.", mission, positioning, personality, tone, writing examples, words to use and avoid, mechanics. | 25 Nov 2026 |
+| D20 | Strike lists "about 80 underlyings" (replaces D8). No other count unless the user gives it. | 25 Nov 2026 |
+| D21 | Custody line: "No key at Strike can move your funds." (was "money"), always with what is still trusted. | 25 Nov 2026 |
+| D22 | US spelling everywhere (color, center, gray). | 25 Nov 2026 |
+| D23 | Logo: 3D for screens, flat for anything printed or made (replaces D15). 3D black has gray side faces (black at 60%) and is used on light grounds and mint on screen. | 25 Nov 2026 |
+| D24 | Logo sizes: 3D at least 32 px; flat 16 px on screen, 8 mm print, 12 mm screen print, 35 mm embroidery; never wider than a third of the layout. Clear space: the width of the S in STRIKE. | 25 Nov 2026 |
+| D25 | Type: line height and tracking follow the brand book's chart by size (screen and print); slides and posters use H1 120, H2 72, H3 42, body 18. | 25 Nov 2026 |
+| D26 | Geist Pixel: large display type and numbers on posters, where contrast is high; never body text or company documents. | 25 Nov 2026 |
+| D27 | Color: the brand book's names, RGB % and CMYK; secondary colors at 5% or less. White text on flat green stays banned in UI; poster display type on the green gradient is white. | 25 Nov 2026 |
+| D28 | Illustration lines are 1 px at every size; nodes 10 px (large) or 20 px (small). Partial fills are allowed when they add contrast or meaning. | 25 Nov 2026 |
+| D29 | Mockups show items in real-world scenes. | 25 Nov 2026 |
+| D30 | Sentence case for every heading, including the reference posters ("of the week", the tagline). | 25 Nov 2026 |
 
 This spec turns the brand book into exact rules that an AI skill can follow. Once it's approved, it is split into the skill's files.
 

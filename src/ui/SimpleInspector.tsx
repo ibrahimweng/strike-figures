@@ -163,7 +163,7 @@ export function SimpleScene({ scene }: { scene: Scene }) {
           onChange={v => update(s => void (s.ground = v))}
         />
       </Section>
-      <Section title="Colours">
+      <Section title="Colors">
         <Chips
           value={THEMES.find(x => x.name === t.name)?.name ?? null}
           options={THEMES.map(x => ({ value: x.name, label: x.name, swatch: x.name === 'Green lines' ? x.outline : x.dot }))}
@@ -195,7 +195,7 @@ const TIERS = [
 const DOT_COLOURS = [
   { value: STRIKE.emerald500, label: 'Emerald' },
   { value: STRIKE.emerald300, label: 'Mint' },
-  { value: TONE.dot, label: 'Grey' },
+  { value: TONE.dot, label: 'Gray' },
 ] as const;
 
 type Look = 'off' | 'even' | 'fade' | 'wave' | 'glow';

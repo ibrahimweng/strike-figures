@@ -4,14 +4,14 @@ Brand files for Strike. Every SVG is self-contained, with a tight viewBox and id
 
 ## Logo rules
 
-- The logo is 3D by default.
-- Use the flat logo (fully opaque) on very bright grounds such as mint, on merch, and wherever the 3D logo won't fit, such as small sizes.
+- One mark, built two ways: **3D for screens** (app, website, social posts, slides) and **flat for anything printed or made** (merch, stickers, embroidery, packaging).
+- Dark grounds: 3D green mark with white STRIKE. Light grounds and mint: 3D black on screen, flat black in print.
 - On photos the logo is always white: flat white on busy or noisy images, 3D white on soft images.
-- Dark grounds: 3D green mark with white STRIKE. Light grounds: 3D black.
-- Never put the logo on a green ground in UI. On posters and merch, the flat logo may sit on mint.
-- Minimum size: mark 16 px, lock-up 20 px tall.
-- Clear space: one layer of the mark on every side.
-- Don't recolour, redraw, stretch, rotate or add effects.
+- Never put the logo on a flat green ground in UI.
+- Minimum size: 3D 32 px wide on screen (smaller: use flat); flat 16 px on screen, 8 mm in print, 12 mm screen print, 35 mm embroidery; lockup 20 px tall.
+- Maximum size: never wider than one third of the layout.
+- Clear space: the width of the S in the STRIKE wordmark on every side.
+- Don't recolor, redraw, stretch, rotate or add effects. One logo per layout.
 - Write "Strike" in text. STRIKE in capitals belongs to the logo only.
 
 ## logo/
@@ -19,22 +19,22 @@ Brand files for Strike. Every SVG is self-contained, with a tight viewBox and id
 | File | What it is | Use it for |
 |---|---|---|
 | `strike-lockup-3d-green.svg` | Green 3D mark, white STRIKE | Dark grounds |
-| `strike-lockup-3d-black.svg` | Black 3D mark and STRIKE | Light grounds |
+| `strike-lockup-3d-black.svg` | Black 3D mark (gray side faces) and STRIKE | Light grounds and mint, on screen |
 | `strike-lockup-3d-white.svg` | White 3D mark and STRIKE | Soft photos |
-| `strike-lockup-flat-black.svg` | Flat black mark and STRIKE | Mint, merch, small sizes on light |
-| `strike-lockup-flat-white.svg` | Flat white mark and STRIKE | Busy photos, green posters, merch, small sizes on dark |
+| `strike-lockup-flat-black.svg` | Flat black mark and STRIKE | Mint and bright grounds in print; merch on light |
+| `strike-lockup-flat-white.svg` | Flat white mark and STRIKE | Busy photos, green posters, print and merch on dark |
 | `strike-mark-3d-green.svg` | Green 3D mark | Dark grounds |
-| `strike-mark-3d-black.svg` | Black 3D mark | Light grounds |
+| `strike-mark-3d-black.svg` | Black 3D mark (gray side faces) | Light grounds and mint, on screen |
 | `strike-mark-3d-white.svg` | White 3D mark | Soft photos |
-| `strike-mark-flat-black.svg` | Flat black mark | Mint, merch, small sizes on light |
-| `strike-mark-flat-white.svg` | Flat white mark | Busy photos, merch, small sizes on dark |
-| `strike-wordmark-black.svg` | The STRIKE wordmark alone, black | Building lock-ups; layouts that place the mark separately |
+| `strike-mark-flat-black.svg` | Flat black mark | Mint and bright grounds in print; merch on light; under 32 px on screen |
+| `strike-mark-flat-white.svg` | Flat white mark | Busy photos, print and merch on dark; under 32 px on screen |
+| `strike-wordmark-black.svg` | The STRIKE wordmark alone, black | Building lockups; layouts that place the mark separately |
 | `strike-wordmark-white.svg` | The STRIKE wordmark alone, white | The same, on dark grounds and photos |
 | `strike-mark-tile.svg` | Green mark on a dark rounded tile | Avatars, app icons |
 | `strike-mark-disc.svg` | Green mark on a dark disc | Round avatars, favicons |
 | `strike-og.png` | Link preview, 1200 × 630 | Social cards and link previews |
 
-Sub-brand lock-ups ("STRIKE Markets", "Powered by STRIKE") are not official. Build one only when asked:
+Sub-brand lockups ("STRIKE Markets", "Powered by STRIKE") are not official. Build one only when asked:
 
 ```
 node scripts/lockup.mjs --name "Markets" --layout horizontal|stacked|powered-by --version 3d-green|3d-black|3d-white|flat-black|flat-white --out file.svg
@@ -62,5 +62,5 @@ A4 posters (595.28 × 841.89 pt). Text is outlined, so they print without the fo
 | `poster-81-percent.svg` | "Listed options are closed 81% of the week", green gradient, bar chart |
 | `poster-every-hour-24-percent.svg` | "Options on every market, every hour.", dot-matrix "24%" on green |
 | `poster-terminal.svg` | "The terminal, rebuilt for options.", terminal screenshot and a photo |
-| `poster-lockup-blocks.svg` | The lock-up above black and white isometric towers, dark ground |
-| `poster-every-market-rays.svg` | "Options On Every Market, Every Hour.", lines from the mark to tickers with their IV, on green |
+| `poster-lockup-blocks.svg` | The lockup above black and white isometric towers, dark ground |
+| `poster-every-market-rays.svg` | "Options on every market, every hour.", lines from the mark to tickers with their IV, on green |

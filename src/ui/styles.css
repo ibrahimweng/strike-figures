@@ -2116,6 +2116,11 @@ select.select:focus {
   width: 100%;
   height: auto;
 }
+/* illustrations on the skill pages: 1 px lines at any width, as the rules say */
+.sk-art svg *,
+.sk-circles svg * {
+  vector-effect: non-scaling-stroke;
+}
 
 /* card art */
 

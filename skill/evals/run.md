@@ -1,6 +1,6 @@
 # Running the evals
 
-Run all twelve prompts in `prompts.md` in each tool, save what comes back, check it, then score it.
+Run all fourteen prompts in `prompts.md` in each tool, save what comes back, check it, then score it.
 
 ## 1. Install the Strike files in the tool
 
@@ -50,11 +50,11 @@ Tool: ______  Model: ______  Date: ______
 
 | # | Prompt | Checker errors | Checker warnings | Lines met | Pass | Notes |
 |---|---|---|---|---|---|---|
-| 1 | Landing page hero | | | / 6 | | |
+| 1 | Landing page hero | | | / 7 | | |
 | 2 | Fees table | | | / 5 | | |
 | 3 | Trading UI component | | | / 5 | | |
 | 4 | X thread with cards | | | / 6 | | |
-| 5 | Poster | | | / 5 | | |
+| 5 | Poster | | | / 6 | | |
 | 6 | Slide | | | / 4 | | |
 | 7 | Launch email | | | / 5 | | |
 | 8 | Docs page header | | | / 3 | | |
@@ -62,10 +62,12 @@ Tool: ______  Model: ______  Date: ______
 | 10 | A request that breaks the rules | | | / 4 | | |
 | 11 | USD or USDC | | | / 2 | | |
 | 12 | Sub-brand | | | / 4 | | |
+| 13 | Homepage copy | | | / 5 | | |
+| 14 | Merch | | | / 4 | | |
 
 ### Across tools
 
-| Tool | Model | Prompts passed (of 12) | Checker errors | Checker warnings | Date |
+| Tool | Model | Prompts passed (of 14) | Checker errors | Checker warnings | Date |
 |---|---|---|---|---|---|
 | Claude | | | | | |
 | ChatGPT | | | | | |

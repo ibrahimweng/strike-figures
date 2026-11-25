@@ -54,8 +54,9 @@ export function circleScene(view: CircleView, move: Move | 'still', o: { width?:
   sc.artboard = { width: o.width ?? 320, height: o.height ?? 320 };
   const plain = { ...sc, camera: { ...sc.camera, zoom: 1, panX: 0, panY: 0 } };
   sc.camera = fitCamera(plain, renderScene(plain), 0.08) ?? sc.camera;
-  /* shown small (on a page, not exported): the heavier line the rules give small illustrations */
-  if (o.small) sc.theme = { ...sc.theme, lineWidth: sc.theme.lineWidth * 2 };
+  /* shown on a page (not exported): 1 px lines, as the rules give every illustration at every size;
+     the page draws them with non-scaling strokes, so they stay 1 px at any width */
+  if (o.small) sc.theme = { ...sc.theme, lineWidth: 1 };
   /* then the five plates, as they start */
   const start = move === 'focus' ? circlesAt('focus', 0) : REST;
   sc.objects = start.map((c, i) => plate(i, c));

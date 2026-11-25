@@ -61,7 +61,7 @@ export const THEMES: Theme[] = [
     label: TONE.mid,
   },
   {
-    name: 'Grey dots',
+    name: 'Gray dots',
     background: TONE.ink,
     transparent: false,
     fill: TONE.ink,

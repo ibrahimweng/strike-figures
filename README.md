@@ -22,14 +22,14 @@ The tool opens on **Skill**. It's the Strike brand packaged for AI tools: give a
 - **Copy link:** a file any AI that can read a web page can follow.
 - **Install it:** steps and files for Claude, ChatGPT, Cursor, Codex and other AGENTS.md tools, Copilot, Gemini, Perplexity and Figma.
 - **Downloads:** CSS variables, the Tailwind presets and the design tokens.
-- **Logo, colour and type:** at a glance, with each logo file ready to download.
+- **Logo, color and type:** at a glance, with each logo file ready to download.
 
 The skill's source lives in `skill/` (see `skill/README.md`):
 - the rules: `skill/source/`;
 - the logos, fonts and posters: `skill/assets/`;
 - the build: `skill/scripts/build.mjs`;
 - a brand checker: `skill/scripts/check.mjs`;
-- a sub-brand lock-up generator: `skill/scripts/lockup.mjs`.
+- a sub-brand lockup generator: `skill/scripts/lockup.mjs`.
 
 `npm run skill:build` writes the files the page serves into `public/skill/`. Commit them, and Vercel serves them at `/skill/` on your domain.
 
@@ -37,7 +37,7 @@ The skill's source lives in `skill/` (see `skill/README.md`):
 | --- | --- |
 | `npm run skill:build` | Rebuild the skill's files into `public/skill/` after changing anything in `skill/source` or `skill/assets` |
 | `npm run skill:check -- <files>` | Check pages, CSS or SVGs against the brand |
-| `npm run skill:lockup -- --name "Markets" --layout horizontal --version 3d-green` | Build a sub-brand lock-up (only when one is asked for) |
+| `npm run skill:lockup -- --name "Markets" --layout horizontal --version 3d-green` | Build a sub-brand lockup (only when one is asked for) |
 | `npm run skill:test` | Run the skill's tests |
 
 Links: `#figures` and `#thread` open those parts directly.
@@ -46,7 +46,7 @@ Links: `#figures` and `#thread` open those parts directly.
 
 1. **Pick** an illustration from the Library on the left. You can filter by Data, Options, Tech or Brand, or search.
 2. **Turn it**: drag the ball under "Turn the view", or drag the picture itself. "Standard" brings back the usual angle.
-3. **Change it**: click a shape to set how bright its lines are, and its dots (Off, Even, Fade, Wave or Glow; Emerald, Mint or Grey; spacing, size and strength). Click empty space to choose the colours, or to edit the labels.
+3. **Change it**: click a shape to set how bright its lines are, and its dots (Off, Even, Fade, Wave or Glow; Emerald, Mint or Gray; spacing, size and strength). Click empty space to choose the colors, or to edit the labels.
 4. **Animate**: under Animate, press Play.
    - Loop is the illustration's own motion.
    - Turn, Build and Drift work on any figure.
@@ -71,7 +71,7 @@ Switch the top bar from **Figures** to **Thread**. Each post is two things: the 
 1. **Write the post.** The counter counts the way X does: links are 23 characters, emoji 2. Turn on "Add 1/5" and each post's text ends with its number.
 2. **Write the card.**
    - A small line on top (optional).
-   - The headline. Put \*stars\* round words to colour them Strike Green.
+   - The headline. Put \*stars\* round words to color them Strike Green.
    - One sentence underneath (optional).
    - The headline sizes itself to fit, and avoids leaving a word alone on a line.
 3. **Pick the illustration** from the Library or My figures, and choose **Still** or **Animated**.
@@ -114,21 +114,21 @@ Strike's brand book and the 3D figures follow one direction. It is written down 
    - Flat figures are thin plates in 3D, so they keep their look when turned to 2:1.
    - Every figure uses a 320 × 320 frame, fitted with a 14% margin.
 2. **Lines first.**
-   - Faces are the ground colour, so a shape in front hides what's behind it. Every other outline shows.
-   - Lines are 0.5 wide (1 px at 2×): the subject #D0D6E0, what supports it #62666D, the background #3E3E44.
+   - Faces are the ground color, so a shape in front hides what's behind it. Every other outline shows.
+   - Lines are 0.5 wide (1 px at 2×), and 1 px on screen at every size: the subject #D0D6E0, what supports it #62666D, the background #3E3E44.
    - Creases are #3E3E44 (#2E2E32 on background shapes), stopping just short of the outline.
 3. **Dashed means not real yet.** Possible outcomes, ranges, construction circles and limits are dashed.
 4. **Dots carry tone.**
    - Halftones show amount; dots that follow a curve show data.
    - Nodes (small squares or circles) mark exact points. They lie in their plane, so they're square when flat and diamond-shaped in 2:1.
-5. **Colour.**
-   - Greys and Strike Green (#10B981), with one green focus per figure.
-   - Infographics may also use the brand's data colours, each with one meaning: Watermelon #EE5E74 for loss, Shamrock #3FD4AB for profit, and Yellow #FFEF3C, Sky #0788F7 and Purple #976FE6 to tell series apart.
-   - Use the fewest colours that work.
+5. **Color.**
+   - Grays and Strike Green (#10B981), with one green focus per figure.
+   - Infographics may also use the brand's data colors, each with one meaning: Loss #EE5E74, Profit #3FD4AB, and Yellow #FFEF3C, Sky #0788F7 and Purple #976FE6 to tell series apart.
+   - Use the fewest colors that work.
 6. **Labels.**
    - Set in Geist, with a ticker in Medium over its value in Regular ("AMD" over "IV 106.2%").
    - Three at most, and never on the focus. Infographics name every series.
-7. **Grounds.** Ground #0C0C0C, White #F9F9F9 or Strike Green. The greys swap tier for tier, so the subject stays the strongest line.
+7. **Grounds.** Ground #0C0C0C, White #F9F9F9 or Strike Green. The grays swap tier for tier, so the subject stays the strongest line.
 8. **Motion.**
    - Calm, exact, never hyped.
    - One idea moves at a time, eased, and comes back to rest.
@@ -190,7 +190,7 @@ Any shape can be dashed, or see-through (just its lines).
 
 ### Faces
 
-Any face can take a solid colour and a dotted fill:
+Any face can take a solid color and a dotted fill:
 - An even grid, or staggered dots.
 - Round or square dots.
 - A halftone, whose dots grow, shrink or fade with a linear, radial, wave or noise gradient.
@@ -206,7 +206,7 @@ Labels can float upright or lie on the floor or a wall. Both are set in Geist Mo
 
 ### Dots that follow a curve
 
-A dotted fill can keep to one side of a curve, with the dots on the other side shown in a dim grey. This is how the payoff, area and terminal charts are drawn, like the dot-matrix payoff chart in Strike's app.
+A dotted fill can keep to one side of a curve, with the dots on the other side shown in a dim gray. This is how the payoff, area and terminal charts are drawn, like the dot-matrix payoff chart in Strike's app.
 
 ### Animation
 

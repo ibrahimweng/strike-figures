@@ -1,6 +1,6 @@
 # Eval prompts
 
-Twelve requests that cover the brand's main risks. Paste each one as written, in a fresh chat, with the Strike files installed. Under each prompt is what a passing answer must do. Every answer also has to pass `node scripts/check.mjs` with no errors.
+Fourteen requests that cover the brand's main risks. Paste each one as written, in a fresh chat, with the Strike files installed. Under each prompt is what a passing answer must do. Every answer also has to pass `node scripts/check.mjs` with no errors.
 
 ## 1. Landing page hero
 
@@ -12,8 +12,9 @@ A passing answer:
 - uses the dark ground #0C0C0C, ink text and Geist (Arial fallback);
 - keeps the headline to 2 lines or fewer (about 3–8 words), in Geist Medium with tight tracking;
 - has one primary button: green #10B981 with ground text, 8 px radius, 40 px tall;
-- places the 3D green lockup from the files in a corner, not redrawn and not centred;
+- places the 3D green lockup from the files in a corner, not redrawn and not centered;
 - uses only listed facts (168 hours a week, daily expiry at 20:00 ET), with no invented numbers;
+- writes the copy from the verbal brand: sentence case, US spelling, no "24/7" or exclamation marks;
 - puts the risk line in the footer.
 
 ## 2. Fees table
@@ -63,9 +64,10 @@ Design an A3 poster for Strike that says: Options on every market, every hour.
 ```
 
 A passing answer:
-- picks one ground: black, light grey or the mint-to-green gradient;
-- sets the headline in Geist, at most 2 lines, tracked −3%, on the 50 px grid;
-- puts the lockup in a corner, in the version for that ground (3D green on black, 3D black on grey, flat black on mint, flat white on green);
+- picks one ground: black, light gray or the mint-to-green gradient;
+- writes the tagline exactly, in sentence case: "Options on every market, every hour.";
+- sets the headline in Geist, at most 2 lines, tracked −3%, on the 50 px grid; white on the green gradient;
+- puts one lockup in a corner, in the version for that ground (3D green on black; 3D black on gray or mint; flat white on the green gradient; flat if it's for print);
 - shows one illustration or one number, not both; a big number is in Geist Pixel Circle;
 - writes "Strike" in any copy, never STRIKE in capitals.
 
@@ -102,7 +104,7 @@ Create the page header for the Custody page of the Strike docs.
 
 A passing answer:
 - is dark unless asked, with the lockup in the header and a short H1;
-- pairs "No key at Strike can move your money." with what is still trusted: settlement prints, prices on market orders, liquidation prices, and the attesters, all run by Strike today;
+- pairs "No key at Strike can move your funds." with what is still trusted: settlement prints, prices on market orders, liquidation prices, and the attesters, all run by Strike today;
 - makes no custody claim beyond the listed facts.
 
 ## 9. Logo on a photo
@@ -113,7 +115,7 @@ Put the Strike logo on a photo of a trader at a desk at night, with screens and 
 
 A passing answer:
 - uses a white logo: flat white on a busy image like this one (3D white only on soft images);
-- uses the file as it is (`strike-lockup-flat-white.svg`): no recolouring, outline, shadow or glow;
+- uses the file as it is (`strike-lockup-flat-white.svg`): no recoloring, outline, shadow or glow;
 - places it in a corner with clear space, at least 20 px tall;
 - explains the choice in one line at most.
 
@@ -150,3 +152,28 @@ A passing answer:
 - builds it from the mark and the STRIKE wordmark files, then "Vaults" in Geist Medium on STRIKE's baseline, with the brand-book proportions (or `scripts/lockup.mjs`);
 - picks the version for the ground;
 - never redraws the mark, sets STRIKE in a font or invents a new symbol.
+
+## 13. Homepage copy
+
+```text
+Write the headline, a short paragraph and three proof points for Strike's homepage.
+```
+
+A passing answer:
+- uses the tagline "Options on every market, every hour." as written, and the positioning line: "Strike is an options exchange that never closes.";
+- takes proof only from the brand book: 168 hours a week against about 32.5 for listed options; about 80 underlyings; "No key at Strike can move your funds" with what is still trusted;
+- pairs any benefit with its risk, in the same sentence or the next;
+- avoids "24/7", "revolutionary", "guaranteed", "safe", "unforgettable" and exclamation marks; uses US spelling and sentence case;
+- ends with the risk line.
+
+## 14. Merch
+
+```text
+Design the chest print for a Strike T-shirt and tell me the print size.
+```
+
+A passing answer:
+- uses the flat logo (one color, no gray side faces), black on a light shirt or white on a dark one;
+- sizes it at 12 mm or more for screen print (35 mm or more if it is embroidered);
+- keeps clear space of the S width around it and never redraws it;
+- adds no other copy unless asked; if it does, it's the tagline as written.

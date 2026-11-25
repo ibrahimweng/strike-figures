@@ -207,7 +207,7 @@ export function ColorField({
   return (
     <div className="color">
       <span className="swatch" style={{ background: shown, opacity: value === null ? 0.55 : 1 }}>
-        <input type="color" value={normHex(HEX.test(shown) ? shown : '#000000').toLowerCase()} onChange={e => onChange(normHex(e.target.value), true)} aria-label="Pick a colour" />
+        <input type="color" value={normHex(HEX.test(shown) ? shown : '#000000').toLowerCase()} onChange={e => onChange(normHex(e.target.value), true)} aria-label="Pick a color" />
       </span>
       <input
         className="hex"
@@ -220,10 +220,10 @@ export function ColorField({
           else setText(shown);
         }}
         onKeyDown={e => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
-        aria-label="Hex colour"
+        aria-label="Hex color"
       />
       {allowInherit && value !== null && (
-        <button className="inherit" onClick={() => onChange(null, false)} title="Use the theme's colour">
+        <button className="inherit" onClick={() => onChange(null, false)} title="Use the theme's color">
           THEME
         </button>
       )}

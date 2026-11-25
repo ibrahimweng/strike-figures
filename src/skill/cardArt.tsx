@@ -20,12 +20,12 @@ const clamp01 = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x);
 /** element i of n, revealed in turn across p (0..1): its own eased 0..1 */
 const turnOf = (p: number, i: number, n: number, span = 0.45) => inout(clamp01((p - (i / Math.max(1, n - 1)) * (1 - span)) / span));
 
-/** Frame a scene for the card: 2:1, its artboard, a calm margin, lines heavy enough to read at card size. */
+/** Frame a scene for the card: 2:1, its artboard, a calm margin, 1 px lines (non-scaling on the page). */
 function framed(sc: Scene, margin = 0.12): Scene {
   sc.artboard = { width: W, height: H };
   const plain = { ...sc, camera: { ...sc.camera, zoom: 1, panX: 0, panY: 0 } };
   sc.camera = fitCamera(plain, renderScene(plain), margin) ?? sc.camera;
-  sc.theme = { ...sc.theme, lineWidth: 1.1 };
+  sc.theme = { ...sc.theme, lineWidth: 1 };
   return sc;
 }
 

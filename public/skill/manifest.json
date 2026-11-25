@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "updated": "2026-11-20",
+  "updated": "2026-11-25",
   "universal": "STRIKE-DESIGN.md",
   "targets": [
     {
@@ -16,12 +16,12 @@
         {
           "path": "claude/strike-design.zip",
           "label": "Skill (zip)",
-          "bytes": 2849643
+          "bytes": 2858635
         },
         {
           "path": "claude/strike-design/SKILL.md",
           "label": "SKILL.md",
-          "bytes": 10291
+          "bytes": 10488
         }
       ]
     },
@@ -39,32 +39,32 @@
         {
           "path": "chatgpt/strike-design-chatgpt.zip",
           "label": "Everything (zip)",
-          "bytes": 736664
+          "bytes": 740628
         },
         {
           "path": "chatgpt/instructions.md",
           "label": "Instructions",
-          "bytes": 7982
+          "bytes": 7928
         },
         {
           "path": "chatgpt/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 32848
+          "bytes": 41497
         },
         {
           "path": "chatgpt/knowledge/tokens.css",
           "label": "Knowledge: tokens.css",
-          "bytes": 8072
+          "bytes": 10277
         },
         {
           "path": "chatgpt/knowledge/tokens.json",
           "label": "Knowledge: tokens.json",
-          "bytes": 7282
+          "bytes": 10335
         },
         {
           "path": "chatgpt/knowledge/strike-logos.zip",
           "label": "Knowledge: logo files (zip)",
-          "bytes": 716592
+          "bytes": 716568
         },
         {
           "path": "chatgpt/SETUP.md",
@@ -86,57 +86,57 @@
         {
           "path": "cursor/strike-design-cursor.zip",
           "label": "Rules and files (zip)",
-          "bytes": 1010664
+          "bytes": 1018099
         },
         {
           "path": "cursor/rules/strike-design.mdc",
           "label": "strike-design.mdc",
-          "bytes": 10190
+          "bytes": 10388
         },
         {
-          "path": "cursor/rules/strike-colour.mdc",
-          "label": "strike-colour.mdc",
-          "bytes": 3691
+          "path": "cursor/rules/strike-color.mdc",
+          "label": "strike-color.mdc",
+          "bytes": 5459
         },
         {
           "path": "cursor/rules/strike-type.mdc",
           "label": "strike-type.mdc",
-          "bytes": 2059
+          "bytes": 3386
         },
         {
           "path": "cursor/rules/strike-logo.mdc",
           "label": "strike-logo.mdc",
-          "bytes": 2770
+          "bytes": 3607
         },
         {
           "path": "cursor/rules/strike-layout-ui.mdc",
           "label": "strike-layout-ui.mdc",
-          "bytes": 2878
+          "bytes": 2875
         },
         {
           "path": "cursor/rules/strike-illustration-motion.mdc",
           "label": "strike-illustration-motion.mdc",
-          "bytes": 4764
+          "bytes": 5262
         },
         {
           "path": "cursor/rules/strike-data.mdc",
           "label": "strike-data.mdc",
-          "bytes": 1026
+          "bytes": 1329
         },
         {
           "path": "cursor/rules/strike-formats.mdc",
           "label": "strike-formats.mdc",
-          "bytes": 1856
+          "bytes": 2577
         },
         {
           "path": "cursor/rules/strike-words.mdc",
           "label": "strike-words.mdc",
-          "bytes": 2792
+          "bytes": 5410
         },
         {
           "path": "cursor/rules/strike-checklist.mdc",
           "label": "strike-checklist.mdc",
-          "bytes": 1382
+          "bytes": 1713
         }
       ]
     },
@@ -153,12 +153,12 @@
         {
           "path": "agents/strike-design-agents.zip",
           "label": "AGENTS.md and files (zip)",
-          "bytes": 1009581
+          "bytes": 1016933
         },
         {
           "path": "agents/AGENTS.md",
           "label": "AGENTS.md",
-          "bytes": 9983
+          "bytes": 10181
         }
       ]
     },
@@ -175,12 +175,12 @@
         {
           "path": "copilot/strike-design-copilot.zip",
           "label": "Instructions and files (zip)",
-          "bytes": 1009717
+          "bytes": 1017069
         },
         {
           "path": "copilot/copilot-instructions.md",
           "label": "copilot-instructions.md",
-          "bytes": 9983
+          "bytes": 10181
         }
       ]
     },
@@ -197,27 +197,27 @@
         {
           "path": "gemini/strike-design-gemini.zip",
           "label": "Everything (zip)",
-          "bytes": 35044
+          "bytes": 39080
         },
         {
           "path": "gemini/gem-instructions.md",
           "label": "Instructions",
-          "bytes": 7967
+          "bytes": 7913
         },
         {
           "path": "gemini/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 32848
+          "bytes": 41497
         },
         {
           "path": "gemini/knowledge/tokens.css",
           "label": "Knowledge: tokens.css",
-          "bytes": 8072
+          "bytes": 10277
         },
         {
           "path": "gemini/knowledge/tokens.json",
           "label": "Knowledge: tokens.json",
-          "bytes": 7282
+          "bytes": 10335
         }
       ]
     },
@@ -234,17 +234,17 @@
         {
           "path": "perplexity/strike-design-perplexity.zip",
           "label": "Everything (zip)",
-          "bytes": 31730
+          "bytes": 35845
         },
         {
           "path": "perplexity/space-instructions.md",
           "label": "Instructions",
-          "bytes": 897
+          "bytes": 1001
         },
         {
           "path": "perplexity/knowledge/STRIKE-DESIGN.md",
           "label": "Knowledge: STRIKE-DESIGN.md",
-          "bytes": 32848
+          "bytes": 41497
         }
       ]
     },
@@ -262,17 +262,17 @@
         {
           "path": "figma/strike-design-figma.zip",
           "label": "Everything (zip)",
-          "bytes": 22496
+          "bytes": 23475
         },
         {
           "path": "figma/tokens.json",
           "label": "Variables: tokens.json",
-          "bytes": 7282
+          "bytes": 10335
         },
         {
           "path": "figma/guidelines.md",
           "label": "Figma Make: guidelines.md",
-          "bytes": 14285
+          "bytes": 15356
         },
         {
           "path": "figma/SETUP.md",
@@ -293,12 +293,12 @@
         {
           "path": "STRIKE-DESIGN.md",
           "label": "STRIKE-DESIGN.md",
-          "bytes": 32988
+          "bytes": 41637
         },
         {
           "path": "portable/strike-design-kit.zip",
           "label": "Brand kit: logos, fonts, posters, tokens (zip)",
-          "bytes": 3893891
+          "bytes": 3903943
         }
       ]
     }
@@ -307,91 +307,91 @@
     {
       "path": "STRIKE-DESIGN.md",
       "label": "All the rules in one file",
-      "bytes": 32988,
+      "bytes": 41637,
       "kind": "markdown"
     },
     {
       "path": "core.md",
       "label": "Core rules only",
-      "bytes": 7603,
+      "bytes": 7549,
       "kind": "markdown"
     },
     {
       "path": "claude/strike-design.zip",
       "label": "For Claude",
-      "bytes": 2849643,
+      "bytes": 2858635,
       "kind": "zip"
     },
     {
       "path": "chatgpt/strike-design-chatgpt.zip",
       "label": "For ChatGPT",
-      "bytes": 736664,
+      "bytes": 740628,
       "kind": "zip"
     },
     {
       "path": "cursor/strike-design-cursor.zip",
       "label": "For Cursor",
-      "bytes": 1010664,
+      "bytes": 1018099,
       "kind": "zip"
     },
     {
       "path": "agents/strike-design-agents.zip",
       "label": "For Codex and other AGENTS.md tools",
-      "bytes": 1009581,
+      "bytes": 1016933,
       "kind": "zip"
     },
     {
       "path": "copilot/strike-design-copilot.zip",
       "label": "For GitHub Copilot",
-      "bytes": 1009717,
+      "bytes": 1017069,
       "kind": "zip"
     },
     {
       "path": "gemini/strike-design-gemini.zip",
       "label": "For Gemini",
-      "bytes": 35044,
+      "bytes": 39080,
       "kind": "zip"
     },
     {
       "path": "perplexity/strike-design-perplexity.zip",
       "label": "For Perplexity",
-      "bytes": 31730,
+      "bytes": 35845,
       "kind": "zip"
     },
     {
       "path": "figma/strike-design-figma.zip",
       "label": "For Figma",
-      "bytes": 22496,
+      "bytes": 23475,
       "kind": "zip"
     },
     {
       "path": "portable/strike-design-kit.zip",
       "label": "Brand kit",
-      "bytes": 3893891,
+      "bytes": 3903943,
       "kind": "zip"
     },
     {
       "path": "tokens/tokens.css",
       "label": "CSS variables",
-      "bytes": 8072,
+      "bytes": 10277,
       "kind": "css"
     },
     {
       "path": "tokens/tailwind.preset.cjs",
       "label": "Tailwind v3 preset",
-      "bytes": 4194,
+      "bytes": 4840,
       "kind": "js"
     },
     {
       "path": "tokens/theme.css",
       "label": "Tailwind v4 theme",
-      "bytes": 2700,
+      "bytes": 3269,
       "kind": "css"
     },
     {
       "path": "tokens/tokens.json",
       "label": "Design tokens (JSON)",
-      "bytes": 7282,
+      "bytes": 10335,
       "kind": "json"
     }
   ],
@@ -405,7 +405,7 @@
     {
       "path": "portable/logo/strike-lockup-3d-black.svg",
       "label": "Lockup, 3D black",
-      "use": "Light grounds",
+      "use": "Light grounds and mint, on screen",
       "ground": "light"
     },
     {
@@ -417,13 +417,13 @@
     {
       "path": "portable/logo/strike-lockup-flat-black.svg",
       "label": "Lockup, flat black",
-      "use": "Mint, merch, small sizes on light",
+      "use": "Mint and bright grounds in print; merch on light",
       "ground": "mint"
     },
     {
       "path": "portable/logo/strike-lockup-flat-white.svg",
       "label": "Lockup, flat white",
-      "use": "Busy photos, green posters, merch, small sizes on dark",
+      "use": "Busy photos, green posters, print and merch on dark",
       "ground": "photo"
     },
     {
@@ -435,7 +435,7 @@
     {
       "path": "portable/logo/strike-mark-3d-black.svg",
       "label": "Mark, 3D black",
-      "use": "Light grounds",
+      "use": "Light grounds and mint, on screen",
       "ground": "light"
     },
     {
@@ -447,25 +447,25 @@
     {
       "path": "portable/logo/strike-mark-flat-black.svg",
       "label": "Mark, flat black",
-      "use": "Mint, merch, small sizes on light",
+      "use": "Mint and bright grounds in print; merch on light; under 32 px on screen",
       "ground": "mint"
     },
     {
       "path": "portable/logo/strike-mark-flat-white.svg",
       "label": "Mark, flat white",
-      "use": "Busy photos, merch, small sizes on dark",
+      "use": "Busy photos, print and merch on dark; under 32 px on screen",
       "ground": "photo"
     },
     {
       "path": "portable/logo/strike-wordmark-black.svg",
       "label": "Wordmark, black",
-      "use": "Building lock-ups; layouts that place the mark separately",
+      "use": "Building lockups; layouts that place the mark separately",
       "ground": "light"
     },
     {
       "path": "portable/logo/strike-wordmark-white.svg",
       "label": "Wordmark, white",
-      "use": "Building lock-ups; layouts that place the mark separately, on dark grounds and photos",
+      "use": "Building lockups; layouts that place the mark separately, on dark grounds and photos",
       "ground": "dark"
     },
     {
@@ -491,7 +491,7 @@
     {
       "token": "ground",
       "hex": "#0C0C0C",
-      "use": "The dark background: posters, social cards, illustrations, app modules"
+      "use": "Ground: posters, social cards, illustrations, app modules"
     },
     {
       "token": "web.ground",
@@ -506,7 +506,7 @@
     {
       "token": "ink",
       "hex": "#F9F9F9",
-      "use": "Text on ground; ground of light layouts"
+      "use": "White: text on ground; ground of light layouts"
     },
     {
       "token": "ink-2",
@@ -521,47 +521,47 @@
     {
       "token": "green",
       "hex": "#10B981",
-      "use": "Primary action, focus, one highlight"
+      "use": "Strike Green: primary action, focus, one highlight. Never fills a layout; no white text on it in UI"
     },
     {
       "token": "deep",
       "hex": "#047857",
-      "use": "Green text or lines on light grounds (5.2:1)"
+      "use": "Mark Deep: green text or lines on light grounds (5.2:1)"
     },
     {
       "token": "mark-light",
       "hex": "#6EE7B7",
-      "use": "Logo gradient only"
+      "use": "Mark Light: the light end of the logo gradient"
     },
     {
       "token": "profit",
       "hex": "#3FD4AB",
-      "use": "Gains, buys, bids"
+      "use": "Profit: market moves up (gains, buys, bids)"
     },
     {
       "token": "loss",
       "hex": "#EE5E74",
-      "use": "Losses, sells, asks. Red means loss and nothing else"
+      "use": "Loss: market moves down (losses, sells, asks). Red means loss and nothing else"
     },
     {
       "token": "mint",
       "hex": "#50EBA0",
-      "use": "Poster grounds only"
+      "use": "Poster grounds and the light end of the poster gradient"
     },
     {
       "token": "data.yellow",
       "hex": "#FFEF3C",
-      "use": "Charts with several series only"
+      "use": "Chart data series only"
     },
     {
       "token": "data.sky",
       "hex": "#0788F7",
-      "use": "Charts with several series only"
+      "use": "Chart data series only"
     },
     {
       "token": "data.purple",
       "hex": "#976FE6",
-      "use": "Charts with several series only"
+      "use": "Chart data series only"
     },
     {
       "token": "dark.frame",
@@ -642,7 +642,7 @@
   "fonts": [
     {
       "family": "Geist",
-      "use": "Headlines and text",
+      "use": "Geist for everything; Arial when web fonts are unavailable",
       "files": [
         "portable/fonts/geist/Geist-Light.woff2",
         "portable/fonts/geist/Geist-Light.ttf",
@@ -668,7 +668,7 @@
     },
     {
       "family": "Geist Pixel Circle",
-      "use": "Big display numbers on posters only",
+      "use": "Large display type and numbers on posters only, where contrast is high; never body text or company documents",
       "files": [
         "portable/fonts/geist-pixel/GeistPixel-Circle.woff2",
         "portable/fonts/geist-pixel/GeistPixel-Circle.ttf"

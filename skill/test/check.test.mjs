@@ -38,7 +38,7 @@ test('contrast maths matches the rules (2.4, 7.7, 18.6)', () => {
 
 test('colours: off-palette hex, rgb(), hsl() and named colours warn; pure black and white warn', () => {
   const list = issues('colour-bad.css');
-  assert.equal(count(list, 'warn:colour'), 4);
+  assert.equal(count(list, 'warn:color'), 4);
   assert.equal(count(list, 'warn:pure-black-white'), 3);
   assert.ok(list.every((i) => i.severity === 'warn'));
   assert.match(list.find((i) => i.rule === 'pure-black-white').fix, /ground|ink/);
@@ -63,7 +63,7 @@ test('colours: the finished poster artwork in assets/posters/ is exempt', () => 
 
 test('colours: Tailwind default palette classes warn, brand-equal shades pass', () => {
   const list = checkSource('<div class="bg-red-500 text-emerald-500 hover:bg-zinc-900 border-slate-200"></div>', 'x.html');
-  assert.deepEqual(ids(list), ['warn:colour', 'warn:colour']);
+  assert.deepEqual(ids(list), ['warn:color', 'warn:color']);
 });
 
 test('colours: ids, entities and issue numbers are not colours', () => {
@@ -127,6 +127,22 @@ test('copy: USD, market counts, banned claims and exclamation marks', () => {
   expectClean('copy-good.md');
 });
 
+test('voice: words to avoid, British spelling, the tagline, custody wording and Title Case headings', () => {
+  const list = issues('voice-bad.md');
+  assert.equal(count(list, 'warn:heading-case'), 1);
+  assert.equal(count(list, 'warn:tagline'), 1);
+  assert.equal(count(list, 'warn:avoid-word'), 4);
+  assert.equal(count(list, 'warn:custody'), 1);
+  assert.equal(count(list, 'warn:spelling'), 3);
+  assert.ok(list.find((i) => i.rule === 'spelling' && /"color"/.test(i.fix)), 'the fix names the US spelling');
+  expectClean('voice-good.md');
+  assert.deepEqual(ids(checkSource('<h2>Primary Palette</h2>', 'x.html')), ['warn:heading-case']);
+  assert.deepEqual(ids(checkSource('<h2>Strike Green</h2><p>Trade options on Strike and OpenAI.</p>', 'x.html')), [], 'names keep their capitals');
+  assert.deepEqual(ids(checkSource('<p>About 80 underlyings, open 168 hours a week.</p>', 'x.html')), [], 'the brand book count passes');
+  assert.deepEqual(ids(checkSource('<p>About 90 underlyings.</p>', 'x.html')), ['warn:market-count']);
+  assert.deepEqual(ids(checkSource('<p>The "24/7 Options Trading" line is off-brand.</p>', 'x.html')), [], 'quoted examples pass');
+});
+
 test('risk line: full pages and emails without it warn', () => {
   assert.deepEqual(ids(issues('page-no-risk.html')), ['warn:risk-line']);
   assert.deepEqual(ids(issues('email-bad.md')), ['warn:risk-line']);
@@ -142,7 +158,7 @@ test('radius: only 0, 6, 8, 12, 9999px and 50%', () => {
 
 test('JSX and TSX: classes, style objects, text and string literals', () => {
   const list = issues('component-bad.tsx');
-  for (const id of ['error:banned-claim', 'warn:usd', 'warn:colour', 'warn:radius', 'warn:heading-length', 'error:white-on-green', 'error:font', 'warn:exclamation', 'warn:name']) {
+  for (const id of ['error:banned-claim', 'warn:usd', 'warn:color', 'warn:radius', 'warn:heading-length', 'error:white-on-green', 'error:font', 'warn:exclamation', 'warn:name']) {
     assert.ok(ids(list).includes(id), `component-bad.tsx: ${id}`);
   }
   expectClean('component-good.tsx');
@@ -150,12 +166,12 @@ test('JSX and TSX: classes, style objects, text and string literals', () => {
 
 test('Vue: template text and scoped styles', () => {
   const list = issues('component-bad.vue');
-  assert.deepEqual(ids(list).sort(), ['error:font', 'warn:colour', 'warn:heading-exclamation', 'warn:radius', 'warn:usd']);
+  assert.deepEqual(ids(list).sort(), ['error:font', 'warn:color', 'warn:heading-exclamation', 'warn:radius', 'warn:usd']);
   expectClean('component-good.vue');
 });
 
 test('SVG: colours, fonts and copy in posters', () => {
-  assert.deepEqual(ids(issues('poster-bad.svg')).sort(), ['error:banned-claim', 'error:font', 'warn:colour', 'warn:exclamation']);
+  assert.deepEqual(ids(issues('poster-bad.svg')).sort(), ['error:banned-claim', 'error:font', 'warn:color', 'warn:exclamation']);
   expectClean('poster-good.svg');
 });
 
@@ -173,7 +189,7 @@ test('the on-brand sample passes and the off-brand sample is caught', () => {
   expectClean('on-brand.html');
   const list = issues('off-brand.html');
   const rules = new Set(list.map((i) => i.rule));
-  for (const r of ['colour', 'pure-black-white', 'font', 'white-on-green', 'contrast', 'heading-length', 'heading-exclamation', 'name', 'usd', 'market-count', 'banned-claim', 'exclamation', 'risk-line', 'radius']) {
+  for (const r of ['color', 'pure-black-white', 'font', 'white-on-green', 'contrast', 'heading-length', 'heading-exclamation', 'name', 'usd', 'market-count', 'banned-claim', 'exclamation', 'risk-line', 'radius']) {
     assert.ok(rules.has(r), `off-brand.html: ${r}`);
   }
 });

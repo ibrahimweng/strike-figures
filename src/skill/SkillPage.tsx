@@ -257,7 +257,7 @@ export function SkillPage() {
               <br />
               in any AI tool.
             </h1>
-            <p className="sk-lede">One link gives your AI Strike’s rules, colours, type and logos, so everything it makes is on brand.</p>
+            <p className="sk-lede">One link gives your AI Strike’s rules, colors, type and logos, so everything it makes is on brand.</p>
           </div>
           <div className="sk-hero-r">
             <Label>Paste into any AI</Label>

@@ -1,4 +1,4 @@
-/* The brand, one page per part: Logo, Colour, Type, Illustration,
+/* The brand, one page per part: Logo, Color, Type, Illustration,
    Backgrounds and Rules. Each page is grouped by category with one line per
    group; the deeper detail waits on hover. */
 import { useEffect, useMemo, useState } from 'react';
@@ -14,9 +14,9 @@ export type PageId = 'logo' | 'colour' | 'type' | 'illustration' | 'motion' | 'b
 
 export const PAGES: { id: PageId; title: string; line: string }[] = [
   { id: 'logo', title: 'Logo', line: 'The lockup, the mark and the wordmark, in every version.' },
-  { id: 'colour', title: 'Colour', line: 'A dark ground and one green, grouped by use.' },
-  { id: 'type', title: 'Type', line: 'Geist for everything. Short titles, tight tracking.' },
-  { id: 'illustration', title: 'Illustration', line: 'Line art in greys with one green focus.' },
+  { id: 'colour', title: 'Color', line: 'Black, white and Strike Green, grouped by use.' },
+  { id: 'type', title: 'Type', line: 'Geist for everything. Short titles; line height and tracking by size.' },
+  { id: 'illustration', title: 'Illustration', line: 'Line art in grays with one green focus, 1 px lines.' },
   { id: 'motion', title: 'Motion', line: 'Two curves: shapes gather into a point, then release from it.' },
   { id: 'backgrounds', title: 'Backgrounds', line: 'Two darks for each medium. About 80% is the darkest.' },
   { id: 'rules', title: 'Rules', line: 'The full set your AI follows, and the check before handing over.' },
@@ -31,6 +31,13 @@ const LOGO_GROUPS: { title: string; line: string; test: (file: string) => boolea
   { title: 'Profile image', line: 'The mark on its own ground, for avatars, app icons and favicons.', test: f => /^strike-mark-(tile|disc)/.test(f) },
   { title: 'Link preview', line: 'Shown when a Strike link is shared.', test: f => f.endsWith('.png'), wide: true },
 ];
+
+/* The minimum size each kind of logo file is used at. */
+const MIN_SIZE: Record<string, string> = {
+  Mark: 'At least 32 px (3D) or 16 px (flat); in print 8 mm, flat',
+  'Profile image': 'At least 16 px',
+  Lockup: 'At least 20 px tall',
+};
 
 /* Only Strike's own grounds. White logos are for photos; shown here on the dark ground. */
 const LOGO_GROUND: Record<string, string> = { dark: '#0C0C0C', photo: '#0C0C0C', light: '#F1F1F1', mint: '#50EBA0' };
@@ -51,7 +58,7 @@ function LogoPage({ manifest }: { manifest: Manifest }) {
                     <>
                       <strong>{l.label}</strong>
                       <span>{l.use}.</span>
-                      <span className="sk-tip-sub">At least {g.title === 'Mark' || g.title === 'Profile image' ? '16 px' : '20 px tall'}. Clear space: one layer of the mark.</span>
+                      <span className="sk-tip-sub">{MIN_SIZE[g.title] ?? 'At least 20 px tall'}. Clear space: the width of the S in STRIKE. Never wider than a third of the layout.</span>
                       <a href={at(l.path)} download>
                         Download {l.path.endsWith('.png') ? 'PNG' : 'SVG'}
                       </a>
@@ -71,14 +78,14 @@ function LogoPage({ manifest }: { manifest: Manifest }) {
   );
 }
 
-/* ---------- Colour ---------- */
+/* ---------- Color ---------- */
 
 export const NAMES: Record<string, string> = {
   'web.ground': 'Web page',
   'web.section': 'Web section',
   ground: 'Ground',
   'dark.frame': 'App frame',
-  ink: 'Ink',
+  ink: 'White',
   green: 'Strike Green',
   'ink-2': 'Ink, secondary',
   'ink-3': 'Ink, muted',
@@ -87,8 +94,8 @@ export const NAMES: Record<string, string> = {
   'dark.surface-3': 'Pressed',
   profit: 'Profit',
   loss: 'Loss',
-  'mark-light': 'Mark, light',
-  deep: 'Mark, deep',
+  'mark-light': 'Mark Light',
+  deep: 'Mark Deep',
   mint: 'Mint',
   'data.yellow': 'Yellow',
   'data.sky': 'Sky',
@@ -98,11 +105,11 @@ export const NAMES: Record<string, string> = {
 const COLOUR_GROUPS: { title: string; line: string; tokens: string[] }[] = [
   { title: 'Backgrounds', line: 'Only these. About 80% of a screen is the darkest one.', tokens: ['web.ground', 'web.section', 'ground', 'dark.frame'] },
   { title: 'Primary', line: 'White text, and one green for the thing that matters.', tokens: ['ink', 'green'] },
-  { title: 'Supporting greys', line: 'Secondary text and icons.', tokens: ['ink-2', 'ink-3'] },
+  { title: 'Supporting grays', line: 'Secondary text and icons.', tokens: ['ink-2', 'ink-3'] },
   { title: 'Raised', line: 'Controls inside app modules: resting, hover, pressed.', tokens: ['dark.surface-1', 'dark.surface-2', 'dark.surface-3'] },
-  { title: 'Markets', line: 'Profit and loss only. Red means a loss and nothing else.', tokens: ['profit', 'loss'] },
+  { title: 'Markets', line: 'Profit and loss mark market moves only. Red means a loss and nothing else.', tokens: ['profit', 'loss'] },
   { title: 'Logo and print', line: 'The mark’s gradient, green on light grounds, and poster grounds.', tokens: ['mark-light', 'deep', 'mint'] },
-  { title: 'Data', line: 'Only when a chart needs more series than greys and green.', tokens: ['data.yellow', 'data.sky', 'data.purple'] },
+  { title: 'Data', line: 'Only when a chart needs more series than grays and green. Secondary colors stay at 5% or less.', tokens: ['data.yellow', 'data.sky', 'data.purple'] },
 ];
 
 export function Swatch({ c, copied, copy }: { c: Colour; copied: string | null; copy: Copy }) {
@@ -171,7 +178,20 @@ interface TypeToken {
   lineHeight: number;
   letterSpacing: string;
 }
-const SCALE_NAMES: Record<string, string> = { display: 'Display', h1: 'Heading 1', h2: 'Heading 2', h3: 'Heading 3', 'body-l': 'Body large', body: 'Body', small: 'Small', label: 'Label' };
+const SCALE_NAMES: Record<string, string> = {
+  display: 'Display',
+  h1: 'Heading 1',
+  h2: 'Heading 2',
+  h3: 'Heading 3',
+  'body-l': 'Body large',
+  body: 'Body',
+  small: 'Small',
+  label: 'Label',
+  'slide-h1': 'Slide H1',
+  'slide-h2': 'Slide H2',
+  'slide-h3': 'Slide H3',
+  'slide-body': 'Slide body',
+};
 
 function TypePage() {
   const [scale, setScale] = useState<[string, TypeToken][]>([]);
@@ -192,7 +212,7 @@ function TypePage() {
     <>
       <Group title="Families" line="Geist does the work. The others each have one job.">
         <div className="sk-type">
-          <Tip tip={<span>Geist Medium · 48–120 px · line height 0.9–1.0 · tracking −3%. Shorten the words before shrinking the type.</span>} wide>
+          <Tip tip={<span>Geist Medium · 45–79 px: line height 100%, tracking −2% · 80 px and up: 90%, −3%. Shorten the words before shrinking the type.</span>} wide>
             <div className="sk-type-cell">
               <h4>Geist · headlines</h4>
               <div className="sk-spec-title">
@@ -202,10 +222,10 @@ function TypePage() {
               </div>
             </div>
           </Tip>
-          <Tip tip={<span>Geist Regular · 16 px · line height 1.5 · 45–75 characters a line.</span>} wide>
+          <Tip tip={<span>Geist Regular · 15–24 px: line height 130%, tracking 0 · 45–75 characters a line, flush left.</span>} wide>
             <div className="sk-type-cell">
               <h4>Geist · body</h4>
-              <p className="sk-spec-body">Strike is an options exchange that never closes. Trade calls and puts from one margin account.</p>
+              <p className="sk-spec-body">Strike is an options exchange that never closes. Trade options on stocks, indices, pre-IPO companies, GPU compute and crypto from one self-custodial margin account.</p>
             </div>
           </Tip>
           <Tip tip={<span>Geist Mono · code, wallet addresses and order books only.</span>}>
@@ -214,16 +234,16 @@ function TypePage() {
               <div className="sk-spec-mono">0x05a1…c996</div>
             </div>
           </Tip>
-          <Tip tip={<span>Geist Pixel Circle · big numbers on posters only.</span>}>
+          <Tip tip={<span>Geist Pixel Circle · large display type and numbers on posters only, where contrast is high.</span>}>
             <div className="sk-type-cell">
-              <h4>Geist Pixel · poster numbers</h4>
+              <h4>Geist Pixel · poster display</h4>
               <div className="sk-spec-pixel">24%</div>
             </div>
           </Tip>
         </div>
       </Group>
       {scale.length > 0 && (
-        <Group title="Scale" line="Eight sizes. Titles stay within two lines.">
+        <Group title="Scale" line="Web and app sizes, then slides and posters at 1920 wide. Titles stay within two lines.">
           <div className="sk-scale">
             {scale.map(([k, v]) => (
               <div className="sk-scale-row" key={k}>
@@ -232,7 +252,7 @@ function TypePage() {
                   className="sk-scale-sample"
                   style={{ fontSize: `min(${v.fontSize}, 9vw)`, fontWeight: v.fontWeight, lineHeight: v.lineHeight, letterSpacing: v.letterSpacing === '0' ? undefined : v.letterSpacing }}
                 >
-                  {k === 'label' ? 'Open interest' : k.startsWith('body') || k === 'small' ? 'Trade calls and puts from one account.' : k === 'display' || k === 'h1' ? 'Every market' : 'Every market, every hour'}
+                  {k === 'label' ? 'Open interest' : k.includes('body') || k === 'small' ? 'Open 168 hours a week.' : k === 'display' || k.endsWith('h1') ? 'Every market' : 'Every market, every hour'}
                 </span>
                 <span className="sk-scale-spec">
                   {v.fontSize} · {v.fontWeight === 500 ? 'Medium' : v.fontWeight === 400 ? 'Regular' : v.fontWeight} · {v.lineHeight}
@@ -245,6 +265,7 @@ function TypePage() {
       )}
       <Group title="Writing it" line="Sentence case, no full stop on one-line titles.">
         <ul className="sk-dos">
+          <li>Tagline: “Options on every market, every hour.” US spelling: color, center, gray.</li>
           <li>Write “Strike” in text. STRIKE in capitals is the logo only.</li>
           <li>Never typeset the wordmark: use the logo files.</li>
           <li>Numbers in tables and prices use tabular figures.</li>
@@ -279,8 +300,9 @@ function IllustrationPage() {
     <>
       <Group title="Style" line="How every Strike figure is drawn.">
         <ul className="sk-dos">
-          <li>Line art in greys with one green focus, on the dark ground.</li>
-          <li>The 2:1 isometric angle, or flat (straight down).</li>
+          <li>Line art in grays with one green focus, on the dark ground. Lines are 1 px at every size.</li>
+          <li>Flat (straight down) by default; the 2:1 isometric angle when the idea needs depth.</li>
+          <li>A partial fill is fine when it adds contrast or meaning; never a fully filled figure.</li>
           <li>Faces hide what is behind them. Dashed lines mean “not real yet”. Dots carry tone.</li>
           <li>Labels in Geist: a ticker in Medium over its value in Regular.</li>
         </ul>
@@ -369,7 +391,7 @@ function BackgroundsPage({ manifest, copied, copy }: { manifest: Manifest; copie
           See it in <a href="https://strikelabs.app/" target="_blank" rel="noreferrer">strikelabs.app</a>
         </p>
       </Group>
-      <Group title="Posters and illustrations" line="The dark ground. Mint is for posters only.">
+      <Group title="Posters and illustrations" line="The dark ground. Posters may also use light gray, mint or the green gradient.">
         <div className="sk-swatches">
           {pick('ground', 'mint').map(c => (
             <Swatch key={c.token} c={c} copied={copied} copy={copy} />
@@ -379,7 +401,7 @@ function BackgroundsPage({ manifest, copied, copy }: { manifest: Manifest; copie
       <Group title="The rule" line="About 80% of any screen is the darkest background.">
         <ul className="sk-dos">
           <li>The lighter one only separates parts and gives depth. It is never the main ground.</li>
-          <li>No other backgrounds: no gradients, tinted greys or textures made up for the job.</li>
+          <li>No other backgrounds: no gradients, tinted grays or textures made up for the job.</li>
           <li>Light layouts only when someone asks.</li>
         </ul>
       </Group>

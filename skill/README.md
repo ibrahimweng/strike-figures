@@ -30,11 +30,11 @@ Edit `source/`, never `dist/`:
 - `source/core.md`: the core rules that every tool gets (the ChatGPT version must stay under 8,000 characters);
 - `source/mini.md`: the short version for Perplexity (under 1,500 characters);
 - `source/rules/*.md`: the detailed rules;
-- `source/tokens.json`: colours, type, spacing, radii and motion (W3C Design Tokens).
+- `source/tokens.json`: colors, type, spacing, radii and motion (W3C Design Tokens).
 
 Then run `npm run build`. It prints each target's size and fails if a limit is broken or a path in the rules doesn't resolve. `npm test` runs the tests.
 
-The build writes to `dist/` by default. `node scripts/build.mjs --out <dir>` writes elsewhere; relative paths resolve from this folder. The output is plain static files with relative links, so it can be served as-is. It includes `llms.txt`, an index of every file, and `manifest.json`, which lists the targets, downloads, logos, colours and fonts.
+The build writes to `dist/` by default. `node scripts/build.mjs --out <dir>` writes elsewhere; relative paths resolve from this folder. The output is plain static files with relative links, so it can be served as-is. It includes `llms.txt`, an index of every file, and `manifest.json`, which lists the targets, downloads, logos, colors and fonts.
 
 ## Check work
 
@@ -43,18 +43,18 @@ npm run check -- page.html styles.css src/
 node scripts/check.mjs out/ --json
 ```
 
-It reads `.html`, `.css`, `.svg`, `.jsx`, `.tsx`, `.vue` and `.md` files. It reports colours off the palette, fonts other than Geist, white text on green and low contrast, long or shouting titles, "STRIKE" in text, "USD", market counts, banned claims, exclamation marks, a missing risk line and off-scale corner radii. Each finding comes with `file:line` and a one-line fix. It exits with 1 when there are errors. A copy ships with each kit, so AI tools can run it on their own output.
+It reads `.html`, `.css`, `.svg`, `.jsx`, `.tsx`, `.vue` and `.md` files. It reports colors off the palette, fonts other than Geist, white text on green and low contrast, long, shouting or Title Case titles, "STRIKE" in text, "USD", market counts other than "about 80 underlyings", banned claims, words the brand avoids ("24/7", "revolutionary", "safe", "unforgettable"), British spellings, a changed tagline, the old custody wording, exclamation marks, a missing risk line and off-scale corner radii. Each finding comes with `file:line` and a one-line fix. It exits with 1 when there are errors. A copy ships with each kit, so AI tools can run it on their own output.
 
 ## Evals
 
-`evals/prompts.md` has 12 test requests and what a passing answer must do; `evals/run.md` says how to run them in each tool and score them.
+`evals/prompts.md` has 14 test requests and what a passing answer must do; `evals/run.md` says how to run them in each tool and score them.
 
 ## Folders
 
 ```
 source/        the rules and tokens: edit these
 assets/        logo files, fonts, posters
-scripts/       build.mjs (builds dist/), check.mjs (the checker), lockup.mjs (sub-brand lock-ups)
+scripts/       build.mjs (builds dist/), check.mjs (the checker), lockup.mjs (sub-brand lockups)
 test/          node:test suites and fixtures
 evals/         prompts and how to score them
 docs/          the brand spec and site findings

@@ -67,7 +67,7 @@ function SceneInspector({ scene }: { scene: Scene }) {
           </div>
         </Row>
       </Section>
-      <Section title="Colours & lines">
+      <Section title="Colors & lines">
         <Row label="Theme">
           <Select
             value={THEMES.some(x => x.name === t.name) ? t.name : 'Custom'}
@@ -412,7 +412,7 @@ function FaceEditor({
       fn(f.dots);
     }, live(`${faceKey}-${k}`, l));
   const setGrad = (fn: (g: Gradient) => void, k: string, l = false) => setDots(d => fn(d.gradient), `g-${k}`, l);
-  const summary = [dots?.enabled ? (dots.gradient.type === 'none' ? 'dots' : `halftone · ${dots.gradient.type}`) : '', fs.fill ? 'colour' : ''].filter(Boolean).join(' + ');
+  const summary = [dots?.enabled ? (dots.gradient.type === 'none' ? 'dots' : `halftone · ${dots.gradient.type}`) : '', fs.fill ? 'color' : ''].filter(Boolean).join(' + ');
   return (
     <div className={`face${open ? ' open' : ''}`} data-face={faceKey}>
       <button className="fhead" onClick={onOpen} aria-expanded={open}>
@@ -424,7 +424,7 @@ function FaceEditor({
       {open && (
         <div className="fbody">
           {faceKey === 'all' && <div className="note">Fills every side as one sheet, flowing round the corners. A side with its own fill takes priority.</div>}
-          <Row label="Colour">
+          <Row label="Color">
             <ColorField value={fs.fill} inherited={obj.style.fill ?? theme.fill} allowInherit onChange={(v, l) => setFace(f => void (f.fill = v), live(`${faceKey}-fill`, l))} />
           </Row>
           <Toggle
@@ -455,7 +455,7 @@ function FaceEditor({
                   <NumberField label="MIN" value={dots.sizeMin} min={0} step={0.05} onChange={(v, l) => setDots(d => void (d.sizeMin = v), 'szm', l)} title="Dot radius at none (halftones)" />
                 </div>
               </Row>
-              <Row label="Colour">
+              <Row label="Color">
                 <ColorField value={dots.color || null} inherited={theme.dot} allowInherit onChange={(v, l) => setDots(d => void (d.color = v ?? ''), 'col', l)} />
               </Row>
               <Row label="Opacity">
@@ -512,7 +512,7 @@ function FaceEditor({
                   )}
                   {dots.gradient.type === 'radial' && (
                     <>
-                      <Row label="Centre">
+                      <Row label="Center">
                         <div className="grid2">
                           <NumberField label="X" value={dots.gradient.cx} step={0.05} onChange={(v, l) => setGrad(g => void (g.cx = v), 'cx', l)} />
                           <NumberField label="Y" value={dots.gradient.cy} step={0.05} onChange={(v, l) => setGrad(g => void (g.cy = v), 'cy', l)} />
@@ -549,7 +549,7 @@ function FaceEditor({
               </Toggle>
               {dots.region && (
                 <>
-                  <Row label="Centre">
+                  <Row label="Center">
                     <div className="grid2">
                       <NumberField label="X" value={dots.region.x} step={0.02} onChange={(v, l) => setDots(d => void (d.region!.x = v), 'rx', l)} />
                       <NumberField label="Y" value={dots.region.y} step={0.02} onChange={(v, l) => setDots(d => void (d.region!.y = v), 'ry', l)} />
@@ -632,7 +632,7 @@ function DecalEditor({ obj, up, theme }: { obj: SceneObject; up: (fn: (o: SceneO
           <Row label="Mark">
             <span className="note">{dc.kind === 'strike' ? 'Strike logo' : dc.source}</span>
           </Row>
-          <Row label="Centre">
+          <Row label="Center">
             <div className="grid2">
               <NumberField label="X" value={dc.x} onChange={(v, l) => set(d => void (d.x = v), 'x', l)} />
               <NumberField label="Z" value={dc.y} onChange={(v, l) => set(d => void (d.y = v), 'y', l)} />
@@ -647,7 +647,7 @@ function DecalEditor({ obj, up, theme }: { obj: SceneObject; up: (fn: (o: SceneO
           <Row label="Draw as">
             <Seg value={dc.mode} options={[{ value: 'stroke', label: 'Lines' }, { value: 'fill', label: 'Solid' }]} onChange={v => set(d => void (d.mode = v), 'm')} />
           </Row>
-          <Row label="Colour">
+          <Row label="Color">
             <ColorField value={dc.color} inherited={dc.mode === 'stroke' ? obj.style.crease ?? theme.crease : theme.accent} allowInherit onChange={(v, l) => set(d => void (d.color = v), 'c', l)} />
           </Row>
           <Row label="Opacity">

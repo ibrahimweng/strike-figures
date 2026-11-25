@@ -57,7 +57,7 @@ const NOTES: Record<Format, string> = {
   svg: 'Sharp at any size. Opens in Figma, and drops into a website.',
   png: 'A picture, for slides, chats and docs.',
   mp4: 'A video of the loop, for X, LinkedIn, slides and the website. Loop it when you post it.',
-  gif: 'Plays everywhere, email included. Bigger file, fewer colours.',
+  gif: 'Plays everywhere, email included. Bigger file, fewer colors.',
   asvg: 'A small, sharp animation for the website. Browsers play it; Figma shows the first frame.',
   lottie: 'For app and web developers (lottie-web, LottieFiles). Shadows are left out.',
 };
